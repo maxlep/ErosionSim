@@ -1,8 +1,9 @@
-import gab.opencv.*;
+// import gab.opencv.*;
 
 Terrain terrain;
 WaterMap water;
 
+static String inputHeightmap = "heightmap04.png";
 static float displayScale = 1;
 
 boolean autorun = false;
@@ -16,7 +17,7 @@ void setup()
 	fill(0,0,255);
 
 	// Load the initial heightmap
-	String heightmapFile = "heightmap04.png";
+	String heightmapFile = "Heightmaps/"+inputHeightmap;
 	PImage heightmap = loadImage(heightmapFile);
 	println("Loaded",heightmapFile,"as heightmap. (",heightmap.width,"x",heightmap.height,")");
 
@@ -90,19 +91,22 @@ void keyPressed()
 			print = !print;
 			break;
 		case 's':
+			String filename = inputHeightmap+"_"+millis()+".png";
 			if (autorun)
 			{
 				color c1 = color(0);
 				color c2 = color(255);
 				PImage colored = terrain.getColorBlend(c1,c2);
-				colored.save("out.png");
+
+				colored.save("Outputs/" + filename);
 			}
 			else
 			{
 				color c1 = color(255,0,0);
 				color c2 = color(0,0,255);
 				PImage colored = terrain.getColorBlend(c1,c2);
-				colored.save("out.png");
+
+				colored.save("Outputs/" + filename);
 			}
 			break;
 	}
