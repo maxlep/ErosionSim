@@ -6,6 +6,8 @@ WaterMap water;
 static float displayScale = 1;
 
 boolean autorun = false;
+boolean debug = true;
+boolean print = true;
 
 void setup()
 {
@@ -13,12 +15,16 @@ void setup()
 	noStroke();
 	fill(0,0,255);
 
-	String heightmapFile = "heightmap03.png";
+	// Load the initial heightmap
+	String heightmapFile = "heightmap04.png";
 	PImage heightmap = loadImage(heightmapFile);
 	println("Loaded",heightmapFile,"as heightmap. (",heightmap.width,"x",heightmap.height,")");
+
+	// Intialize the terrain and the water map
 	terrain = new Terrain(heightmap);
 	water = new WaterMap(terrain);
 
+	// Initialize the simulation with some droplets
 	for (int i=0; i<50000; i++)
 	{
 		water.addRandomDroplet();
@@ -45,8 +51,20 @@ void draw()
 	pushMatrix();
 	scale(displayScale);
 	terrain.draw();
-	water.draw();
+	if (debug) water.draw();
 	popMatrix();
+}
+
+void mouseClicked()
+{
+	PImage heightmap = terrain.getHeightmap();
+	int heightmapX = int(mouseX / displayScale);
+	int heightmapY = int(mouseY / displayScale);
+	if (heightmapX > heightmap.width || heightmapY > heightmap.height) return;
+	int heightmapIndex = int(heightmapY * heightmap.width + heightmapX);
+	int col = heightmap.pixels[heightmapIndex];
+	int height = terrain.heightFromColor(col);
+	println("Clicked",heightmapX,"x",heightmapY,"y",height,"value");
 }
 
 void keyPressed()
@@ -65,6 +83,12 @@ void keyPressed()
 				water.addRandomDroplet();
 			}
 			break;
+		case 'd':
+			debug = !debug;
+			break;
+		case 'p':
+			print = !print;
+			break;
 		case 's':
 			if (autorun)
 			{
@@ -82,16 +106,4 @@ void keyPressed()
 			}
 			break;
 	}
-}
-
-void mouseClicked()
-{
-	PImage heightmap = terrain.getHeightmap();
-	int heightmapX = int(mouseX / displayScale);
-	int heightmapY = int(mouseY / displayScale);
-	if (heightmapX > heightmap.width || heightmapY > heightmap.height) return;
-	int heightmapIndex = int(heightmapY * heightmap.width + heightmapX);
-	int col = heightmap.pixels[heightmapIndex];
-	int height = terrain.heightFromColor(col);
-	println("Clicked",heightmapX,"x",heightmapY,"y",height,"value");
 }

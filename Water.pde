@@ -43,8 +43,11 @@ class WaterMap
 	int doSimulationStep()
 	{
 		int destroyedCount = 0;
-		println("----------");
-		println("Doing simulation step "+(simulationStep));
+		if (print)
+		{
+			println("----------");
+			println("Doing simulation step "+(simulationStep));
+		}
 
 		PImage inHeightmap  = terrain.getHeightmap();
 		PImage outHeightmap = terrain.getHeightmapCopy();
@@ -140,7 +143,11 @@ class WaterMap
 		terrain.setHeightmap(outHeightmap.pixels);
 		nextPassFlag = !nextPassFlag;
 
-		println("Finished simulation step "+simulationStep++);
+		if (print)
+		{
+			println("Finished simulation step "+simulationStep);
+		}
+		simulationStep++;
 		return destroyedCount;
 	}
 

@@ -48,6 +48,7 @@ class Terrain
 	void setHeightmap(int[] heightmap)
 	{
 		this.heightmap.pixels = heightmap;
+		this.heightmap.updatePixels();
 		// for (int i=0; i<this.heightmap.pixels.length; i++)
 		// {
 		// 	if (this.heightmap.pixels[i] != heightmap[i]) println("Heightmap not updated",this.heightmap.pixels[i],heightmap[i]);
