@@ -3,6 +3,9 @@ class Terrain
 {
 	public ValueMap heightmap;
 
+	public int getHeight() { return heightmap.height; };
+	public int getWidth()  { return heightmap.width;  };
+
 	public Terrain(PImage heightmapImg)
 	{
 		this.heightmap = new ValueMap(heightmapImg);
@@ -13,9 +16,10 @@ class Terrain
 		heightmap.draw();
 	}
 
-	public void prepForStep()
+	public void preStep()
 	{
-		heightmap.prepForStep();
+		heightmap.preStep();
+		// recomputeGradient();
 	}
 
 	public void postStep()
@@ -23,12 +27,24 @@ class Terrain
 		heightmap.postStep();
 	}
 
+	public int getHeightValue(int x, int y) { return heightmap.getValue(x, y); }
+	public void setHeightValue(int x, int y, int value) {
+		heightmap.setValue(x, y, value);
+		if (print) println("Set value",x,y,value);
+		// TODO return remainder if value exceeds max or min
+	}
+
+	// private void recomputeGradient()
+	// {
+		
+	// }
+
 	// Relies on heightmap.loadPixels previously being called
 	int getDownhillNeighborIndex(int x, int y)
 	{
 		int myIndex = y * heightmap.width + x;
-		// if (myIndex >= heightmap.pixels.length) println(x, y);
-		int myValue = heightFromColor(heightmap.pixels[myIndex]);
+		int myValue = heightmap.getValue(x, y);
+
 		int lowestNeighborIndex = myIndex;
 		int lowestNeighborValue = myValue;
 
@@ -48,7 +64,7 @@ class Terrain
 
 				int neighborIndex = yy * heightmap.width + xx;
 				// if (neighborIndex >= heightmap.pixels.length) println(x, y);
-				int neighborValue = heightFromColor(heightmap.pixels[neighborIndex]);
+				int neighborValue = heightmap.getValue(neighborIndex);
 				if (neighborValue <= lowestNeighborValue)
 				{
 					lowestNeighborIndex = neighborIndex;
@@ -64,43 +80,16 @@ class Terrain
 		else return lowestNeighborIndex;
 	}
 
-	int getHeight() { return heightmap.height; };
-	int getWidth()  { return heightmap.width;  };
-	
-	PImage getColorBlend(color c1, color c2)
-	{
-		PImage copy = heightmap.copy();
-		copy.loadPixels();
-		for (int i=0; i<copy.pixels.length; i++)
-		{
-			int height = copy.pixels[i] & 0xFF;
-			float pct = float(height) / 255f;
-			copy.pixels[i] = lerpColor(c1, c2, pct);
-		}
-		return copy;
-	}
 	PImage getColorBlend(color[] colors)
 	{
 		Gradient g = new Gradient(colors);
 
-		PImage copy = heightmap.copy();
-		copy.loadPixels();
+		PImage heights = heightmap.getValues();
 
-		for (int i=0; i<copy.pixels.length; i++)
-		{
-			int height = copy.pixels[i] & 0xFF;
-			float pct = float(height) / 255f;
-			color col = g.sample(pct);
+		heights.loadPixels();
+		ColorConverter.valueToGradientSample(heights.pixels, g);
+		heights.updatePixels();
 
-			copy.pixels[i] = col;
-		}
-
-		return copy;
-	}
-
-	PImage getGradient()
-	{
-		// TODO
-		return null;
+		return heights;
 	}
 }

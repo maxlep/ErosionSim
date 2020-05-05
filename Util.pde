@@ -53,9 +53,9 @@ static class PImageUtils
 
 static class ColorConverter
 {
-    public static byte grayscaleToValue(color grayscale)
+    public static int grayscaleToValue(color grayscale)
     {
-        byte value = grayscale && 0xFF;
+        int value = grayscale & 0xFF;
         return value;
     }
 
@@ -63,16 +63,14 @@ static class ColorConverter
     {
         for (int i=0; i<pixels.length; i++)
         {
-            byte value = grayscaleToValue(pixels[i]);
+            int value = grayscaleToValue(pixels[i]);
             pixels[i] = value;
         }
     }
 
     public static color valueToGradientSample(int value, Gradient g)
     {
-        float pct = (float)value / Integer.MAX_VALUE;
-        // TODO remove print
-        if (pct % 1 > 0) println("Successfully got float division!");
+        float pct = (float)Integer.toUnsignedLong(value) / Integer.toUnsignedLong(MAX_HEIGHT);
         color col = g.sample(pct);
         return col;
     }

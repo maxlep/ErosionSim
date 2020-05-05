@@ -1,29 +1,41 @@
 
 class ValueMap
 {
+    public int height, width;
+
     private PImage map;
     private PImage snapshot;
     // The snapshot will be used for reading values, while edits will be applied to the map.
 
+    private Gradient displayGradient = new Gradient( new color[] { color(0), color(255) } );
+
     public ValueMap(PImage map)
     {
+        this.height = map.height;
+        this.width = map.width;
         this.map = map.copy();
 
-        map.loadPixels();
-        ColorConverter.grayscaleToValue(map.pixels);
-        map.updatePixels();
+        this.map.loadPixels();
+        ColorConverter.grayscaleToValue(this.map.pixels);
+        this.map.updatePixels();
         // Reorder the values in the input heightmap to allow use of the full 4 bytes for storage of the map value.
 
-        snapshot = map;
+        snapshot = this.map;
         // This makes snapshot and map reference the same object; if makesnapshot() is never called, values will be written and read directly on the map.
     }
 
     public void draw()
     {
-        image(map, 0,0);
+        PImage colored = getValuesOnGradient(displayGradient);
+        // for (int i=0; i<map.pixels.length; i++)
+        // {
+        //     int mapSample = map.pixels[i];
+        //     int sample = getValue(i);
+        //     println(mapSample, sample);
+        // }
+        image(colored, 0,0);
     }
 
-    // Loads to heightmap to prepare for reading and modification during one simulation step.
     public void preStep()
     {
         map.loadPixels();
@@ -35,23 +47,40 @@ class ValueMap
         map.updatePixels();
     }
 
+    public int getValue(int index)
+    {
+        return snapshot.pixels[index];
+    }
     public int getValue(int x, int y)
     {
         int index = snapshot.width * y + x;
-        return snapshot[index];
+        return getValue(index);
+    }
+    public PImage getValues()
+    {
+        // TODO make not reliant on the PImage type
+        map.loadPixels();
+        return map.copy();
+    }
+    public PImage getValuesOnGradient(Gradient g)
+    {
+        PImage colored = getValues();
+        colored.loadPixels();
+        ColorConverter.valueToGradientSample(colored.pixels, g);
+        colored.updatePixels();
+        return colored;
     }
 
-    public int setValue(int x, int y, value)
+    public void setValue(int x, int y, int value)
     {
         int index = map.width * y + x;
-        map[index] = 
-        // TODO if a value exceeds the max or min return the remainder
+        map.pixels[index] = value;
     }
 
     // Makes a copy of the heightmap at a moment in time.
     private void takeSnapshot()
     {
-        if (snapshot != null) { // Dispose? }
+        if (snapshot != null) { /* Dispose? */ }
 
         snapshot = map.copy();
         snapshot.loadPixels();

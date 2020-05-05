@@ -1,14 +1,18 @@
 // import gab.opencv.*;
 
 Terrain terrain;
-WaterMap water;
+WaterErosion water;
 
 static String inputHeightmap = "heightmap04.png";
 static float displayScale = 1;
+static int MAX_HEIGHT = 255;
+// Height is treated as an unsigned int so the max this value can be is Integer.toUnsignedLong(-1)
 
 boolean autorun = false;
 boolean debug = true;
 boolean print = true;
+
+int simulationStep = 0;
 
 void setup()
 {
@@ -23,7 +27,7 @@ void setup()
 
 	// Intialize the terrain and the water map
 	terrain = new Terrain(heightmap);
-	water = new WaterMap(terrain);
+	water = new WaterErosion(terrain);
 
 	// Initialize the simulation with some droplets
 	for (int i=0; i<50000; i++)
@@ -34,15 +38,10 @@ void setup()
 
 void doSimulationStep()
 {
-	int destroyedCount = water.doSimulationStep();
-	
-	if (autorun)
-	{
-		for (int i=0; i<destroyedCount; i++)
-		{
-			water.addRandomDroplet();
-		}
-	}
+	if (print) println("----------\nStarting simulation step",simulationStep);
+	water.doSimulationStep();
+	simulationStep++;
+	if (print) println("Finished simulation step");
 }
 
 void draw()
@@ -58,14 +57,13 @@ void draw()
 
 void mouseClicked()
 {
-	PImage heightmap = terrain.getHeightmap();
-	int heightmapX = int(mouseX / displayScale);
-	int heightmapY = int(mouseY / displayScale);
-	if (heightmapX > heightmap.width || heightmapY > heightmap.height) return;
-	int heightmapIndex = int(heightmapY * heightmap.width + heightmapX);
-	int col = heightmap.pixels[heightmapIndex];
-	int height = terrain.heightFromColor(col);
-	println("Clicked",heightmapX,"x",heightmapY,"y",height,"value");
+	int terrainX = int(mouseX / displayScale);
+	int terrainY = int(mouseY / displayScale);
+	if (terrainX > terrain.getWidth() || terrainY > terrain.getHeight()) return;
+
+	int height = terrain.getHeightValue(terrainX, terrainY);
+	println("Clicked",terrainX,"x",terrainY,"y",height,"value");
+	// println("Clicked",terrainX,"x",terrainY,"y",height.toUnsignedString(),"value");
 }
 
 void keyPressed()
@@ -91,22 +89,19 @@ void keyPressed()
 			print = !print;
 			break;
 		case 's':
-			String filename = inputHeightmap+"_"+millis()+".png";
+			color[] colors;
 			if (autorun)
-			{
-				color c1 = color(0);
-				color c2 = color(255);
-				PImage colored = terrain.getColorBlend(c1,c2);
-
-				colored.save("Outputs/" + filename);
-			}
+				colors = new color[] { color(0), color(255) };
 			else
-			{
-				color[] colors = new color[] { color(0,0,255), color(64,252,255), color(255,240,73), color(255,42,42) };
-				PImage colored = terrain.getColorBlend(colors);
+				colors = new color[] { color(0,0,255), color(64,252,255), color(255,240,73), color(255,42,42) };
 
-				colored.save("Outputs/" + filename);
-			}
+			PImage colored = terrain.getColorBlend(colors);
+
+			String filename = inputHeightmap+"_"+millis()+".png";
+			String path = "Outputs/" + filename;
+
+			colored.save(path);
+			println("Saved image", path);
 			break;
 	}
 }
