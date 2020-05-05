@@ -30,7 +30,6 @@ class Terrain
 	public int getHeightValue(int x, int y) { return heightmap.getValue(x, y); }
 	public void setHeightValue(int x, int y, int value) {
 		heightmap.setValue(x, y, value);
-		if (print) println("Set value",x,y,value);
 		// TODO return remainder if value exceeds max or min
 	}
 

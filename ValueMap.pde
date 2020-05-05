@@ -27,12 +27,6 @@ class ValueMap
     public void draw()
     {
         PImage colored = getValuesOnGradient(displayGradient);
-        // for (int i=0; i<map.pixels.length; i++)
-        // {
-        //     int mapSample = map.pixels[i];
-        //     int sample = getValue(i);
-        //     println(mapSample, sample);
-        // }
         image(colored, 0,0);
     }
 
