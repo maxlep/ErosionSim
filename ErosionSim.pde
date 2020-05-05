@@ -102,9 +102,8 @@ void keyPressed()
 			}
 			else
 			{
-				color c1 = color(255,0,0);
-				color c2 = color(0,0,255);
-				PImage colored = terrain.getColorBlend(c1,c2);
+				color[] colors = new color[] { color(0,0,255), color(64,252,255), color(255,240,73), color(255,42,42) };
+				PImage colored = terrain.getColorBlend(colors);
 
 				colored.save("Outputs/" + filename);
 			}

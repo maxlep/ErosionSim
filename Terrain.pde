@@ -119,6 +119,24 @@ class Terrain
 		}
 		return copy;
 	}
+	PImage getColorBlend(color[] colors)
+	{
+		Gradient g = new Gradient(colors);
+
+		PImage copy = heightmap.copy();
+		copy.loadPixels();
+
+		for (int i=0; i<copy.pixels.length; i++)
+		{
+			int height = copy.pixels[i] & 0xFF;
+			float pct = float(height) / 255f;
+			color col = g.sample(pct);
+
+			copy.pixels[i] = col;
+		}
+
+		return copy;
+	}
 
 	PImage getGradient()
 	{

@@ -26,7 +26,6 @@ On linux this is:
 - Add a parameter for the number of cycles to run the simulation for
 - Add a parameter for the amount of upward slope that droplets can traverse
     - Hopefully will help to keep them from getting stuck
-- Add displaying results with a gradient of multiple colors
 - Add grouping and movement to rain pattern
     - Can I generate a voronoi texture?
 - Make speed dependent on the slope droplets travel
