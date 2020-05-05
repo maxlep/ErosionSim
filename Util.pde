@@ -67,4 +67,22 @@ static class ColorConverter
             pixels[i] = value;
         }
     }
+
+    public static color valueToGradientSample(int value, Gradient g)
+    {
+        float pct = (float)value / Integer.MAX_VALUE;
+        // TODO remove print
+        if (pct % 1 > 0) println("Successfully got float division!");
+        color col = g.sample(pct);
+        return col;
+    }
+
+    public static void valueToGradientSample(int[] values, Gradient g)
+    {
+        for (int i=0; i<values.length; i++)
+        {
+            color col = valueToGradientSample(values[i], g);
+            values[i] = col;
+        }
+    }
 }

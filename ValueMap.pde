@@ -3,7 +3,7 @@ class ValueMap
 {
     private PImage map;
     private PImage snapshot;
-    // The snapshot will be used for reading values, while edits will be applied to the main map.
+    // The snapshot will be used for reading values, while edits will be applied to the map.
 
     public ValueMap(PImage map)
     {

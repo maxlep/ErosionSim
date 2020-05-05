@@ -1,58 +1,26 @@
 
-static class PImageUtils
-{
-	static int[][] getGrayscaleValues(PImage img)
-	{
-		int width = img.width;
-		int height = img.height;
-		int[][] grayscale = new int[height][width];
-
-		img.loadPixels();
-		for (int y=0; y<height; y++)
-		{
-			int i_temp = y * width;
-			for (int x=0; x<width; x++)
-			{
-				grayscale[y][x] = img.pixels[i_temp + x] & 0xFF;
-			}
-		}
-		return grayscale;
-	}
-}
-
 class Terrain
 {
-	PImage heightmap;
+	public ValueMap heightmap;
 
-	Terrain(PImage heightmap)
+	public Terrain(PImage heightmapImg)
 	{
-		this.heightmap = heightmap;
-	}
-
-	void draw()
-	{
-		image(heightmap, 0,0);
+		this.heightmap = new ValueMap(heightmapImg);
 	}
 
-	PImage getHeightmap()
+	public void draw()
 	{
-		heightmap.loadPixels();
-		return heightmap;
+		heightmap.draw();
 	}
-	PImage getHeightmapCopy()
+
+	public void prepForStep()
 	{
-		PImage copy = heightmap.copy();
-		copy.loadPixels();
-		return copy;
+		heightmap.prepForStep();
 	}
-	void setHeightmap(int[] heightmap)
+
+	public void postStep()
 	{
-		this.heightmap.pixels = heightmap;
-		this.heightmap.updatePixels();
-		// for (int i=0; i<this.heightmap.pixels.length; i++)
-		// {
-		// 	if (this.heightmap.pixels[i] != heightmap[i]) println("Heightmap not updated",this.heightmap.pixels[i],heightmap[i]);
-		// }
+		heightmap.postStep();
 	}
 
 	// Relies on heightmap.loadPixels previously being called
@@ -98,15 +66,7 @@ class Terrain
 
 	int getHeight() { return heightmap.height; };
 	int getWidth()  { return heightmap.width;  };
-
-	int heightFromColor(int col)
-	{
-		return col & 0xFF;
-	}
-	int colorFromHeight(int height)
-	{
-		return color(height);
-	}
+	
 	PImage getColorBlend(color c1, color c2)
 	{
 		PImage copy = heightmap.copy();
