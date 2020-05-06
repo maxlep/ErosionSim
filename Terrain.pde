@@ -39,7 +39,7 @@ class Terrain
 	// }
 
 	// Relies on heightmap.loadPixels previously being called
-	int getDownhillNeighborIndex(int x, int y)
+	public int getDownhillNeighborIndex(int x, int y)
 	{
 		int myIndex = y * heightmap.width + x;
 		int myValue = heightmap.getValue(x, y);
@@ -79,16 +79,10 @@ class Terrain
 		else return lowestNeighborIndex;
 	}
 
-	PImage getColorBlend(color[] colors)
+	public PImage getWithGradient(color[] colors)
 	{
 		Gradient g = new Gradient(colors);
-
-		PImage heights = heightmap.getValues();
-
-		heights.loadPixels();
-		ColorConverter.valueToGradientSample(heights.pixels, g);
-		heights.updatePixels();
-
-		return heights;
+		PImage colored = heightmap.getValuesOnGradient(g);
+		return colored;
 	}
 }

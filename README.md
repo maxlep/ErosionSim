@@ -21,6 +21,10 @@ On linux this is:
 **s** - Save the current terrain to `./Outputs`
 
 ## TODO
+- Add debug window to display information and toggle settings
+- Add terrain manipulation tool
+- Add water sources
+- Make simulation droplets normalize to a set amount with no hard limit
 - Implement terrain resistance map to mimic different materials
 - Move settings to config file
 - Add a parameter for the number of cycles to run the simulation for

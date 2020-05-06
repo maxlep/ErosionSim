@@ -3,7 +3,7 @@
 Terrain terrain;
 WaterErosion water;
 
-static String inputHeightmap = "heightmap04.png";
+static String inputHeightmap = "heightmap05.png";
 static float displayScale = 1;
 static int MAX_HEIGHT = 255;
 // Height is treated as an unsigned int so the max this value can be is Integer.toUnsignedLong(-1)
@@ -11,6 +11,7 @@ static int MAX_HEIGHT = 255;
 boolean autorun = false;
 boolean debug = true;
 boolean print = true;
+int mouseMode = 0;
 
 int simulationStep = 0;
 
@@ -61,47 +62,86 @@ void mouseClicked()
 	int terrainY = int(mouseY / displayScale);
 	if (terrainX > terrain.getWidth() || terrainY > terrain.getHeight()) return;
 
-	int height = terrain.getHeightValue(terrainX, terrainY);
-	println("Clicked",terrainX,"x",terrainY,"y",height,"value");
-	// println("Clicked",terrainX,"x",terrainY,"y",height.toUnsignedString(),"value");
+	switch (mouseMode)
+	{
+	case 0: // Modify water sources
+		// for (int i=0; i<1000; i++)
+		// {
+		// 	water.addRandomDroplet(terrainX, terrainY, 30);
+		// }
+		break;
+	case 1: // Modify terrain
+
+		break;
+	case 2: // Read heightmap values
+		int height = terrain.getHeightValue(terrainX, terrainY);
+		println("Clicked",terrainX,"x",terrainY,"y",height,"value");
+		// println("Clicked",terrainX,"x",terrainY,"y",height.toUnsignedString(),"value");
+		break;
+	}
+}
+
+void mouseDragged()
+{
+	int terrainX = int(mouseX / displayScale);
+	int terrainY = int(mouseY / displayScale);
+	if (terrainX > terrain.getWidth() || terrainY > terrain.getHeight()) return;
+
+	switch (mouseMode)
+	{
+	case 0: // Modify water sources
+		for (int i=0; i<1000; i++)
+		{
+			water.addRandomDroplet(terrainX, terrainY, 30);
+		}
+		break;
+	case 1: // Modify terrain
+
+		break;
+	case 2: // Read heightmap values
+		int height = terrain.getHeightValue(terrainX, terrainY);
+		println("Clicked",terrainX,"x",terrainY,"y",height,"value");
+		// println("Clicked",terrainX,"x",terrainY,"y",height.toUnsignedString(),"value");
+		break;
+	}
 }
 
 void keyPressed()
 {
 	switch (key)
 	{
-		case 'n':
-			doSimulationStep();
-			break;
-		case 'c':
-			autorun = !autorun;
-			break;
-		case 'r':
-			for (int i=0; i<1000; i++)
-			{
-				water.addRandomDroplet();
-			}
-			break;
-		case 'd':
-			debug = !debug;
-			break;
-		case 'p':
-			print = !print;
-			break;
-		case 's':
-			color[] colors;
-			if (autorun)
-				colors = new color[] { color(0), color(255) };
-			else
-				colors = new color[] { color(0,0,255), color(64,252,255), color(255,240,73), color(255,42,42) };
+	case 'n':
+		doSimulationStep();
+		break;
+	case 'c':
+		autorun = !autorun;
+		break;
+	case 'r':
+		for (int i=0; i<1000; i++)
+		{
+			water.addRandomDroplet();
+		}
+		break;
+	case 'd':
+		debug = !debug;
+		break;
+	case 'p':
+		print = !print;
+		break;
+	case 's':
+		color[] colors;
+		if (autorun)
+			colors = new color[] { color(0), color(255) };
+		else
+			colors = new color[] { color(0,0,255), color(64,252,255), color(255,240,73), color(255,42,42) };
 
-			PImage colored = terrain.getColorBlend(colors);
+		PImage colored = terrain.getWithGradient(colors);
 
-			String filename = inputHeightmap+"_"+millis()+".png";
-			String path = "Outputs/" + filename;
+		String filename = inputHeightmap+"_"+simulationStep+".png";
+		String path = "Outputs/" + filename;
 
-			colored.save(path);
-			println("Saved image", path);
-			break;
+		colored.save(path);
+		println("Saved image", path);
+		break;
 	}
 }

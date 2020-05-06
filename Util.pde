@@ -16,7 +16,7 @@ class Gradient
 
     color sample(float pct)
     {
-        if (pct == 1f) return colors[colors.length - 1];
+        if (pct >= 1f) return colors[colors.length - 1];
 
         float temp = pct * (colors.length - 1);
         int index = floor(temp);
@@ -68,19 +68,24 @@ static class ColorConverter
         }
     }
 
+    static boolean pctGT1 = false;
     public static color valueToGradientSample(int value, Gradient g)
     {
         float pct = (float)Integer.toUnsignedLong(value) / Integer.toUnsignedLong(MAX_HEIGHT);
+        // if (pct > 1f) println(value, pct);
+        if (pct > 1f) pctGT1 = true;
         color col = g.sample(pct);
         return col;
     }
 
     public static void valueToGradientSample(int[] values, Gradient g)
     {
+        pctGT1 = false;
         for (int i=0; i<values.length; i++)
         {
             color col = valueToGradientSample(values[i], g);
             values[i] = col;
         }
+        if (pctGT1) println("Some values are above MAX_HEIGHT");
     }
 }

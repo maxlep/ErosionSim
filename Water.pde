@@ -23,7 +23,7 @@ class WaterErosion
 	private boolean nextPassFlag;
 	private int simulationStep = 1;
 
-	WaterErosion(Terrain terrain)
+	public WaterErosion(Terrain terrain)
 	{
 		this.terrain = terrain;
 		width = terrain.getWidth();
@@ -40,8 +40,7 @@ class WaterErosion
 		}
 	}
 
-	// Returns the number of droplets destroyed in this step
-	void doSimulationStep()
+	public void doSimulationStep()
 	{
 		int destroyedCount = 0;
 		terrain.preStep();
@@ -54,105 +53,110 @@ class WaterErosion
 			for (int x=0; x<width; x++)
 			{
 				int i = temp_i + x;
-
-				ArrayList<Droplet> droplets = watermap[y][x];
-				if (droplets.isEmpty()) continue;
-
-				int flowToIndex = terrain.getDownhillNeighborIndex(x,y);
-				// println(flowToIndex);
-				if (flowToIndex == -1)
-				{
-					// no neighbor is lower than this is. evaporate water and deposit all sediment
-					int outHeight = terrain.getHeightValue(x, y);
-
-					for (Droplet d : droplets)
-					{
-						outHeight += d.sediment;
-						destroyedCount++;
-					}
-					droplets.clear();
-
-					outHeight = constrain(outHeight, 0, 255);
-					terrain.setHeightValue(x, y, outHeight);
-					// println("No lower neighbor");
-					continue;
-				}
-				
-				ArrayList<Droplet> neighborDroplets = watermap[flowToIndex / width][flowToIndex % width];
-
-				int size = 0;
-				for (Droplet d : droplets)
-				{
-					size += (d.alternatingFlag == nextPassFlag ? 1 : 0);
-				}
-				if (size < 1)
-				{
-					continue;
-				}
-
-				// println("Size ",size," Index ",i,"Flow to index",flowToIndex);
-
-				// TODO when speed is low they deposit sediment, when speed is higher they accumulate it
-				float rand = random(-1, 10);
-				if (rand > 1) rand = 1;
-				int sedimentExchange = round(rand);
-
-				int inValue = terrain.getHeightValue(x, y);
-				int outValue = inValue + sedimentExchange;
-				if (outValue < 0)
-				{
-					sedimentExchange = inValue;
-				}
-				if (outValue > 255)
-				{
-					sedimentExchange = 255 - inValue;
-				}
-				outValue = inValue;
-
-				float each = sedimentExchange / size;
-				// println("Exchanging",sedimentExchange,"sediment between ground",inValue,"and",size,"droplets,",each,"each");
-				for (int d=0; d<droplets.size(); d++)
-				{
-					Droplet curr = droplets.get(d);
-					if (curr.alternatingFlag == nextPassFlag)
-					{
-						float amount = curr.sediment;
-						curr.sediment -= each;
-						if (curr.sediment < 0)
-						{
-							curr.sediment = 0;
-						}
-						if (curr.sediment > SEDIMENT_LIMIT)
-						{
-							curr.sediment = SEDIMENT_LIMIT;
-							amount = amount - SEDIMENT_LIMIT;
-						}
-						outValue += amount;
-						curr.alternatingFlag = !curr.alternatingFlag;
-						neighborDroplets.add(curr);
-						droplets.remove(curr);
-						d--;
-					}
-				}
-				
-				terrain.setHeightValue(x, y, outValue);
+				destroyedCount += updateDroplets(x, y);
 			}
 		}
 
 		terrain.postStep();
 
+		if (print) println("Finished water simulation step");
+
+		simulationStep++;
+		nextPassFlag = !nextPassFlag;
 		if (autorun)
 		{
 			for (int i=0; i<destroyedCount; i++)
 				addRandomDroplet();
 		}
-
-		if (print) println("Finished water simulation step");
-		simulationStep++;
-		nextPassFlag = !nextPassFlag;
 	}
 
-	void draw()
+	private int updateDroplets(int x, int y)
+	{
+		int destroyedCount = 0;
+		ArrayList<Droplet> droplets = watermap[y][x];
+		if (droplets.isEmpty()) return destroyedCount;
+
+		// Step 1: Determine flow direction
+		int flowToIndex = terrain.getDownhillNeighborIndex(x,y);
+		if (flowToIndex == -1)	// No neighbor is lower than this is. Evaporate water and deposit all sediment.
+		{
+			int outHeight = terrain.getHeightValue(x, y);
+
+			for (Droplet d : droplets)
+			{
+				outHeight += d.sediment;
+				destroyedCount++;
+			}
+			droplets.clear();
+
+			outHeight = constrain(outHeight, 0, MAX_HEIGHT);
+			terrain.setHeightValue(x, y, outHeight);
+			return destroyedCount;
+		}
+		ArrayList<Droplet> neighborDroplets = watermap[flowToIndex / width][flowToIndex % width];
+
+		// Step 2: Count the number of droplets that have not yet been updated this step
+		int size = 0;
+		for (Droplet d : droplets)
+		{
+			size += (d.alternatingFlag == nextPassFlag ? 1 : 0);
+		}
+		if (size < 1)
+		{
+			return destroyedCount;
+		}
+
+		// Step 3: Determine the amount of sediment to exchange
+		// TODO when speed is low they deposit sediment, when speed is higher they accumulate it
+		float rand = random(-1, 3);
+		if (rand > 1) rand = 1;
+		int sedimentExchange = round(rand);
+
+		int inValue = terrain.getHeightValue(x, y);
+		int outValue = inValue + sedimentExchange;
+		if (outValue < 0)
+		{
+			sedimentExchange = inValue;
+		}
+		if (outValue > MAX_HEIGHT)
+		{
+			sedimentExchange = MAX_HEIGHT - inValue;
+		}
+		outValue = inValue;
+		float each = sedimentExchange / size;
+
+		// Step 4: Exchange the values from each droplet and move them along in their flow direction
+		for (int d=0; d<droplets.size(); d++)
+		{
+			Droplet curr = droplets.get(d);
+			if (curr.alternatingFlag == nextPassFlag)
+			{
+				float amount = curr.sediment;
+				curr.sediment -= each;
+				if (curr.sediment < 0)
+				{
+					curr.sediment = 0;
+				}
+				if (curr.sediment > SEDIMENT_LIMIT)
+				{
+					curr.sediment = SEDIMENT_LIMIT;
+					amount = amount - SEDIMENT_LIMIT;
+				}
+				outValue += amount;
+				curr.alternatingFlag = !curr.alternatingFlag;
+				neighborDroplets.add(curr);
+				droplets.remove(curr);
+				d--;
+			}
+		}
+		
+		// Step 5: Update the height value of this cell
+		terrain.setHeightValue(x, y, outValue);
+
+		return destroyedCount;
+	}
+
+	public void draw()
 	{
 		// Debug display
 		for (int y=0; y<height; y++)
@@ -167,16 +171,22 @@ class WaterErosion
 		}
 	}
 
-	void addDroplet(int x, int y)
+	public void addDroplet(int x, int y)
 	{
 		Droplet d = new Droplet();
 		watermap[y][x].add(d);
 	}
 
-	void addRandomDroplet()
+	public void addRandomDroplet()
 	{
-		int x = int(random(width));
-		int y = int(random(height));
+		int x = int(random(this.width));
+		int y = int(random(this.height));
 		addDroplet(x,y);
+	}
+	public void addRandomDroplet(int x, int y, int radius)
+	{
+		int rx = int(random( max(0,x-radius), min(width,x+radius) ));
+		int ry = int(random( max(0,y-radius), min(width,y+radius) ));
+		addDroplet(rx, ry);
 	}
 }
