@@ -20,12 +20,13 @@ class WaterErosion
 	public int width, height;
 	private ArrayList<Droplet>[][] watermap;
 	private Terrain terrain;
+	private SimulationParameters params;
 	private boolean nextPassFlag;
-	private int simulationStep = 1;
 
-	public WaterErosion(Terrain terrain)
+	public WaterErosion(Terrain terrain, SimulationParameters params)
 	{
 		this.terrain = terrain;
+		this.params = params;
 		width = terrain.getWidth();
 		height = terrain.getHeight();
 		nextPassFlag = false;
@@ -45,7 +46,7 @@ class WaterErosion
 		int destroyedCount = 0;
 		terrain.preStep();
 
-		if (print) println("Doing water simulation step");
+		// if (print) println("Doing water simulation step");
 
 		for (int y=0; y<height; y++)
 		{
@@ -59,11 +60,10 @@ class WaterErosion
 
 		terrain.postStep();
 
-		if (print) println("Finished water simulation step");
+		// if (print) println("Finished water simulation step");
 
-		simulationStep++;
 		nextPassFlag = !nextPassFlag;
-		if (autorun)
+		if (params.autorun)
 		{
 			for (int i=0; i<destroyedCount; i++)
 				addRandomDroplet();
@@ -89,7 +89,7 @@ class WaterErosion
 			}
 			droplets.clear();
 
-			outHeight = constrain(outHeight, 0, MAX_HEIGHT);
+			outHeight = constrain(outHeight, 0, params.MAX_HEIGHT);
 			terrain.setHeightValue(x, y, outHeight);
 			return destroyedCount;
 		}
@@ -118,9 +118,9 @@ class WaterErosion
 		{
 			sedimentExchange = inValue;
 		}
-		if (outValue > MAX_HEIGHT)
+		if (outValue > params.MAX_HEIGHT)
 		{
-			sedimentExchange = MAX_HEIGHT - inValue;
+			sedimentExchange = params.MAX_HEIGHT - inValue;
 		}
 		outValue = inValue;
 		float each = sedimentExchange / size;
@@ -156,16 +156,18 @@ class WaterErosion
 		return destroyedCount;
 	}
 
-	public void draw()
+	public void draw(PGraphics canvas)
 	{
 		// Debug display
+		canvas.fill(0,0,255);
+		canvas.noStroke();
 		for (int y=0; y<height; y++)
 		{
 			for (int x=0; x<width; x++)
 			{
 				if (!watermap[y][x].isEmpty())
 				{
-					rect(x,y, 1,1);
+					canvas.rect(x,y, 1,1);
 				}
 			}
 		}

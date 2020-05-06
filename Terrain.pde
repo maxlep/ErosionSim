@@ -11,9 +11,9 @@ class Terrain
 		this.heightmap = new ValueMap(heightmapImg);
 	}
 
-	public void draw()
+	public void draw(PGraphics canvas)
 	{
-		heightmap.draw();
+		heightmap.draw(canvas);
 	}
 
 	public void preStep()

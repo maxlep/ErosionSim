@@ -1,147 +1,87 @@
-// import gab.opencv.*;
 
-Terrain terrain;
-WaterErosion water;
+import g4p_controls.*;
 
-static String inputHeightmap = "heightmap05.png";
-static float displayScale = 1;
-static int MAX_HEIGHT = 255;
-// Height is treated as an unsigned int so the max this value can be is Integer.toUnsignedLong(-1)
+public SimulationWindow simulation;
+public SimulationParameters global_params;
+public HashMap<String,Gradient> gradientMap;
 
-boolean autorun = false;
-boolean debug = true;
-boolean print = true;
-int mouseMode = 0;
-
-int simulationStep = 0;
-
-void setup()
+void settings()
 {
-	size(500,500);
-	noStroke();
-	fill(0,0,255);
-
-	// Load the initial heightmap
-	String heightmapFile = "Heightmaps/"+inputHeightmap;
-	PImage heightmap = loadImage(heightmapFile);
-	println("Loaded",heightmapFile,"as heightmap. (",heightmap.width,"x",heightmap.height,")");
-
-	// Intialize the terrain and the water map
-	terrain = new Terrain(heightmap);
-	water = new WaterErosion(terrain);
-
-	// Initialize the simulation with some droplets
-	for (int i=0; i<50000; i++)
-	{
-		water.addRandomDroplet();
-	}
+	size(300,500);
+	println(width,height);
 }
 
-void doSimulationStep()
-{
-	if (print) println("----------\nStarting simulation step",simulationStep);
-	water.doSimulationStep();
-	simulationStep++;
-	if (print) println("Finished simulation step");
+void setup()
+{ 
+	global_params = new SimulationParameters();
+	println("setup");
+	loadGradients();
+
+	surface.setLocation(200,200);
+	// setDefaultClosePolicy(this, true);
+
+	// Create the settings window GUI
+	createGUI();
+	// Set some default UI values
+	txtHeightmapPath.setText("Heightmaps/heightmap04.png");
+	// listDisplayGradient.setItems( gradientMap.keySet().toArray(new String[0]), 0 );
+
+	// Launch a simulation window
+	// startSimulation();
 }
 
 void draw()
 {
-	if (autorun) doSimulationStep();
-
-	pushMatrix();
-	scale(displayScale);
-	terrain.draw();
-	if (debug) water.draw();
-	popMatrix();
+  
 }
 
-void mouseClicked()
+public void startSimulation()
 {
-	int terrainX = int(mouseX / displayScale);
-	int terrainY = int(mouseY / displayScale);
-	if (terrainX > terrain.getWidth() || terrainY > terrain.getHeight()) return;
-
-	switch (mouseMode)
-	{
-	case 0: // Modify water sources
-		// for (int i=0; i<1000; i++)
-		// {
-		// 	water.addRandomDroplet(terrainX, terrainY, 30);
-		// }
-		break;
-	case 1: // Modify terrain
-
-		break;
-	case 2: // Read heightmap values
-		int height = terrain.getHeightValue(terrainX, terrainY);
-		println("Clicked",terrainX,"x",terrainY,"y",height,"value");
-		// println("Clicked",terrainX,"x",terrainY,"y",height.toUnsignedString(),"value");
-		break;
-	}
+  try
+  {
+  	readParams();
+  	openSimulationWindow(global_params);
+  } catch(Exception e) {
+    println(e);
+  }
 }
 
-void mouseDragged()
+public void readParams()
 {
-	int terrainX = int(mouseX / displayScale);
-	int terrainY = int(mouseY / displayScale);
-	if (terrainX > terrain.getWidth() || terrainY > terrain.getHeight()) return;
+	//global_params.sourceHeightmapFilename = "heightmap05";
+	global_params.sourceHeightmapPath = txtHeightmapPath.getText();
+	global_params.displayScale = 1;
+	global_params.autorun = false;
 
-	switch (mouseMode)
-	{
-	case 0: // Modify water sources
-		for (int i=0; i<1000; i++)
-		{
-			water.addRandomDroplet(terrainX, terrainY, 30);
-		}
-		break;
-	case 1: // Modify terrain
-
-		break;
-	case 2: // Read heightmap values
-		int height = terrain.getHeightValue(terrainX, terrainY);
-		println("Clicked",terrainX,"x",terrainY,"y",height,"value");
-		// println("Clicked",terrainX,"x",terrainY,"y",height.toUnsignedString(),"value");
-		break;
-	}
+	// Load the initial heightmap
+	//String heightmapFile = "Heightmaps/"+global_params.sourceHeightmapFilename+".png";
+  println("load file", global_params.sourceHeightmapPath);
+	global_params.sourceHeightmap = loadImage(global_params.sourceHeightmapPath);
+  println("load file", global_params.sourceHeightmapPath);
+	global_params.width = global_params.sourceHeightmap.width;
+	global_params.height = global_params.sourceHeightmap.height;
+	//global_params.sourceHeightmap = null;
 }
 
-void keyPressed()
+public void openSimulationWindow(SimulationParameters settings)
 {
-	switch (key)
-	{
-	case 'n':
-		doSimulationStep();
-		break;
-	case 'c':
-		autorun = !autorun;
-		break;
-	case 'r':
-		for (int i=0; i<1000; i++)
-		{
-			water.addRandomDroplet();
-		}
-		break;
-	case 'd':
-		debug = !debug;
-		break;
-	case 'p':
-		print = !print;
-		break;
-	case 's':
-		color[] colors;
-		if (autorun)
-			colors = new color[] { color(0), color(255) };
-		else
-			colors = new color[] { color(0,0,255), color(64,252,255), color(255,240,73), color(255,42,42) };
+	String[] args = {	"--display=1",
+						String.format("--location=%d,%d",500,200),
+						""};//,
+						//"--sketch-path=" + sketchPath};//,
+						// "Projector"};
+	simulation = new SimulationWindow(settings);
+	PApplet.runSketch(args, simulation);
+}
 
-		PImage colored = terrain.getWithGradient(colors);
+public void loadGradients()
+{
+  gradientMap = new HashMap<String,Gradient>();
+ 	color[] colors;
 
-		String filename = inputHeightmap+"_"+simulationStep+".png";
-		String path = "Outputs/" + filename;
+ 	colors = new color[] { color(0), color(255) };
+ 	gradientMap.put( "Grayscale", new Gradient(colors) );
 
-		colored.save(path);
-		println("Saved image", path);
-		break;
-	}
+ 	colors = new color[] { color(0,0,255), color(64,252,255), color(255,240,73), color(255,42,42) };
+ 	gradientMap.put( "Heatmap", new Gradient(colors) );
 }
