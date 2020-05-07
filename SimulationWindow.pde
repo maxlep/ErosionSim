@@ -4,7 +4,7 @@ class SimulationParameters
 	static final int MAX_HEIGHT = 255;
 	// Height is treated as an unsigned int so the max this value can be is Integer.toUnsignedLong(-1)
 
-  public int width, height;
+	public int width, height;
 	public String sourceHeightmapPath;
 	public PImage sourceHeightmap;
 	public int displayScale;

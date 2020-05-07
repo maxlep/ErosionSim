@@ -12,9 +12,8 @@ void settings()
 }
 
 void setup()
-{ 
+{
 	global_params = new SimulationParameters();
-	println("setup");
 	loadGradients();
 
 	surface.setLocation(200,200);
@@ -22,11 +21,12 @@ void setup()
 
 	// Create the settings window GUI
 	createGUI();
+
 	// Set some default UI values
 	txtHeightmapPath.setText("Heightmaps/heightmap04.png");
 	chkWater.setSelected(true);
 	chkWater_clicked(chkWater, GEvent.SELECTED);
-	// listDisplayGradient.setItems( gradientMap.keySet().toArray(new String[0]), 0 );
+	listDisplayGradients.setItems( gradientMap.keySet().toArray(new String[0]), 0 );
 
 	// Launch a simulation window
 	startSimulation();
@@ -44,25 +44,30 @@ public void startSimulation()
 		readParams();
 		openSimulationWindow(global_params);
 	} catch(Exception e) {
-		println(e);
+		e.printStackTrace();
 	}
 }
 
 public void readParams()
 {
-	//global_params.sourceHeightmapFilename = "heightmap05";
-	global_params.sourceHeightmapPath = txtHeightmapPath.getText();
-	global_params.displayScale = 1;
-	global_params.autorun = false;
+	// Set params through GUI events
+	txtHeightmapPath_change(txtHeightmapPath, GEvent.ENTERED);
+	chkWater.setSelected(true);
+	chkWater_clicked(chkWater, GEvent.SELECTED);
+	global_params.autorun = true;			// Set opposite of the desired default
+	btnPlay_click(btnPlay, GEvent.CLICKED);	// ...so this event toggles it.
+	listDisplayGradients_click(listDisplayGradients, GEvent.CLICKED);
 
 	// Load the initial heightmap
-	//String heightmapFile = "Heightmaps/"+global_params.sourceHeightmapFilename+".png";
-	println("load file", global_params.sourceHeightmapPath);
 	global_params.sourceHeightmap = loadImage(global_params.sourceHeightmapPath);
-	println("load file", global_params.sourceHeightmapPath);
 	global_params.width = global_params.sourceHeightmap.width;
 	global_params.height = global_params.sourceHeightmap.height;
-	//global_params.sourceHeightmap = null;
+
+	// Set some other defaults
+	global_params.displayScale = 1;
+	global_params.autorun = false;
+	global_params.print = false;
+	global_params.debug = true;
 }
 
 public void openSimulationWindow(SimulationParameters settings)

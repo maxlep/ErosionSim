@@ -7,8 +7,6 @@ class ValueMap
     private PImage snapshot;
     // The snapshot will be used for reading values, while edits will be applied to the map.
 
-    private Gradient displayGradient = new Gradient( new color[] { color(0), color(255) } );
-
     public ValueMap(PImage map)
     {
         this.height = map.height;
@@ -26,7 +24,7 @@ class ValueMap
 
     public void draw(PGraphics pg)
     {
-        PImage colored = getValuesOnGradient(displayGradient);
+        PImage colored = getValuesOnGradient(global_params.displayGradient);
         pg.image(colored, 0,0);
     }
 

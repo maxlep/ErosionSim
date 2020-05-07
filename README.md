@@ -22,9 +22,12 @@ On linux this is:
 
 ## TODO
 - Add debug window to display information and toggle settings
+    - Finish implementing debug views
+    - Add gray color scheme for disabled buttons
 - Add terrain manipulation tool
 - Add water sources
 - Make simulation droplets normalize to a set amount with no hard limit
+    - Implement droplet count
 - Implement terrain resistance map to mimic different materials
 - Move settings to config file
 - Add a parameter for the number of cycles to run the simulation for

@@ -35,9 +35,12 @@ public void btnPlay_click(GButton source, GEvent event) { //_CODE_:btnPlay:66116
   {
     source.setText("Stop");
     source.setLocalColorScheme(G4P.RED_SCHEME);
+    btnReload.setEnabled(false);
+    // btnReload.setLocalColorScheme();
   } else {
     source.setText("Play");
     source.setLocalColorScheme(G4P.GREEN_SCHEME);
+    btnReload.setEnabled(true);
   }
   
   global_params.autorun = isPlaying;
@@ -62,6 +65,14 @@ public void chkWater_clicked(GCheckbox source, GEvent event) { //_CODE_:chkWater
 
 } //_CODE_:chkWater:767303:
 
+public void listDisplayGradients_click(GDropList source, GEvent event) { //_CODE_:listDisplayGradients:261396:
+  println("listDisplayGradients - GDropList >> GEvent." + event + " @ " + millis());
+
+  String gradientName = source.getSelectedText();
+  global_params.displayGradient = gradientMap.get(gradientName);
+
+} //_CODE_:listDisplayGradients:261396:
+
 public void txtHeightmapPath_change(GTextField source, GEvent event) { //_CODE_:txtHeightmapPath:394852:
   println("txtHeightmapPath - GTextField >> GEvent." + event + " @ " + millis());
 
@@ -84,10 +95,6 @@ public void optMouseTerrain_clicked(GOption source, GEvent event) { //_CODE_:opt
 public void optMouseWater_clicked(GOption source, GEvent event) { //_CODE_:optMouseWater:988387:
   println("optMouseWater - GOption >> GEvent." + event + " @ " + millis());
 } //_CODE_:optMouseWater:988387:
-
-public void listDisplayGradients_click(GDropList source, GEvent event) { //_CODE_:listDisplayGradients:546539:
-  println("listDisplayGradients - GDropList >> GEvent." + event + " @ " + millis());
-} //_CODE_:listDisplayGradients:546539:
 
 
 
@@ -126,11 +133,15 @@ public void createGUI(){
   chkWater.setOpaque(false);
   chkWater.addEventHandler(this, "chkWater_clicked");
   chkWater.setSelected(true);
+  listDisplayGradients = new GDropList(this, 10, 80, 180, 120, 3, 10);
+  listDisplayGradients.setItems(loadStrings("list_261396"), 0);
+  listDisplayGradients.addEventHandler(this, "listDisplayGradients_click");
   pnlControls.addControl(btnReload);
   pnlControls.addControl(btnPlay);
   pnlControls.addControl(btnSave);
   pnlControls.addControl(btnStep);
   pnlControls.addControl(chkWater);
+  pnlControls.addControl(listDisplayGradients);
   pnlSourceHeightmap = new GPanel(this, 0, 0, 300, 70, "Source Heightmap");
   pnlSourceHeightmap.setCollapsible(false);
   pnlSourceHeightmap.setText("Source Heightmap");
@@ -172,9 +183,6 @@ public void createGUI(){
   pnlInfo = new GPanel(this, 0, 380, 300, 120, "Debug Info");
   pnlInfo.setText("Debug Info");
   pnlInfo.setOpaque(true);
-  listDisplayGradients = new GDropList(this, 10, 150, 180, 120, 3, 10);
-  listDisplayGradients.setItems(loadStrings("list_546539"), 0);
-  listDisplayGradients.addEventHandler(this, "listDisplayGradients_click");
 }
 
 // Variable declarations 
@@ -185,6 +193,7 @@ GButton btnPlay;
 GButton btnSave; 
 GButton btnStep; 
 GCheckbox chkWater; 
+GDropList listDisplayGradients; 
 GPanel pnlSourceHeightmap; 
 GTextField txtHeightmapPath; 
 GButton btnHeightmapBrowse; 
@@ -194,4 +203,3 @@ GToggleGroup togGroupMouseMode;
 GOption optMouseTerrain; 
 GOption optMouseWater; 
 GPanel pnlInfo; 
-GDropList listDisplayGradients; 
