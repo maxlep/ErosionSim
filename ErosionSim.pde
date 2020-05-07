@@ -24,26 +24,28 @@ void setup()
 	createGUI();
 	// Set some default UI values
 	txtHeightmapPath.setText("Heightmaps/heightmap04.png");
+	chkWater.setSelected(true);
+	chkWater_clicked(chkWater, GEvent.SELECTED);
 	// listDisplayGradient.setItems( gradientMap.keySet().toArray(new String[0]), 0 );
 
 	// Launch a simulation window
-	// startSimulation();
+	startSimulation();
 }
 
 void draw()
 {
-  
+
 }
 
 public void startSimulation()
 {
-  try
-  {
-  	readParams();
-  	openSimulationWindow(global_params);
-  } catch(Exception e) {
-    println(e);
-  }
+	try
+	{
+		readParams();
+		openSimulationWindow(global_params);
+	} catch(Exception e) {
+		println(e);
+	}
 }
 
 public void readParams()
@@ -55,9 +57,9 @@ public void readParams()
 
 	// Load the initial heightmap
 	//String heightmapFile = "Heightmaps/"+global_params.sourceHeightmapFilename+".png";
-  println("load file", global_params.sourceHeightmapPath);
+	println("load file", global_params.sourceHeightmapPath);
 	global_params.sourceHeightmap = loadImage(global_params.sourceHeightmapPath);
-  println("load file", global_params.sourceHeightmapPath);
+	println("load file", global_params.sourceHeightmapPath);
 	global_params.width = global_params.sourceHeightmap.width;
 	global_params.height = global_params.sourceHeightmap.height;
 	//global_params.sourceHeightmap = null;
@@ -76,12 +78,12 @@ public void openSimulationWindow(SimulationParameters settings)
 
 public void loadGradients()
 {
-  gradientMap = new HashMap<String,Gradient>();
- 	color[] colors;
+	gradientMap = new HashMap<String,Gradient>();
+	color[] colors;
 
- 	colors = new color[] { color(0), color(255) };
- 	gradientMap.put( "Grayscale", new Gradient(colors) );
+	colors = new color[] { color(0), color(255) };
+	gradientMap.put( "Grayscale", new Gradient(colors) );
 
- 	colors = new color[] { color(0,0,255), color(64,252,255), color(255,240,73), color(255,42,42) };
- 	gradientMap.put( "Heatmap", new Gradient(colors) );
+	colors = new color[] { color(0,0,255), color(64,252,255), color(255,240,73), color(255,42,42) };
+	gradientMap.put( "Heatmap", new Gradient(colors) );
 }

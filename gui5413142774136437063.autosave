@@ -50,17 +50,15 @@ public void btnSave_click(GButton source, GEvent event) { //_CODE_:btnSave:96561
 
 public void btnStep_click(GButton source, GEvent event) { //_CODE_:btnStep:679000:
   println("btnStep - GButton >> GEvent." + event + " @ " + millis());
-
-  simulation.doSimulationStep();
-
 } //_CODE_:btnStep:679000:
 
 public void chkWater_clicked(GCheckbox source, GEvent event) { //_CODE_:chkWater:767303:
   println("chkWater - GCheckbox >> GEvent." + event + " @ " + millis());
-
-  global_params.debug = source.isSelected();
-
 } //_CODE_:chkWater:767303:
+
+public void listDisplayGradient_click(GDropList source, GEvent event) { //_CODE_:listDisplayGradient:357402:
+  println("listDisplayGradient - GDropList >> GEvent." + event + " @ " + millis());
+} //_CODE_:listDisplayGradient:357402:
 
 public void txtHeightmapPath_change(GTextField source, GEvent event) { //_CODE_:txtHeightmapPath:394852:
   println("txtHeightmapPath - GTextField >> GEvent." + event + " @ " + millis());
@@ -85,10 +83,6 @@ public void optMouseWater_clicked(GOption source, GEvent event) { //_CODE_:optMo
   println("optMouseWater - GOption >> GEvent." + event + " @ " + millis());
 } //_CODE_:optMouseWater:988387:
 
-public void listDisplayGradients_click(GDropList source, GEvent event) { //_CODE_:listDisplayGradients:546539:
-  println("listDisplayGradients - GDropList >> GEvent." + event + " @ " + millis());
-} //_CODE_:listDisplayGradients:546539:
-
 
 
 // Create all the GUI controls. 
@@ -101,7 +95,7 @@ public void createGUI(){
   G4P.setDisplayFont("Lucida Sans", G4P.PLAIN, 14);
   G4P.setInputFont("Arial", G4P.PLAIN, 14);
   G4P.setSliderFont("Arial", G4P.PLAIN, 11);
-  surface.setTitle("Settings");
+  surface.setTitle("Sketch Window");
   pnlControls = new GPanel(this, 0, 70, 300, 190, "Controls");
   pnlControls.setCollapsible(false);
   pnlControls.setText("Controls");
@@ -126,11 +120,15 @@ public void createGUI(){
   chkWater.setOpaque(false);
   chkWater.addEventHandler(this, "chkWater_clicked");
   chkWater.setSelected(true);
+  listDisplayGradient = new GDropList(this, 10, 80, 180, 120, 3, 10);
+  listDisplayGradient.setItems(loadStrings("list_357402"), 0);
+  listDisplayGradient.addEventHandler(this, "listDisplayGradient_click");
   pnlControls.addControl(btnReload);
   pnlControls.addControl(btnPlay);
   pnlControls.addControl(btnSave);
   pnlControls.addControl(btnStep);
   pnlControls.addControl(chkWater);
+  pnlControls.addControl(listDisplayGradient);
   pnlSourceHeightmap = new GPanel(this, 0, 0, 300, 70, "Source Heightmap");
   pnlSourceHeightmap.setCollapsible(false);
   pnlSourceHeightmap.setText("Source Heightmap");
@@ -172,9 +170,6 @@ public void createGUI(){
   pnlInfo = new GPanel(this, 0, 380, 300, 120, "Debug Info");
   pnlInfo.setText("Debug Info");
   pnlInfo.setOpaque(true);
-  listDisplayGradients = new GDropList(this, 10, 150, 180, 120, 3, 10);
-  listDisplayGradients.setItems(loadStrings("list_546539"), 0);
-  listDisplayGradients.addEventHandler(this, "listDisplayGradients_click");
 }
 
 // Variable declarations 
@@ -185,6 +180,7 @@ GButton btnPlay;
 GButton btnSave; 
 GButton btnStep; 
 GCheckbox chkWater; 
+GDropList listDisplayGradient; 
 GPanel pnlSourceHeightmap; 
 GTextField txtHeightmapPath; 
 GButton btnHeightmapBrowse; 
@@ -194,4 +190,3 @@ GToggleGroup togGroupMouseMode;
 GOption optMouseTerrain; 
 GOption optMouseWater; 
 GPanel pnlInfo; 
-GDropList listDisplayGradients; 
