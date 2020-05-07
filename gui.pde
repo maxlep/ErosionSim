@@ -49,6 +49,9 @@ public void btnPlay_click(GButton source, GEvent event) { //_CODE_:btnPlay:66116
 
 public void btnSave_click(GButton source, GEvent event) { //_CODE_:btnSave:965615:
   println("btnSave - GButton >> GEvent." + event + " @ " + millis());
+
+  simulation.saveSimulationFrame();
+
 } //_CODE_:btnSave:965615:
 
 public void btnStep_click(GButton source, GEvent event) { //_CODE_:btnStep:679000:

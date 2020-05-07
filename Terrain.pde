@@ -79,9 +79,8 @@ class Terrain
 		else return lowestNeighborIndex;
 	}
 
-	public PImage getWithGradient(color[] colors)
+	public PImage getWithGradient(Gradient g)
 	{
-		Gradient g = new Gradient(colors);
 		PImage colored = heightmap.getValuesOnGradient(g);
 		return colored;
 	}

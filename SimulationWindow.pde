@@ -43,11 +43,6 @@ class SimulationWindow extends PApplet
 		surface.setTitle(params.sourceHeightmapPath);
 		// setDefaultClosePolicy(this, true);
 
-		// Load the initial heightmap
-		//params.sourceHeightmap = null;
-		//params.sourceHeightmap = loadImage(params.sourceHeightmapPath);
-		//println("Loaded",params.sourceHeightmapPath,"as heightmap. (",params.sourceHeightmap.width,"x",params.sourceHeightmap.height,")");
-
 		// Intialize the terrain and the water map
 		params.terrain = new Terrain(params.sourceHeightmap);
 		params.water = new WaterErosion(params.terrain, params);
@@ -61,14 +56,6 @@ class SimulationWindow extends PApplet
 		{
 			params.water.addRandomDroplet();
 		}
-
-		// text("Arguments:", 0, 30);
-		// if (args!=null) { //Go through arguments
-		// 	for (int i=0; i<args.length; i++)
-		// 	{
-		// 		text(args[i], 0, 45+15*i);
-		// 	}
-		// }
 	}
 
 	void doSimulationStep()
@@ -104,10 +91,7 @@ class SimulationWindow extends PApplet
 		switch (params.mouseMode)
 		{
 		case 0: // Modify water sources
-			// for (int i=0; i<1000; i++)
-			// {
-			// 	water.addRandomDroplet(terrainX, terrainY, 30);
-			// }
+
 			break;
 		case 1: // Modify terrain
 
@@ -145,6 +129,16 @@ class SimulationWindow extends PApplet
 		}
 	}
 
+	public void saveSimulationFrame()
+	{
+		String filename = params.sourceHeightmapPath+"_"+params.simulationStep+".png";
+		String path = "Outputs/" + filename;
+
+		PImage colored = params.terrain.getWithGradient(params.displayGradient);
+		colored.save(path);
+		println("Saved image", path);
+	}
+
 	void keyPressed()
 	{
 		switch (key)
@@ -168,19 +162,7 @@ class SimulationWindow extends PApplet
 			params.print = !params.print;
 			break;
 		case 's':
-			color[] colors;
-			if (params.autorun)
-				colors = new color[] { color(0), color(255) };
-			else
-				colors = new color[] { color(0,0,255), color(64,252,255), color(255,240,73), color(255,42,42) };
-
-			PImage colored = params.terrain.getWithGradient(colors);
-
-			String filename = params.sourceHeightmapPath+"_"+params.simulationStep+".png";
-			String path = "Outputs/" + filename;
-
-			colored.save(path);
-			println("Saved image", path);
+			saveSimulationFrame();
 			break;
 		}
 	}
