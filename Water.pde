@@ -63,9 +63,11 @@ class WaterErosion
 		// if (print) println("Finished water simulation step");
 
 		nextPassFlag = !nextPassFlag;
+		global_params.dropletCount -= destroyedCount;
 		if (params.autorun)
 		{
-			for (int i=0; i<destroyedCount; i++)
+			int underTarget = global_params.targetDropletCount - global_params.dropletCount;
+			for (int i=0; i<underTarget; i++)
 				addRandomDroplet();
 		}
 	}
@@ -177,6 +179,7 @@ class WaterErosion
 	{
 		Droplet d = new Droplet();
 		watermap[y][x].add(d);
+		global_params.dropletCount++;
 	}
 
 	public void addRandomDroplet()

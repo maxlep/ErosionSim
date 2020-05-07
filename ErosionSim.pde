@@ -16,17 +16,18 @@ void setup()
 	global_params = new SimulationParameters();
 	loadGradients();
 
-	surface.setLocation(200,200);
-	// setDefaultClosePolicy(this, true);
-
 	// Create the settings window GUI
 	createGUI();
+	surface.setLocation(200,200);
+	// setDefaultClosePolicy(this, true);
 
 	// Set some default UI values
 	txtHeightmapPath.setText("Heightmaps/heightmap04.png");
 	chkWater.setSelected(true);
 	chkWater_clicked(chkWater, GEvent.SELECTED);
 	listDisplayGradients.setItems( gradientMap.keySet().toArray(new String[0]), 0 );
+	
+	global_params.targetDropletCount = 30000;
 
 	// Launch a simulation window
 	startSimulation();
@@ -34,7 +35,7 @@ void setup()
 
 void draw()
 {
-
+	// Need to have this function for GUI to draw
 }
 
 public void startSimulation()
@@ -65,6 +66,7 @@ public void readParams()
 
 	// Set some other defaults
 	global_params.displayScale = 1;
+	global_params.dropletCount = 0;
 	global_params.autorun = false;
 	global_params.print = false;
 	global_params.debug = true;

@@ -14,6 +14,7 @@ class SimulationParameters
 	public boolean debug;
 	public boolean print;
 	public int mouseMode;
+	public int targetDropletCount, dropletCount;
 
 	// data
 	public Terrain terrain;
@@ -143,26 +144,8 @@ class SimulationWindow extends PApplet
 	{
 		switch (key)
 		{
-		case 'n':
-			doSimulationStep();
-			break;
-		case 'c':
-			params.autorun = !params.autorun;
-			break;
-		case 'r':
-			for (int i=0; i<1000; i++)
-			{
-				params.water.addRandomDroplet();
-			}
-			break;
-		case 'd':
-			params.debug = !params.debug;
-			break;
 		case 'p':
 			params.print = !params.print;
-			break;
-		case 's':
-			saveSimulationFrame();
 			break;
 		}
 	}
