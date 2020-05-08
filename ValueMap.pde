@@ -78,9 +78,8 @@ class ValueMap
 		map.pixels[index] = value;
 	}
 
-	public void applyBrush(int x, int y, ValueBrush brush)
+	public void applyBrush(int x, int y, ValueBrush brush, boolean erase)
 	{
-		println("Apply brush");
 		// loadPixels();
 		int sqrRadius = brush.radius * brush.radius;
 		for (int yy=y-brush.radius; yy<y+brush.radius; yy++)
@@ -96,7 +95,8 @@ class ValueMap
 					int i = yy * width + xx;
 					float pct = (float)sqrDistance / sqrRadius;
 					float brushEffect = 1 - (float)Math.pow(pct, brush.hardness * 10);
-					map.pixels[i] += brush.value * brushEffect;
+					int sign = erase ? -1 : 1;
+					map.pixels[i] += brush.value * brushEffect * sign;
 					map.pixels[i] = constrain(map.pixels[i], 0,maxValue);
 				}
 			}

@@ -53,29 +53,37 @@ class SimulationWindow extends PApplet
 		// PImage testImg = data.water.waterSources.getValuesOnGradient(settings.displayGradient);
 		// pg.image(testImg, 0,0);
 
+		// Draw brush cursor
+		pg.noFill();
+		pg.stroke(0,255,0);
+		pg.ellipseMode(RADIUS);
+		// TODO take radius from GUI
+		pg.ellipse(mouseX,mouseY, settings.terrainBrush.radius,settings.terrainBrush.radius);
+
 		// pg.popMatrix();
 		pg.endDraw();
 
 		image(pg, 0,0);
 	}
 
-	ValueBrush test = new ValueBrush(100, 1f, 1);
 	void mouseClicked()
 	{
 		if (mouseX > settings.getWidth() || mouseY > settings.getHeight()) return;
 
 		switch (settings.mouseMode)
 		{
-		case 0: // Modify water sources
+		case WATERSOURCE: // Modify water sources
 
 			break;
-		case 1: // Modify terrain
-
+		case HEIGHT: // Modify terrain
 			break;
-		case 2: // Read heightmap values
+		case ROCK: // Read heightmap values
 			int height = data.terrain.getHeightValue(mouseX, mouseY);
 			println("Clicked",mouseX,"x",mouseY,"y",height,"value");
 			// println("Clicked",terrainX,"x",terrainY,"y",height.toUnsignedString(),"value");
+			break;
+		case DEBUG:
+
 			break;
 		}
 	}
@@ -84,22 +92,26 @@ class SimulationWindow extends PApplet
 	{
 		if (mouseX > settings.getWidth() || mouseY > settings.getHeight()) return;
 
+		boolean rightClick = (mouseButton == RIGHT);
 		switch (settings.mouseMode)
 		{
-		case 0: // Modify water sources
+		case WATERSOURCE: // Modify water sources
 			// for (int i=0; i<1000; i++)
 			// {
 			// 	data.water.addRandomDroplet(mouseX, mouseY, 30);
 			// }
-			data.water.waterSources.applyBrush(mouseX, mouseY, test);
+			data.water.waterSources.applyBrush(mouseX, mouseY, settings.waterBrush, rightClick);
 			break;
-		case 1: // Modify terrain
-
+		case HEIGHT: // Modify terrain
+			data.terrain.heightmap.applyBrush(mouseX, mouseY, settings.terrainBrush, rightClick);
 			break;
-		case 2: // Read heightmap values
+		case ROCK: // Read heightmap values
 			int height = data.terrain.getHeightValue(mouseX, mouseY);
 			println("Clicked",mouseX,"x",mouseY,"y",height,"value");
 			// println("Clicked",terrainX,"x",terrainY,"y",height.toUnsignedString(),"value");
+			break;
+		case DEBUG:
+
 			break;
 		}
 	}

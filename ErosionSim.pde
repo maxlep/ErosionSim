@@ -41,6 +41,7 @@ public void startSimulation()
 	}
 }
 
+// Sets GUI defaults and populates the SimulationSettings with initial values
 public void setGUIdefaults()
 {
 	txtHeightmapPath.setText("Heightmaps/heightmap04.png");
@@ -54,6 +55,12 @@ public void setGUIdefaults()
 
 	// TODO add droplet limit GUI
 	settingsInstance.dropletSoftLimit = 50000;
+
+	// TODO connect mouse mode GUI
+	settingsInstance.waterBrush = new ValueBrush(80, 1f, 1);
+	settingsInstance.terrainBrush = new ValueBrush(80, 0.2f, 2);
+	settingsInstance.resistanceBrush = new ValueBrush(80, 1f, 1);
+	settingsInstance.mouseMode = MouseMode.HEIGHT;
 }
 
 public void resetGUI()

@@ -13,7 +13,11 @@ class SimulationSettings
 	public boolean showWater;
 	public boolean logToConsole;
 
-	public int mouseMode;
+	public MouseMode mouseMode;
+	public ValueBrush waterBrush;
+	public ValueBrush terrainBrush;
+	public ValueBrush resistanceBrush;
+
 	public int dropletSoftLimit;
 
 	public Gradient displayGradient;
@@ -62,4 +66,12 @@ class SimulationData
 	}
 
 	public int getSimulationStep() { return simulationStep; }
+}
+
+public enum MouseMode
+{
+	WATERSOURCE,
+	HEIGHT,
+	ROCK,
+	DEBUG
 }

@@ -92,10 +92,16 @@ public void btnHeightmapBrowse_click(GButton source, GEvent event) { //_CODE_:bt
 
 public void optMouseTerrain_clicked(GOption source, GEvent event) { //_CODE_:optMouseTerrain:370312:
   println("optMouseTerrain - GOption >> GEvent." + event + " @ " + millis());
+
+  settingsInstance.mouseMode = MouseMode.HEIGHT;
+
 } //_CODE_:optMouseTerrain:370312:
 
 public void optMouseWater_clicked(GOption source, GEvent event) { //_CODE_:optMouseWater:988387:
   println("optMouseWater - GOption >> GEvent." + event + " @ " + millis());
+
+  settingsInstance.mouseMode = MouseMode.WATERSOURCE;
+
 } //_CODE_:optMouseWater:988387:
 
 
