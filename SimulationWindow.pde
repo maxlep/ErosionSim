@@ -114,6 +114,12 @@ class SimulationWindow extends PApplet
 		}
 	}
 
+	void mouseWheel(MouseEvent event)
+	{
+		int currentBrushSize = sliderBrushRadius.getValueI();
+		sliderBrushRadius.setValue( currentBrushSize - event.getCount()*10 );
+	}
+
 	public void saveSimulationFrame()
 	{
 		String filename = String.format("%s_%d.png", settings.getSourceHeightmapFilename(), data.getSimulationStep());
