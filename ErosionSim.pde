@@ -68,12 +68,14 @@ public void setGUIdefaults()
 	// TODO add droplet limit GUI
 	settingsInstance.dropletSoftLimit = 50000;
 
-	// TODO connect mouse mode GUI
 	settingsInstance.waterBrush = new ValueBrush(80, 1f, 1);
 	settingsInstance.terrainBrush = new ValueBrush(80, 0.2f, 2);
 	settingsInstance.resistanceBrush = new ValueBrush(80, 1f, 1);
 	optMouseTerrain.setSelected(true);
 	optMouseTerrain_clicked(optMouseTerrain, GEvent.SELECTED);
+
+	// TODO connect display scale to GUI
+	settingsInstance.displayScale = 2;
 }
 
 public void loadBrushSettings()

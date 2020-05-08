@@ -11,7 +11,8 @@ class SimulationWindow extends PApplet
 
 	void settings()
 	{
-		size(settings.getWidth(), settings.getHeight());
+		size(settings.getDisplayWidth(), settings.getDisplayHeight());
+		println(settings.getDisplayWidth(), settings.getDisplayHeight());
 	}
 
 	void setup()
@@ -42,31 +43,31 @@ class SimulationWindow extends PApplet
 
 		PGraphics pg = data.canvas;
 		pg.beginDraw();
-		// pg.pushMatrix();
-		// pg.scale(2);
 
 		data.terrain.draw(pg, settings.displayGradient);
 		if (settings.showWater) data.water.draw(pg);
 
-		// PImage testImg = data.water.waterSources.getValuesOnGradient(settings.displayGradient);
-		// pg.image(testImg, 0,0);
-
-		// Draw brush cursor
-		pg.noFill();
-		pg.stroke(0,255,0);
-		pg.ellipseMode(RADIUS);
-		// TODO take radius from GUI
-		pg.ellipse(mouseX,mouseY, settings.activeBrush.getRadius(),settings.activeBrush.getRadius());
-
-		// pg.popMatrix();
 		pg.endDraw();
 
+		pushMatrix();
+		scale(settings.displayScale);
 		image(pg, 0,0);
+		popMatrix();
+
+		// Draw brush cursor
+		noFill();
+		stroke(0,255,0);
+		ellipseMode(RADIUS);
+		// TODO take radius from GUI
+		int radius = settings.activeBrush.getRadius() * settings.displayScale;
+		ellipse(mouseX,mouseY, radius,radius);
 	}
 
 	void mouseClicked()
 	{
-		if (mouseX > settings.getWidth() || mouseY > settings.getHeight()) return;
+		int scaledX = mouseX / settings.displayScale;
+		int scaledY = mouseY / settings.displayScale;
+		if (scaledX > settings.getWidth() || scaledY > settings.getHeight()) return;
 
 		switch (settings.getMouseMode())
 		{
@@ -76,9 +77,9 @@ class SimulationWindow extends PApplet
 		case HEIGHT: // Modify terrain
 			break;
 		case ROCK: // Read heightmap values
-			int height = data.terrain.getHeightValue(mouseX, mouseY);
-			println("Clicked",mouseX,"x",mouseY,"y",height,"value");
-			// println("Clicked",terrainX,"x",terrainY,"y",height.toUnsignedString(),"value");
+			int height = data.terrain.getHeightValue(scaledX, scaledY);
+			println("Clicked",scaledX,"x",scaledY,"y",height,"value");
+			// println("Clicked",scaledX,"x",scaledY,"y",height.toUnsignedString(),"value");
 			break;
 		case DEBUG:
 
@@ -88,7 +89,9 @@ class SimulationWindow extends PApplet
 
 	void mouseDragged()
 	{
-		if (mouseX > settings.getWidth() || mouseY > settings.getHeight()) return;
+		int scaledX = mouseX / settings.displayScale;
+		int scaledY = mouseY / settings.displayScale;
+		if (scaledX > settings.getWidth() || scaledY > settings.getHeight()) return;
 
 		boolean rightClick = (mouseButton == RIGHT);
 		switch (settings.getMouseMode())
@@ -96,17 +99,17 @@ class SimulationWindow extends PApplet
 		case WATERSOURCE: // Modify water sources
 			// for (int i=0; i<1000; i++)
 			// {
-			// 	data.water.addRandomDroplet(mouseX, mouseY, 30);
+			// 	data.water.addRandomDroplet(scaledX, scaledY, 30);
 			// }
-			data.water.waterSources.applyBrush(mouseX, mouseY, settings.waterBrush, rightClick);
+			data.water.waterSources.applyBrush(scaledX, scaledY, settings.waterBrush, rightClick);
 			break;
 		case HEIGHT: // Modify terrain
-			data.terrain.heightmap.applyBrush(mouseX, mouseY, settings.terrainBrush, rightClick);
+			data.terrain.heightmap.applyBrush(scaledX, scaledY, settings.terrainBrush, rightClick);
 			break;
 		case ROCK: // Read heightmap values
-			int height = data.terrain.getHeightValue(mouseX, mouseY);
-			println("Clicked",mouseX,"x",mouseY,"y",height,"value");
-			// println("Clicked",terrainX,"x",terrainY,"y",height.toUnsignedString(),"value");
+			int height = data.terrain.getHeightValue(scaledX, scaledY);
+			println("Clicked",scaledX,"x",scaledY,"y",height,"value");
+			// println("Clicked",scaledX,"x",scaledY,"y",height.toUnsignedString(),"value");
 			break;
 		case DEBUG:
 

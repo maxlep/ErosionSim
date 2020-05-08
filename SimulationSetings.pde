@@ -22,6 +22,7 @@ class SimulationSettings
 	public int dropletSoftLimit;
 
 	public Gradient displayGradient;
+	public int displayScale;
 
 	private String sourceHeightmapPath;
 	private String sourceHeightmapFilename;
@@ -32,6 +33,8 @@ class SimulationSettings
 	public PImage getSourceHeightmap() { return sourceHeightmap; }
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
+	public int getDisplayWidth() { return width * displayScale; }
+	public int getDisplayHeight() { return height * displayScale; }
 
 	public void setSourceHeightmap(String sourceHeightmapPath)
 	{
