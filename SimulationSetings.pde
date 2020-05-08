@@ -13,7 +13,8 @@ class SimulationSettings
 	public boolean showWater;
 	public boolean logToConsole;
 
-	public MouseMode mouseMode;
+	private MouseMode mouseMode;
+	public ValueBrush activeBrush;	// Just a pointer to the brush for the current mode
 	public ValueBrush waterBrush;
 	public ValueBrush terrainBrush;
 	public ValueBrush resistanceBrush;
@@ -46,6 +47,29 @@ class SimulationSettings
 
 		println(width, height);
 	}
+
+	public MouseMode getMouseMode() { return mouseMode; }
+
+	public void setMouseMode(MouseMode mode)
+	{
+		mouseMode = mode;
+		switch(mouseMode)
+		{
+			case WATERSOURCE:
+				activeBrush = waterBrush;
+				break;
+			case HEIGHT:
+				activeBrush = terrainBrush;
+				break;
+			case ROCK:
+				activeBrush = resistanceBrush;
+				break;
+			case DEBUG:
+				// TODO add debug brush?
+				activeBrush = terrainBrush;
+				break;
+		}
+	}
 }
 
 class SimulationData
@@ -57,16 +81,35 @@ class SimulationData
 	private int simulationStep;
 	private int dropletCount;
 
+	private int stepsInLastSec;
+	private int stepsCountEndTime;
+	private int lastStepRate;
+
 	public SimulationData(SimulationSettings settings)
 	{
 		terrain = new Terrain(settings.getSourceHeightmap());
 		water = new WaterErosion(settings, this);
 		canvas = createGraphics(settings.getWidth(), settings.getHeight());
 		simulationStep = 0;
+		stepsCountEndTime = millis() + 1000;
+		lastStepRate = 0;
 	}
 
 	public int getSimulationStep() { return simulationStep; }
+	public int getLastStepRate() { return lastStepRate; }
 	public int getDropletCount() { return dropletCount; }
+	
+	public void incrementSimulationStep()
+	{
+		if (stepsCountEndTime <= millis())
+		{
+			stepsCountEndTime = millis() + 1000;
+			lastStepRate = stepsInLastSec;
+			stepsInLastSec = 0;
+		}
+		simulationStep++;
+		stepsInLastSec++;
+	}
 }
 
 public enum MouseMode

@@ -32,7 +32,13 @@ void draw()
 	// Update GUI displays
 	if (activeSimulation != null && activeSimulation.data != null)
 	{
-		lblDropletCount.setText( Integer.toString( activeSimulation.data.getDropletCount() ) );
+		valStepCount.setText( Integer.toString( activeSimulation.data.getSimulationStep() ) );
+		valDropletCount.setText( Integer.toString( activeSimulation.data.getDropletCount() ) );
+
+		if (activeSimulation.settings.running)
+			valStepRate.setText( Integer.toString( activeSimulation.data.getLastStepRate() ) );
+		else
+			valStepRate.setText("#");
 	}
 }
 
@@ -66,7 +72,15 @@ public void setGUIdefaults()
 	settingsInstance.waterBrush = new ValueBrush(80, 1f, 1);
 	settingsInstance.terrainBrush = new ValueBrush(80, 0.2f, 2);
 	settingsInstance.resistanceBrush = new ValueBrush(80, 1f, 1);
-	settingsInstance.mouseMode = MouseMode.HEIGHT;
+	optMouseTerrain.setSelected(true);
+	optMouseTerrain_clicked(optMouseTerrain, GEvent.SELECTED);
+}
+
+public void loadBrushSettings()
+{
+	ValueBrush b = settingsInstance.activeBrush;
+	sliderBrushRadius.setValue( b.getRadius() );
+	sliderBrushHardness.setValue( b.getHardness() );
 }
 
 public void resetGUI()

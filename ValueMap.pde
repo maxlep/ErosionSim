@@ -140,10 +140,12 @@ class ValueBrush
 	{
 		this.radius = radius;
 		this.size = 2 * radius + 1;
+
+		brushMask = new int[size][size];
 		recalculateMask();
 	}
 
-	public void setHardness(int hardness)
+	public void setHardness(float hardness)
 	{
 		this.hardness = hardness;
 		recalculateMask();
@@ -162,9 +164,9 @@ class ValueBrush
 
 	private void recalculateMask()
 	{
-		int size = 2*radius + 1;
 		int sqrRadius = radius * radius;
 		PVector center = new PVector(radius, radius);
+		
 		for (int y=0; y<size; y++)
 		{
 			for (int x=0; x<2*radius; x++)

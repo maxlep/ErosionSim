@@ -93,20 +93,32 @@ public void btnHeightmapBrowse_click(GButton source, GEvent event) { //_CODE_:bt
 public void optMouseTerrain_clicked(GOption source, GEvent event) { //_CODE_:optMouseTerrain:370312:
   println("optMouseTerrain - GOption >> GEvent." + event + " @ " + millis());
 
-  settingsInstance.mouseMode = MouseMode.HEIGHT;
+  settingsInstance.setMouseMode(MouseMode.HEIGHT);
+  loadBrushSettings();
 
 } //_CODE_:optMouseTerrain:370312:
 
 public void optMouseWater_clicked(GOption source, GEvent event) { //_CODE_:optMouseWater:988387:
   println("optMouseWater - GOption >> GEvent." + event + " @ " + millis());
 
-  settingsInstance.mouseMode = MouseMode.WATERSOURCE;
+  settingsInstance.setMouseMode(MouseMode.WATERSOURCE);
+  loadBrushSettings();
 
 } //_CODE_:optMouseWater:988387:
 
 public void sliderBrushRadius_change(GSlider source, GEvent event) { //_CODE_:sliderBrushRadius:748696:
   println("sliderBrushRadius - GSlider >> GEvent." + event + " @ " + millis());
+
+  settingsInstance.activeBrush.setRadius( source.getValueI() );
+
 } //_CODE_:sliderBrushRadius:748696:
+
+public void sliderBrushHardness_change(GSlider source, GEvent event) { //_CODE_:sliderBrushHardness:774342:
+  println("sliderBrushHardness - GSlider >> GEvent." + event + " @ " + millis());
+
+  settingsInstance.activeBrush.setHardness( source.getValueF() );
+
+} //_CODE_:sliderBrushHardness:774342:
 
 
 
@@ -167,7 +179,7 @@ public void createGUI(){
   btnHeightmapBrowse.addEventHandler(this, "btnHeightmapBrowse_click");
   pnlSourceHeightmap.addControl(txtHeightmapPath);
   pnlSourceHeightmap.addControl(btnHeightmapBrowse);
-  pnlTools = new GPanel(this, 0, 220, 300, 160, "Tools");
+  pnlTools = new GPanel(this, 0, 220, 300, 190, "Tools");
   pnlTools.setCollapsible(false);
   pnlTools.setText("Tools");
   pnlTools.setOpaque(true);
@@ -193,27 +205,54 @@ public void createGUI(){
   pnlTools.addControl(optMouseWater);
   sliderBrushRadius = new GSlider(this, 10, 80, 280, 50, 10.0);
   sliderBrushRadius.setShowValue(true);
-  sliderBrushRadius.setLimits(50, 1, 300);
+  sliderBrushRadius.setLimits(50, 1, 500);
   sliderBrushRadius.setNbrTicks(300);
   sliderBrushRadius.setStickToTicks(true);
   sliderBrushRadius.setNumberFormat(G4P.INTEGER, 0);
   sliderBrushRadius.setOpaque(false);
   sliderBrushRadius.addEventHandler(this, "sliderBrushRadius_change");
+  sliderBrushHardness = new GSlider(this, 10, 120, 280, 50, 10.0);
+  sliderBrushHardness.setShowValue(true);
+  sliderBrushHardness.setLimits(1.0, 0.0, 1.0);
+  sliderBrushHardness.setNumberFormat(G4P.DECIMAL, 2);
+  sliderBrushHardness.setOpaque(false);
+  sliderBrushHardness.addEventHandler(this, "sliderBrushHardness_change");
   pnlTools.addControl(lblMouseMode);
   pnlTools.addControl(sliderBrushRadius);
-  pnlInfo = new GPanel(this, 0, 400, 300, 90, "Debug Info");
+  pnlTools.addControl(sliderBrushHardness);
+  pnlInfo = new GPanel(this, 0, 410, 300, 90, "Debug Info");
   pnlInfo.setText("Debug Info");
   pnlInfo.setOpaque(true);
-  lblDroplets = new GLabel(this, 10, 30, 70, 20);
-  lblDroplets.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  lblDroplets.setText("Droplets:");
-  lblDroplets.setOpaque(false);
-  lblDropletCount = new GLabel(this, 80, 30, 60, 20);
-  lblDropletCount.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  lblDropletCount.setText("#");
+  lblDropletCount = new GLabel(this, 0, 40, 70, 20);
+  lblDropletCount.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lblDropletCount.setText("Droplets:");
   lblDropletCount.setOpaque(false);
-  pnlInfo.addControl(lblDroplets);
+  valDropletCount = new GLabel(this, 70, 40, 60, 20);
+  valDropletCount.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  valDropletCount.setText("#");
+  valDropletCount.setOpaque(false);
+  lblStepCount = new GLabel(this, 0, 20, 70, 20);
+  lblStepCount.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lblStepCount.setText("Steps:");
+  lblStepCount.setOpaque(false);
+  valStepCount = new GLabel(this, 70, 20, 60, 20);
+  valStepCount.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  valStepCount.setText("#");
+  valStepCount.setOpaque(false);
+  lblStepRate = new GLabel(this, 140, 20, 80, 20);
+  lblStepRate.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lblStepRate.setText("Steps/sec:");
+  lblStepRate.setOpaque(false);
+  valStepRate = new GLabel(this, 220, 20, 60, 20);
+  valStepRate.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  valStepRate.setText("#");
+  valStepRate.setOpaque(false);
   pnlInfo.addControl(lblDropletCount);
+  pnlInfo.addControl(valDropletCount);
+  pnlInfo.addControl(lblStepCount);
+  pnlInfo.addControl(valStepCount);
+  pnlInfo.addControl(lblStepRate);
+  pnlInfo.addControl(valStepRate);
 }
 
 // Variable declarations 
@@ -234,6 +273,11 @@ GToggleGroup togGroupMouseMode;
 GOption optMouseTerrain; 
 GOption optMouseWater; 
 GSlider sliderBrushRadius; 
+GSlider sliderBrushHardness; 
 GPanel pnlInfo; 
-GLabel lblDroplets; 
 GLabel lblDropletCount; 
+GLabel valDropletCount; 
+GLabel lblStepCount; 
+GLabel valStepCount; 
+GLabel lblStepRate; 
+GLabel valStepRate; 

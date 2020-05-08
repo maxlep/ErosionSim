@@ -30,9 +30,9 @@ class SimulationWindow extends PApplet
 
 	void doSimulationStep()
 	{
-		if (settings.logToConsole) println("----------\nStarting simulation step",data.simulationStep);
+		if (settings.logToConsole) println("----------\nStarting simulation step",data.getSimulationStep());
 		data.water.doSimulationStep();
-		data.simulationStep++;
+		data.incrementSimulationStep();
 		if (settings.logToConsole) println("Finished simulation step");
 	}
 
@@ -56,7 +56,7 @@ class SimulationWindow extends PApplet
 		pg.stroke(0,255,0);
 		pg.ellipseMode(RADIUS);
 		// TODO take radius from GUI
-		pg.ellipse(mouseX,mouseY, settings.terrainBrush.radius,settings.terrainBrush.radius);
+		pg.ellipse(mouseX,mouseY, settings.activeBrush.getRadius(),settings.activeBrush.getRadius());
 
 		// pg.popMatrix();
 		pg.endDraw();
@@ -68,7 +68,7 @@ class SimulationWindow extends PApplet
 	{
 		if (mouseX > settings.getWidth() || mouseY > settings.getHeight()) return;
 
-		switch (settings.mouseMode)
+		switch (settings.getMouseMode())
 		{
 		case WATERSOURCE: // Modify water sources
 
@@ -91,7 +91,7 @@ class SimulationWindow extends PApplet
 		if (mouseX > settings.getWidth() || mouseY > settings.getHeight()) return;
 
 		boolean rightClick = (mouseButton == RIGHT);
-		switch (settings.mouseMode)
+		switch (settings.getMouseMode())
 		{
 		case WATERSOURCE: // Modify water sources
 			// for (int i=0; i<1000; i++)
