@@ -58,9 +58,18 @@ class SimulationWindow extends PApplet
 		noFill();
 		stroke(0,255,0);
 		ellipseMode(RADIUS);
-		// TODO take radius from GUI
 		int radius = settings.activeBrush.getRadius() * settings.displayScale;
 		ellipse(mouseX,mouseY, radius,radius);
+
+		// Update some GUI debug values
+		int scaledX = mouseX / activeSimulation.settings.displayScale;
+		int scaledY = mouseY / activeSimulation.settings.displayScale;
+		if (scaledX > 0 && scaledX < settings.width &&
+			scaledY > 0 && scaledY < settings.height)
+		{
+			valMousePos.setText( String.format("%d, %d", scaledX,scaledY) );
+			valHeight.setText( Integer.toString( data.terrain.getHeightValue(scaledX,scaledY) ) );
+		}
 	}
 
 	void mouseClicked()

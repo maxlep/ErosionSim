@@ -75,7 +75,7 @@ public void setGUIdefaults()
 	optMouseTerrain_clicked(optMouseTerrain, GEvent.SELECTED);
 
 	// TODO connect display scale to GUI
-	settingsInstance.displayScale = 2;
+	settingsInstance.displayScale = 1;
 }
 
 public void loadBrushSettings()
