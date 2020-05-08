@@ -66,6 +66,7 @@ class SimulationData
 	}
 
 	public int getSimulationStep() { return simulationStep; }
+	public int getDropletCount() { return dropletCount; }
 }
 
 public enum MouseMode

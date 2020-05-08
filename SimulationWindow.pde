@@ -16,8 +16,6 @@ class SimulationWindow extends PApplet
 
 	void setup()
 	{
-		noStroke();
-		fill(0,0,255);
 		surface.setTitle( settings.getSourceHeightmapFilename() );
 		// setDefaultClosePolicy(this, true);
 

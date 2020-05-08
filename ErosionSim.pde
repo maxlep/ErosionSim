@@ -28,6 +28,12 @@ void setup()
 void draw()
 {
 	// Need to have this function for GUI to draw
+
+	// Update GUI displays
+	if (activeSimulation != null && activeSimulation.data != null)
+	{
+		lblDropletCount.setText( Integer.toString( activeSimulation.data.getDropletCount() ) );
+	}
 }
 
 public void startSimulation()

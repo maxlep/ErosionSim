@@ -81,24 +81,23 @@ class ValueMap
 	public void applyBrush(int x, int y, ValueBrush brush, boolean erase)
 	{
 		// loadPixels();
-		int sqrRadius = brush.radius * brush.radius;
-		for (int yy=y-brush.radius; yy<y+brush.radius; yy++)
+		int x0 = x - brush.getRadius();
+		int y0 = y - brush.getRadius();
+		for (int iy=0; iy<brush.getSize(); iy++)
 		{
+			int yy = y0 + iy;
 			if (yy < 0 || yy >= height) continue;
-			for (int xx=x-brush.radius; xx<x+brush.radius; xx++)
+			for (int ix=0; ix<brush.getSize(); ix++)
 			{
+				int xx = x0 + ix;
 				if (xx < 0 || xx >= width) continue;
 
-				double sqrDistance = Math.pow(xx - x, 2) + Math.pow(yy - y, 2);
-				if (sqrDistance <= sqrRadius)
-				{
-					int i = yy * width + xx;
-					float pct = (float)sqrDistance / sqrRadius;
-					float brushEffect = 1 - (float)Math.pow(pct, brush.hardness * 10);
-					int sign = erase ? -1 : 1;
-					map.pixels[i] += brush.value * brushEffect * sign;
-					map.pixels[i] = constrain(map.pixels[i], 0,maxValue);
-				}
+				float brushEffect = brush.getMaskValue(ix, iy);
+				int sign = erase ? -1 : 1;
+
+				int i = yy * width + xx;
+				map.pixels[i] += brushEffect * sign;
+				map.pixels[i] = constrain(map.pixels[i], 0,maxValue);
 			}
 		}
 		// updatePixels();
@@ -116,14 +115,69 @@ class ValueMap
 
 class ValueBrush
 {
-	public int radius;
-	public float hardness;
-	public int value;
+	private int radius;
+	private int size;
+	private float hardness;
+	private int value;
+	private int[][] brushMask;
 
 	public ValueBrush(int radius, float hardness, int value)
 	{
 		this.radius = radius;
+		this.size = 2 * radius + 1;
 		this.hardness = hardness;
 		this.value = value;
+		brushMask = new int[size][size];
+		recalculateMask();
+	}
+
+	public int getRadius() { return radius; }
+	public int getSize() { return size; }
+	public float getHardness() { return hardness; }
+	public int getValue() { return value; }
+
+	public void setRadius(int radius)
+	{
+		this.radius = radius;
+		this.size = 2 * radius + 1;
+		recalculateMask();
+	}
+
+	public void setHardness(int hardness)
+	{
+		this.hardness = hardness;
+		recalculateMask();
+	}
+
+	public void setMultiplier(int value)
+	{
+		this.value = value;
+		recalculateMask();
+	}
+
+	public int getMaskValue(int x, int y)
+	{
+		return brushMask[y][x];
+	}
+
+	private void recalculateMask()
+	{
+		int size = 2*radius + 1;
+		int sqrRadius = radius * radius;
+		PVector center = new PVector(radius, radius);
+		for (int y=0; y<size; y++)
+		{
+			for (int x=0; x<2*radius; x++)
+			{
+				double sqrDistance = Math.pow(x - center.x, 2) + Math.pow(y - center.y, 2);
+				if (sqrDistance <= sqrRadius)
+				{
+					float pct = (float)sqrDistance / sqrRadius;
+					float brushEffect = 1 - (float)Math.pow(pct, hardness * 10);
+
+					brushMask[y][x] = (int)(value * brushEffect);
+				}
+			}
+		}
 	}
 }

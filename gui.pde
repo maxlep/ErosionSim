@@ -104,6 +104,10 @@ public void optMouseWater_clicked(GOption source, GEvent event) { //_CODE_:optMo
 
 } //_CODE_:optMouseWater:988387:
 
+public void sliderBrushRadius_change(GSlider source, GEvent event) { //_CODE_:sliderBrushRadius:748696:
+  println("sliderBrushRadius - GSlider >> GEvent." + event + " @ " + millis());
+} //_CODE_:sliderBrushRadius:748696:
+
 
 
 // Create all the GUI controls. 
@@ -117,7 +121,7 @@ public void createGUI(){
   G4P.setInputFont("Arial", G4P.PLAIN, 14);
   G4P.setSliderFont("Arial", G4P.PLAIN, 11);
   surface.setTitle("Settings");
-  pnlControls = new GPanel(this, 0, 70, 300, 190, "Controls");
+  pnlControls = new GPanel(this, 0, 70, 300, 150, "Controls");
   pnlControls.setCollapsible(false);
   pnlControls.setText("Controls");
   pnlControls.setOpaque(true);
@@ -163,11 +167,11 @@ public void createGUI(){
   btnHeightmapBrowse.addEventHandler(this, "btnHeightmapBrowse_click");
   pnlSourceHeightmap.addControl(txtHeightmapPath);
   pnlSourceHeightmap.addControl(btnHeightmapBrowse);
-  pnlTools = new GPanel(this, 0, 260, 300, 120, "Tools");
+  pnlTools = new GPanel(this, 0, 220, 300, 160, "Tools");
   pnlTools.setCollapsible(false);
   pnlTools.setText("Tools");
   pnlTools.setOpaque(true);
-  lblMouseMode = new GLabel(this, 10, 30, 80, 20);
+  lblMouseMode = new GLabel(this, 10, 30, 86, 20);
   lblMouseMode.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lblMouseMode.setText("Mouse tool");
   lblMouseMode.setOpaque(false);
@@ -177,7 +181,7 @@ public void createGUI(){
   optMouseTerrain.setText("Terrain");
   optMouseTerrain.setOpaque(false);
   optMouseTerrain.addEventHandler(this, "optMouseTerrain_clicked");
-  optMouseWater = new GOption(this, 90, 50, 120, 20);
+  optMouseWater = new GOption(this, 90, 50, 113, 20);
   optMouseWater.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
   optMouseWater.setText("Water source");
   optMouseWater.setOpaque(false);
@@ -187,10 +191,29 @@ public void createGUI(){
   pnlTools.addControl(optMouseTerrain);
   togGroupMouseMode.addControl(optMouseWater);
   pnlTools.addControl(optMouseWater);
+  sliderBrushRadius = new GSlider(this, 10, 80, 280, 50, 10.0);
+  sliderBrushRadius.setShowValue(true);
+  sliderBrushRadius.setLimits(50, 1, 300);
+  sliderBrushRadius.setNbrTicks(300);
+  sliderBrushRadius.setStickToTicks(true);
+  sliderBrushRadius.setNumberFormat(G4P.INTEGER, 0);
+  sliderBrushRadius.setOpaque(false);
+  sliderBrushRadius.addEventHandler(this, "sliderBrushRadius_change");
   pnlTools.addControl(lblMouseMode);
-  pnlInfo = new GPanel(this, 0, 380, 300, 120, "Debug Info");
+  pnlTools.addControl(sliderBrushRadius);
+  pnlInfo = new GPanel(this, 0, 400, 300, 90, "Debug Info");
   pnlInfo.setText("Debug Info");
   pnlInfo.setOpaque(true);
+  lblDroplets = new GLabel(this, 10, 30, 70, 20);
+  lblDroplets.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lblDroplets.setText("Droplets:");
+  lblDroplets.setOpaque(false);
+  lblDropletCount = new GLabel(this, 80, 30, 60, 20);
+  lblDropletCount.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lblDropletCount.setText("#");
+  lblDropletCount.setOpaque(false);
+  pnlInfo.addControl(lblDroplets);
+  pnlInfo.addControl(lblDropletCount);
 }
 
 // Variable declarations 
@@ -210,4 +233,7 @@ GLabel lblMouseMode;
 GToggleGroup togGroupMouseMode; 
 GOption optMouseTerrain; 
 GOption optMouseWater; 
+GSlider sliderBrushRadius; 
 GPanel pnlInfo; 
+GLabel lblDroplets; 
+GLabel lblDropletCount; 
