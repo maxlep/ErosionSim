@@ -15,6 +15,8 @@ class Droplet
 
 class WaterErosion
 {
+	public ValueMap waterSources;
+
 	private ArrayList<Droplet>[][] watermap;
 	private boolean nextPassFlag;
 
@@ -29,6 +31,7 @@ class WaterErosion
 		this.terrain = data.terrain;
 		nextPassFlag = false;
 
+		waterSources = new ValueMap(getWidth(), getHeight(), 1);
 		watermap = (ArrayList<Droplet>[][]) new ArrayList[getWidth()][getHeight()];
 		for (int y=0; y<getHeight(); y++)
 		{
@@ -37,8 +40,6 @@ class WaterErosion
 				watermap[y][x] = new ArrayList<Droplet>();
 			}
 		}
-
-		println(getWidth(), getHeight());
 	}
 
 	public int getWidth() { return settings.getWidth(); }
@@ -65,7 +66,8 @@ class WaterErosion
 
 		int underTarget = settings.dropletSoftLimit - data.dropletCount;
 		for (int i=0; i<underTarget; i++)
-			addRandomDroplet();
+			tryAddDropletFromSource();
+			// addRandomDroplet();
 	}
 
 	private int updateDroplets(int x, int y)
@@ -178,12 +180,26 @@ class WaterErosion
 		data.dropletCount++;
 	}
 
+	public boolean tryAddDropletFromSource()
+	{
+		int x = int( random( getWidth()  ) );
+		int y = int( random( getHeight() ) );
+		boolean isSource = waterSources.getValue(x, y) > 0;
+		if (isSource)
+		{
+			addDroplet(x, y);
+			return true;
+		}
+		else return false;
+	}
+
 	public void addRandomDroplet()
 	{
-		int x = int(random( getWidth() ));
-		int y = int(random( getHeight() ));
+		int x = int( random( getWidth()  ) );
+		int y = int( random( getHeight() ) );
 		addDroplet(x,y);
 	}
+
 	public void addRandomDroplet(int x, int y, int radius)
 	{
 		int rx = int(random( max(0,x-radius), min(getWidth(),x+radius) ));
