@@ -23,6 +23,10 @@ class ValueMap
 		snapshot = this.map;
 		// This makes snapshot and map reference the same object; if makesnapshot() is never called, values will be written and read directly on the map.
 	}
+	public ValueMap(int width, int height, int maxValue)
+	{
+		this(createImage(width, height, RGB), maxValue);
+	}
 
 	public void draw(PGraphics canvas, Gradient displayGradient)
 	{
@@ -76,7 +80,28 @@ class ValueMap
 
 	public void applyBrush(int x, int y, ValueBrush brush)
 	{
-		
+		println("Apply brush");
+		// loadPixels();
+		int sqrRadius = brush.radius * brush.radius;
+		for (int yy=y-brush.radius; yy<y+brush.radius; yy++)
+		{
+			if (yy < 0 || yy >= height) continue;
+			for (int xx=x-brush.radius; xx<x+brush.radius; xx++)
+			{
+				if (xx < 0 || xx >= width) continue;
+
+				double sqrDistance = Math.pow(xx - x, 2) + Math.pow(yy - y, 2);
+				if (sqrDistance <= sqrRadius)
+				{
+					int i = yy * width + xx;
+					float pct = (float)sqrDistance / sqrRadius;
+					float brushEffect = 1 - (float)Math.pow(pct, brush.hardness * 10);
+					map.pixels[i] += brush.value * brushEffect;
+					map.pixels[i] = constrain(map.pixels[i], 0,maxValue);
+				}
+			}
+		}
+		// updatePixels();
 	}
 
 	// Makes a copy of the heightmap at a moment in time.
@@ -91,7 +116,14 @@ class ValueMap
 
 class ValueBrush
 {
-	public float size;
+	public int radius;
 	public float hardness;
 	public int value;
+
+	public ValueBrush(int radius, float hardness, int value)
+	{
+		this.radius = radius;
+		this.hardness = hardness;
+		this.value = value;
+	}
 }

@@ -50,12 +50,16 @@ class SimulationWindow extends PApplet
 		data.terrain.draw(pg, settings.displayGradient);
 		if (settings.showWater) data.water.draw(pg);
 
+		// PImage testImg = data.water.waterSources.getValuesOnGradient(settings.displayGradient);
+		// pg.image(testImg, 0,0);
+
 		// pg.popMatrix();
 		pg.endDraw();
 
 		image(pg, 0,0);
 	}
 
+	ValueBrush test = new ValueBrush(100, 1f, 1);
 	void mouseClicked()
 	{
 		if (mouseX > settings.getWidth() || mouseY > settings.getHeight()) return;
@@ -83,10 +87,11 @@ class SimulationWindow extends PApplet
 		switch (settings.mouseMode)
 		{
 		case 0: // Modify water sources
-			for (int i=0; i<1000; i++)
-			{
-				data.water.addRandomDroplet(mouseX, mouseY, 30);
-			}
+			// for (int i=0; i<1000; i++)
+			// {
+			// 	data.water.addRandomDroplet(mouseX, mouseY, 30);
+			// }
+			data.water.waterSources.applyBrush(mouseX, mouseY, test);
 			break;
 		case 1: // Modify terrain
 
