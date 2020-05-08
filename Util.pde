@@ -7,14 +7,14 @@ int randomSign()
 
 class Gradient
 {
-	color[] colors;
+	private color[] colors;
 
-	Gradient(color[] colors)
+	public Gradient(color[] colors)
 	{
 		this.colors = colors.clone();
 	}
 
-	color sample(float pct)
+	public color sample(float pct)
 	{
 		if (pct >= 1f) return colors[colors.length - 1];
 
@@ -28,27 +28,8 @@ class Gradient
 		color value = lerpColor(c1, c2, decimal);
 		return value;
 	}
-}
 
-static class PImageUtils
-{
-	static int[][] getGrayscaleValues(PImage img)
-	{
-		int width = img.width;
-		int height = img.height;
-		int[][] grayscale = new int[height][width];
-
-		img.loadPixels();
-		for (int y=0; y<height; y++)
-		{
-			int i_temp = y * width;
-			for (int x=0; x<width; x++)
-			{
-				grayscale[y][x] = img.pixels[i_temp + x] & 0xFF;
-			}
-		}
-		return grayscale;
-	}
+	
 }
 
 static class ColorConverter
@@ -71,7 +52,7 @@ static class ColorConverter
 	static boolean pctGT1 = false;
 	public static color valueToGradientSample(int value, Gradient g)
 	{
-		float pct = (float)Integer.toUnsignedLong(value) / Integer.toUnsignedLong(SimulationParameters.MAX_HEIGHT);
+		float pct = (float)Integer.toUnsignedLong(value) / Integer.toUnsignedLong(SimulationSettings.MAX_HEIGHT);
 		// if (pct > 1f) println(value, pct);
 		if (pct > 1f) pctGT1 = true;
 		color col = g.sample(pct);

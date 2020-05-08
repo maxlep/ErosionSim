@@ -18,10 +18,10 @@ public void btnReload_click(GButton source, GEvent event) { //_CODE_:btnReload:4
   println("btnReload - GButton >> GEvent." + event + " @ " + millis());
 
   // TODO better check for window is open
-  if (simulation != null)
+  if (activeSimulation != null)
   {
-    simulation.dispose();
-    simulation.frame.setVisible(false);
+    activeSimulation.dispose();
+    activeSimulation.frame.setVisible(false);
   }
   startSimulation();
 
@@ -30,7 +30,7 @@ public void btnReload_click(GButton source, GEvent event) { //_CODE_:btnReload:4
 public void btnPlay_click(GButton source, GEvent event) { //_CODE_:btnPlay:661167:
   println("btnPlay - GButton >> GEvent." + event + " @ " + millis());
   
-  boolean isPlaying = !global_params.autorun;
+  boolean isPlaying = !settingsInstance.running;
   if (isPlaying)
   {
     source.setText("Stop");
@@ -43,28 +43,28 @@ public void btnPlay_click(GButton source, GEvent event) { //_CODE_:btnPlay:66116
     btnReload.setEnabled(true);
   }
   
-  global_params.autorun = isPlaying;
+  settingsInstance.running = isPlaying;
   
 } //_CODE_:btnPlay:661167:
 
 public void btnSave_click(GButton source, GEvent event) { //_CODE_:btnSave:965615:
   println("btnSave - GButton >> GEvent." + event + " @ " + millis());
 
-  simulation.saveSimulationFrame();
+  activeSimulation.saveSimulationFrame();
 
 } //_CODE_:btnSave:965615:
 
 public void btnStep_click(GButton source, GEvent event) { //_CODE_:btnStep:679000:
   println("btnStep - GButton >> GEvent." + event + " @ " + millis());
 
-  simulation.doSimulationStep();
+  activeSimulation.doSimulationStep();
 
 } //_CODE_:btnStep:679000:
 
 public void chkWater_clicked(GCheckbox source, GEvent event) { //_CODE_:chkWater:767303:
   println("chkWater - GCheckbox >> GEvent." + event + " @ " + millis());
 
-  global_params.debug = source.isSelected();
+  settingsInstance.showWater = source.isSelected();
 
 } //_CODE_:chkWater:767303:
 
@@ -72,7 +72,7 @@ public void listDisplayGradients_click(GDropList source, GEvent event) { //_CODE
   println("listDisplayGradients - GDropList >> GEvent." + event + " @ " + millis());
 
   String gradientName = source.getSelectedText();
-  global_params.displayGradient = gradientMap.get(gradientName);
+  settingsInstance.displayGradient = gradientPresets.get(gradientName);
 
 } //_CODE_:listDisplayGradients:261396:
 
@@ -81,8 +81,7 @@ public void txtHeightmapPath_change(GTextField source, GEvent event) { //_CODE_:
 
   if (event == GEvent.ENTERED || event == GEvent.LOST_FOCUS)
   {
-    // TODO validate path
-    global_params.sourceHeightmapPath = source.getText();
+    settingsInstance.setSourceHeightmap( source.getText() );
   }
 
 } //_CODE_:txtHeightmapPath:394852:

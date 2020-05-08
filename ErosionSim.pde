@@ -1,33 +1,24 @@
 
 import g4p_controls.*;
 
-public SimulationWindow simulation;
-public SimulationParameters global_params;
-public HashMap<String,Gradient> gradientMap;
+public SimulationWindow activeSimulation;
+
+public HashMap<String,Gradient> gradientPresets;
 
 void settings()
 {
 	size(300,500);
-	println(width,height);
 }
 
 void setup()
 {
-	global_params = new SimulationParameters();
-	loadGradients();
+	loadGradientPresets();
 
 	// Create the settings window GUI
 	createGUI();
+	setGUIdefaults();
 	surface.setLocation(200,200);
 	// setDefaultClosePolicy(this, true);
-
-	// Set some default UI values
-	txtHeightmapPath.setText("Heightmaps/heightmap04.png");
-	chkWater.setSelected(true);
-	chkWater_clicked(chkWater, GEvent.SELECTED);
-	listDisplayGradients.setItems( gradientMap.keySet().toArray(new String[0]), 0 );
-	
-	global_params.targetDropletCount = 30000;
 
 	// Launch a simulation window
 	startSimulation();
@@ -40,57 +31,55 @@ void draw()
 
 public void startSimulation()
 {
+	resetGUI();
 	try
 	{
-		readParams();
-		openSimulationWindow(global_params);
+		openSimulationWindow(settingsInstance);
 	} catch(Exception e) {
 		e.printStackTrace();
 	}
 }
 
-public void readParams()
+public void setGUIdefaults()
 {
-	// Set params through GUI events
+	txtHeightmapPath.setText("Heightmaps/heightmap04.png");
 	txtHeightmapPath_change(txtHeightmapPath, GEvent.ENTERED);
+
 	chkWater.setSelected(true);
 	chkWater_clicked(chkWater, GEvent.SELECTED);
-	global_params.autorun = true;			// Set opposite of the desired default
-	btnPlay_click(btnPlay, GEvent.CLICKED);	// ...so this event toggles it.
+
+	listDisplayGradients.setItems( gradientPresets.keySet().toArray(new String[0]), 1 );
 	listDisplayGradients_click(listDisplayGradients, GEvent.CLICKED);
 
-	// Load the initial heightmap
-	global_params.sourceHeightmap = loadImage(global_params.sourceHeightmapPath);
-	global_params.width = global_params.sourceHeightmap.width;
-	global_params.height = global_params.sourceHeightmap.height;
-
-	// Set some other defaults
-	global_params.displayScale = 1;
-	global_params.dropletCount = 0;
-	global_params.autorun = false;
-	global_params.print = false;
-	global_params.debug = true;
+	// TODO add droplet limit GUI
+	settingsInstance.dropletSoftLimit = 50000;
 }
 
-public void openSimulationWindow(SimulationParameters settings)
+public void resetGUI()
+{
+	settingsInstance.running = true;		// Set opposite of the desired default
+	btnPlay_click(btnPlay, GEvent.CLICKED);	// ...so this event toggles it.
+}
+
+public void openSimulationWindow(SimulationSettings settings)
 {
 	String[] args = {	"--display=1",
 						String.format("--location=%d,%d",500,200),
 						""};//,
 						//"--sketch-path=" + sketchPath};//,
 						// "Projector"};
-	simulation = new SimulationWindow(settings);
-	PApplet.runSketch(args, simulation);
+	activeSimulation = new SimulationWindow(settings);
+	PApplet.runSketch(args, activeSimulation);
 }
 
-public void loadGradients()
+public void loadGradientPresets()
 {
-	gradientMap = new HashMap<String,Gradient>();
+	gradientPresets = new HashMap<String,Gradient>();
 	color[] colors;
 
 	colors = new color[] { color(0), color(255) };
-	gradientMap.put( "Grayscale", new Gradient(colors) );
+	gradientPresets.put( "Grayscale", new Gradient(colors) );
 
 	colors = new color[] { color(0,0,255), color(64,252,255), color(255,240,73), color(255,42,42) };
-	gradientMap.put( "Heatmap", new Gradient(colors) );
+	gradientPresets.put( "Heatmap", new Gradient(colors) );
 }

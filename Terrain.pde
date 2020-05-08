@@ -11,15 +11,14 @@ class Terrain
 		this.heightmap = new ValueMap(heightmapImg);
 	}
 
-	public void draw(PGraphics canvas)
+	public void draw(PGraphics canvas, Gradient displayGradient)
 	{
-		heightmap.draw(canvas);
+		heightmap.draw(canvas, displayGradient);
 	}
 
 	public void preStep()
 	{
 		heightmap.preStep();
-		// recomputeGradient();
 	}
 
 	public void postStep()
@@ -32,11 +31,6 @@ class Terrain
 		heightmap.setValue(x, y, value);
 		// TODO return remainder if value exceeds max or min
 	}
-
-	// private void recomputeGradient()
-	// {
-		
-	// }
 
 	// Relies on heightmap.loadPixels previously being called
 	public int getDownhillNeighborIndex(int x, int y)

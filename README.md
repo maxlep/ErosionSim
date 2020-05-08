@@ -24,6 +24,7 @@ On linux this is:
 - Add debug window to display information and toggle settings
     - Finish implementing debug views
     - Add gray color scheme for disabled buttons
+    - Remember settings window position
 - Add terrain manipulation tool
 - Add water sources
 - Make simulation droplets normalize to a set amount with no hard limit

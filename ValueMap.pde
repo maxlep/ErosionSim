@@ -22,10 +22,10 @@ class ValueMap
         // This makes snapshot and map reference the same object; if makesnapshot() is never called, values will be written and read directly on the map.
     }
 
-    public void draw(PGraphics pg)
+    public void draw(PGraphics canvas, Gradient displayGradient)
     {
-        PImage colored = getValuesOnGradient(global_params.displayGradient);
-        pg.image(colored, 0,0);
+        PImage colored = getValuesOnGradient(displayGradient);
+        canvas.image(colored, 0,0);
     }
 
     public void preStep()

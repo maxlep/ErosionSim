@@ -1,6 +1,4 @@
 
-static float SEDIMENT_LIMIT = 100f;
-
 class Droplet
 {
 	int speed;
@@ -17,59 +15,57 @@ class Droplet
 
 class WaterErosion
 {
-	public int width, height;
 	private ArrayList<Droplet>[][] watermap;
-	private Terrain terrain;
-	private SimulationParameters params;
 	private boolean nextPassFlag;
 
-	public WaterErosion(Terrain terrain, SimulationParameters params)
+	private SimulationSettings settings;
+	private SimulationData data;
+	private Terrain terrain;
+
+	public WaterErosion(SimulationSettings settings, SimulationData data)
 	{
-		this.terrain = terrain;
-		this.params = params;
-		width = terrain.getWidth();
-		height = terrain.getHeight();
+		this.settings = settings;
+		this.data = data;
+		this.terrain = data.terrain;
 		nextPassFlag = false;
 
-		watermap = (ArrayList<Droplet>[][]) new ArrayList[height][width];
-		for (int y=0; y<height; y++)
+		watermap = (ArrayList<Droplet>[][]) new ArrayList[getWidth()][getHeight()];
+		for (int y=0; y<getHeight(); y++)
 		{
-			for (int x=0; x<width; x++)
+			for (int x=0; x<getWidth(); x++)
 			{
 				watermap[y][x] = new ArrayList<Droplet>();
 			}
 		}
+
+		println(getWidth(), getHeight());
 	}
+
+	public int getWidth() { return settings.getWidth(); }
+	public int getHeight() { return settings.getHeight(); }
 
 	public void doSimulationStep()
 	{
 		int destroyedCount = 0;
+
 		terrain.preStep();
 
-		// if (print) println("Doing water simulation step");
-
-		for (int y=0; y<height; y++)
+		for (int y=0; y<getHeight(); y++)
 		{
-			int temp_i = y * width;
-			for (int x=0; x<width; x++)
+			for (int x=0; x<getWidth(); x++)
 			{
-				int i = temp_i + x;
 				destroyedCount += updateDroplets(x, y);
 			}
 		}
 
 		terrain.postStep();
 
-		// if (print) println("Finished water simulation step");
-
 		nextPassFlag = !nextPassFlag;
-		global_params.dropletCount -= destroyedCount;
-		if (params.autorun)
-		{
-			int underTarget = global_params.targetDropletCount - global_params.dropletCount;
-			for (int i=0; i<underTarget; i++)
-				addRandomDroplet();
-		}
+		data.dropletCount -= destroyedCount;
+
+		int underTarget = settings.dropletSoftLimit - data.dropletCount;
+		for (int i=0; i<underTarget; i++)
+			addRandomDroplet();
 	}
 
 	private int updateDroplets(int x, int y)
@@ -91,11 +87,11 @@ class WaterErosion
 			}
 			droplets.clear();
 
-			outHeight = constrain(outHeight, 0, params.MAX_HEIGHT);
+			outHeight = constrain(outHeight, 0, SimulationSettings.MAX_HEIGHT);
 			terrain.setHeightValue(x, y, outHeight);
 			return destroyedCount;
 		}
-		ArrayList<Droplet> neighborDroplets = watermap[flowToIndex / width][flowToIndex % width];
+		ArrayList<Droplet> neighborDroplets = watermap[flowToIndex / getWidth()][flowToIndex % getWidth()];
 
 		// Step 2: Count the number of droplets that have not yet been updated this step
 		int size = 0;
@@ -120,9 +116,9 @@ class WaterErosion
 		{
 			sedimentExchange = inValue;
 		}
-		if (outValue > params.MAX_HEIGHT)
+		if (outValue > SimulationSettings.MAX_HEIGHT)
 		{
-			sedimentExchange = params.MAX_HEIGHT - inValue;
+			sedimentExchange = SimulationSettings.MAX_HEIGHT - inValue;
 		}
 		outValue = inValue;
 		float each = sedimentExchange / size;
@@ -139,10 +135,10 @@ class WaterErosion
 				{
 					curr.sediment = 0;
 				}
-				if (curr.sediment > SEDIMENT_LIMIT)
+				if (curr.sediment > settings.SEDIMENT_LIMIT)
 				{
-					curr.sediment = SEDIMENT_LIMIT;
-					amount = amount - SEDIMENT_LIMIT;
+					curr.sediment = settings.SEDIMENT_LIMIT;
+					amount = amount - settings.SEDIMENT_LIMIT;
 				}
 				outValue += amount;
 				curr.alternatingFlag = !curr.alternatingFlag;
@@ -163,9 +159,9 @@ class WaterErosion
 		// Debug display
 		canvas.fill(0,0,255);
 		canvas.noStroke();
-		for (int y=0; y<height; y++)
+		for (int y=0; y<getHeight(); y++)
 		{
-			for (int x=0; x<width; x++)
+			for (int x=0; x<getWidth(); x++)
 			{
 				if (!watermap[y][x].isEmpty())
 				{
@@ -179,19 +175,19 @@ class WaterErosion
 	{
 		Droplet d = new Droplet();
 		watermap[y][x].add(d);
-		global_params.dropletCount++;
+		data.dropletCount++;
 	}
 
 	public void addRandomDroplet()
 	{
-		int x = int(random(this.width));
-		int y = int(random(this.height));
+		int x = int(random( getWidth() ));
+		int y = int(random( getHeight() ));
 		addDroplet(x,y);
 	}
 	public void addRandomDroplet(int x, int y, int radius)
 	{
-		int rx = int(random( max(0,x-radius), min(width,x+radius) ));
-		int ry = int(random( max(0,y-radius), min(width,y+radius) ));
+		int rx = int(random( max(0,x-radius), min(getWidth(),x+radius) ));
+		int ry = int(random( max(0,y-radius), min(getHeight(),y+radius) ));
 		addDroplet(rx, ry);
 	}
 }
