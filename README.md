@@ -41,3 +41,4 @@ On linux this is:
     - Also use impact speed to determine rainsplash erosion
 - Finish or remove gradient filter implementation
     - The intention was to compute the whole image gradient at once, rather than compute the downhill each droplet's neighbors iteratively. But unless droplet density sufficiently increases, it may be faster going by droplet so that no computation is needed for unpopulated image areas.
+- Reimplement display scale

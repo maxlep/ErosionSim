@@ -3,12 +3,14 @@ class ValueMap
 {
 	public int height, width;
 
+	private int maxValue;
 	private PImage map;
 	private PImage snapshot;
 	// The snapshot will be used for reading values, while edits will be applied to the map.
 
-	public ValueMap(PImage map)
+	public ValueMap(PImage map, int maxValue)
 	{
+		this.maxValue = maxValue;
 		this.height = map.height;
 		this.width = map.width;
 		this.map = map.copy();
@@ -61,7 +63,7 @@ class ValueMap
 	{
 		PImage colored = getValues();
 		colored.loadPixels();
-		ColorConverter.valueToGradientSample(colored.pixels, g);
+		ColorConverter.valueToGradientSample(colored.pixels, maxValue, g);
 		colored.updatePixels();
 		return colored;
 	}

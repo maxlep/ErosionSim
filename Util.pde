@@ -50,21 +50,21 @@ static class ColorConverter
 	}
 
 	static boolean pctGT1 = false;
-	public static color valueToGradientSample(int value, Gradient g)
+	public static color valueToGradientSample(int value, int valueMax, Gradient g)
 	{
-		float pct = (float)Integer.toUnsignedLong(value) / Integer.toUnsignedLong(SimulationSettings.MAX_HEIGHT);
+		float pct = (float)Integer.toUnsignedLong(value) / Integer.toUnsignedLong(valueMax);
 		// if (pct > 1f) println(value, pct);
 		if (pct > 1f) pctGT1 = true;
 		color col = g.sample(pct);
 		return col;
 	}
 
-	public static void valueToGradientSample(int[] values, Gradient g)
+	public static void valueToGradientSample(int[] values, int valueMax, Gradient g)
 	{
 		pctGT1 = false;
 		for (int i=0; i<values.length; i++)
 		{
-			color col = valueToGradientSample(values[i], g);
+			color col = valueToGradientSample(values[i], valueMax, g);
 			values[i] = col;
 		}
 		if (pctGT1) println("Some values are above MAX_HEIGHT");

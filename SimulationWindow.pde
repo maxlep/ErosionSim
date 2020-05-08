@@ -11,7 +11,7 @@ class SimulationWindow extends PApplet
 
 	void settings()
 	{
-		size(settings.getWidth()*2, settings.getHeight()*2);
+		size(settings.getWidth(), settings.getHeight());
 	}
 
 	void setup()
@@ -44,13 +44,13 @@ class SimulationWindow extends PApplet
 
 		PGraphics pg = data.canvas;
 		pg.beginDraw();
-		pg.pushMatrix();
-		pg.scale(2);
+		// pg.pushMatrix();
+		// pg.scale(2);
 
 		data.terrain.draw(pg, settings.displayGradient);
 		if (settings.showWater) data.water.draw(pg);
 
-		pg.popMatrix();
+		// pg.popMatrix();
 		pg.endDraw();
 
 		image(pg, 0,0);

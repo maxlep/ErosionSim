@@ -8,7 +8,7 @@ class Terrain
 
 	public Terrain(PImage heightmapImg)
 	{
-		this.heightmap = new ValueMap(heightmapImg);
+		this.heightmap = new ValueMap(heightmapImg, SimulationSettings.MAX_HEIGHT);
 	}
 
 	public void draw(PGraphics canvas, Gradient displayGradient)
