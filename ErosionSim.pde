@@ -2,8 +2,9 @@
 import g4p_controls.*;
 
 public SimulationWindow activeSimulation;
-
 public HashMap<String,Gradient> gradientPresets;
+
+private static int windowX=500, windowY=500;
 
 void settings()
 {
@@ -17,7 +18,7 @@ void setup()
 	// Create the settings window GUI
 	createGUI();
 	setGUIdefaults();
-	surface.setLocation(200,200);
+	surface.setLocation(windowX,windowY);
 	// setDefaultClosePolicy(this, true);
 
 	// Launch a simulation window
@@ -64,7 +65,7 @@ public void resetGUI()
 public void openSimulationWindow(SimulationSettings settings)
 {
 	String[] args = {	"--display=1",
-						String.format("--location=%d,%d",500,200),
+						String.format("--location=%d,%d",windowX+width,windowY),
 						""};//,
 						//"--sketch-path=" + sketchPath};//,
 						// "Projector"};
