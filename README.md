@@ -25,12 +25,7 @@ On linux this is:
     - Finish implementing debug views
     - Add gray color scheme for disabled buttons
     - Remember settings window position
-- Add terrain manipulation tool
-- Add water sources
-- Make simulation droplets normalize to a set amount with no hard limit
-    - Implement droplet count
 - Implement terrain resistance map to mimic different materials
-- Move settings to config file
 - Add a parameter for the number of cycles to run the simulation for
 - Add a parameter for the amount of upward slope that droplets can traverse
     - Hopefully will help to keep them from getting stuck
@@ -39,6 +34,3 @@ On linux this is:
 - Make speed dependent on the slope droplets travel
     - Speed will affect the amount of sediment they deposit and leave
     - Also use impact speed to determine rainsplash erosion
-- Finish or remove gradient filter implementation
-    - The intention was to compute the whole image gradient at once, rather than compute the downhill each droplet's neighbors iteratively. But unless droplet density sufficiently increases, it may be faster going by droplet so that no computation is needed for unpopulated image areas.
-- Reimplement display scale
