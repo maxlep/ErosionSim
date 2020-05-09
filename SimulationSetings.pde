@@ -8,12 +8,12 @@ class SimulationSettings
 {
 	public static final int MAX_HEIGHT = 255;
 	public static final int SEDIMENT_LIMIT = 10;
-	public static final float GRAVITY = 9.8f;
+	public static final float GRAVITY = 2f;
 
 	public float initialSpeed = 1;
 	public float initialWater = 1;
-	public float inertia;
-	public float sedimentCapacityFactor = 2;
+	public float inertia = .05f;
+	public float sedimentCapacityFactor = 4f;
 	public float minSedimentCapacity = .01f;
 	public float erodeSpeed = .01f;
 	public float depositSpeed = .01f;

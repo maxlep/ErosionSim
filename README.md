@@ -21,16 +21,11 @@ On linux this is:
 **s** - Save the current terrain to `./Outputs`
 
 ## TODO
-- Add debug window to display information and toggle settings
-    - Finish implementing debug views
-    - Add gray color scheme for disabled buttons
-    - Remember settings window position
+- Refactor heightmap to use float values
+    - This will hopefully prevent drops getting stuck in discrete holes
 - Implement terrain resistance map to mimic different materials
+- Add gray color scheme for disabled buttons
+- Remember settings window position
 - Add a parameter for the number of cycles to run the simulation for
-- Add a parameter for the amount of upward slope that droplets can traverse
-    - Hopefully will help to keep them from getting stuck
 - Add grouping and movement to rain pattern
     - Can I generate a voronoi texture?
-- Make speed dependent on the slope droplets travel
-    - Speed will affect the amount of sediment they deposit and leave
-    - Also use impact speed to determine rainsplash erosion

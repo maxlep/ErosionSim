@@ -101,6 +101,19 @@ class Terrain
 		data.y = -heightmap.getGradientY(x, y);
 		// data.x = g.x;
 		// data.y = g.y;
+		// int flowIndex = getDownhillNeighborIndex(x,y);
+		// if (flowIndex == -1)
+		// {
+		// 	data.x = 0;
+		// 	data.y = 0;
+		// }
+		// else
+		// {
+		// 	int flowX = flowIndex % getWidth();
+		// 	int flowY = flowIndex / getWidth();
+		// 	data.x = x - flowX;
+		// 	data.y = y - flowY;
+		// }
 		return data;
 	}
 

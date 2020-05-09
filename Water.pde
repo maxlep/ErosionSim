@@ -106,7 +106,7 @@ class WaterErosion
 			if ((newX == x && newY == y) || newX < 0 || newX >= getWidth() || newY < 0 || newY >= getHeight())
 			{
 				// TODO deposit all sediment
-				if (newX == x && newY == y) terrain.addValue(x,y, floor(d.sediment));
+				if (newX == x && newY == y) terrain.addValue(x,y, floor(d.sediment/2));
 				droplets.remove(i);
 				destroyedCount++;
 				i--;
