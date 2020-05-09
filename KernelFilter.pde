@@ -20,37 +20,40 @@ class KernelFilter
 		PImage out = createImage(in.width, in.height, RGB);
 		in.loadPixels();
 		out.loadPixels();
-		for (int y=0; y<height; y++)
+		for (int y=0; y<in.height; y++)
 		{
-			int i_temp = y * width;
-			for (int x=0; x<width; x++)
+			int i_temp = y * in.width;
+			for (int x=0; x<in.width; x++)
 			{
-				out.pixels[i_temp + x] = 0;
+				int index = i_temp + x;
+				out.pixels[index] = 0;
 
 				int loY = y - radius, loX = x - radius;
 				int hiY = y + radius, hiX = x + radius;
 
-				for (int j=0; j<size; j++)
+				for (int iy=0; iy<size; iy++)
 				{
-					for (int i=0; i<size; i++)
+					for (int ix=0; ix<size; ix++)
 					{
-						int yy = y - radius + j;
-						int xx = x - radius + i;
+						int yy = y - radius + iy;
+						int xx = x - radius + ix;
 
 						int inValue;
-						if (yy < 0 || yy > in.height ||
-							xx < 0 || xx > in.width)
+						if (yy < 0 || yy >= in.height ||
+							xx < 0 || xx >= in.width)
 						{
 							inValue = 0; // Value to use for pixels outside the image borders
 						} else {
 							inValue = in.pixels[yy * in.width + xx];
 						}
 
-						float kernelValue = kernel[j][i];
+						float kernelValue = kernel[iy][ix];
 
-						out.pixels[i_temp + x] += inValue * kernelValue;
+						out.pixels[index] += inValue * kernelValue;
 					}
 				}
+
+				out.pixels[index] = out.pixels[index] / (size * size);
 			}
 		}
 

@@ -9,6 +9,9 @@ class SimulationSettings
 	public static final int MAX_HEIGHT = 255;
 	public static final int SEDIMENT_LIMIT = 10;
 
+	public float inertia;
+	
+
 	public boolean running;
 	public boolean showWater;
 	public boolean logToConsole;

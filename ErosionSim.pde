@@ -21,6 +21,12 @@ void setup()
 	surface.setLocation(windowX,windowY);
 	// setDefaultClosePolicy(this, true);
 
+	int test = constrain(10, 1,5);
+	println(test);
+	test = constrain(-1, 5,1);
+	
+	println(test);
+
 	// Launch a simulation window
 	startSimulation();
 }

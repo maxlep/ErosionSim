@@ -63,6 +63,13 @@ class ValueMap
 		return map.copy();
 	}
 
+	public PImage[] getGradients()
+	{
+		KernelFilter sobelX = sobelEdgeVertical();
+		KernelFilter sobelY = sobelEdgeHorizontal();
+		return new PImage[] { sobelX.applyFilter(snapshot), sobelY.applyFilter(snapshot) };
+	}
+
 	public PImage getValuesOnGradient(Gradient g)
 	{
 		PImage colored = getValues();

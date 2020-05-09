@@ -108,11 +108,13 @@ class WaterErosion
 
 		// Step 3: Determine the amount of sediment to exchange
 		// TODO when speed is low they deposit sediment, when speed is higher they accumulate it
+
 		float rand = random(-size, size);
 		int sedimentExchange = round(rand);
 
 		int inValue = terrain.getHeightValue(x, y);
 		int outValue = inValue + sedimentExchange;
+		sedimentExchange = constrain(sedimentExchange, inValue,SimulationSettings.MAX_HEIGHT - inValue);
 		if (outValue < 0)
 		{
 			sedimentExchange = inValue;

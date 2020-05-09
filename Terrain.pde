@@ -2,6 +2,7 @@
 class Terrain
 {
 	public ValueMap heightmap;
+	public PImage[] gradients;
 
 	public int getHeight() { return heightmap.height; };
 	public int getWidth()  { return heightmap.width;  };
@@ -19,6 +20,7 @@ class Terrain
 	public void preStep()
 	{
 		heightmap.preStep();
+		gradients = heightmap.getGradients();
 	}
 
 	public void postStep()
@@ -71,6 +73,14 @@ class Terrain
 
 		if (lowestNeighborIndex == myIndex) return -1;
 		else return lowestNeighborIndex;
+	}
+
+	public PVector getGradient(int x, int y)
+	{
+		int i = y * getWidth() + x;
+		int dx = gradients[0].pixels[i];
+		int dy = gradients[1].pixels[i];
+		return new PVector(dx, dy);
 	}
 
 	public PImage getWithGradient(Gradient g)
