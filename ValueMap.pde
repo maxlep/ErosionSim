@@ -65,9 +65,14 @@ class ValueMap
 
 	public PImage[] getGradients()
 	{
-		KernelFilter sobelX = sobelEdgeVertical();
-		KernelFilter sobelY = sobelEdgeHorizontal();
 		return new PImage[] { sobelX.applyFilter(snapshot), sobelY.applyFilter(snapshot) };
+	}
+
+	private KernelFilter sobelX = sobelEdgeVertical();
+	private KernelFilter sobelY = sobelEdgeHorizontal();
+	public PVector getGradient(int x, int y)
+	{
+		return new PVector( sobelX.applyFilter(snapshot, x,y), sobelY.applyFilter(snapshot, x,y) );
 	}
 
 	public PImage getValuesOnGradient(Gradient g)

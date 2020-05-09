@@ -78,6 +78,7 @@ class WaterErosion
 
 		// Step 1: Determine flow direction
 		int flowToIndex = terrain.getDownhillNeighborIndex(x,y);
+		// PVector gradient = terrain.getGradient(x,y);
 		if (flowToIndex == -1)	// No neighbor is lower than this is. Evaporate water and deposit all sediment.
 		{
 			int outHeight = terrain.getHeightValue(x, y);

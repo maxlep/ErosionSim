@@ -20,7 +20,7 @@ class Terrain
 	public void preStep()
 	{
 		heightmap.preStep();
-		gradients = heightmap.getGradients();
+		// gradients = heightmap.getGradients();
 	}
 
 	public void postStep()
@@ -77,10 +77,11 @@ class Terrain
 
 	public PVector getGradient(int x, int y)
 	{
-		int i = y * getWidth() + x;
-		int dx = gradients[0].pixels[i];
-		int dy = gradients[1].pixels[i];
-		return new PVector(dx, dy);
+		// int i = y * getWidth() + x;
+		// int dx = gradients[0].pixels[i];
+		// int dy = gradients[1].pixels[i];
+		// return new PVector(dx, dy);
+		return heightmap.getGradient(x, y);
 	}
 
 	public PImage getWithGradient(Gradient g)
