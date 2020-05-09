@@ -2,7 +2,7 @@
 class Droplet
 {
 	int speed;
-	float sediment;
+	int sediment;
 	boolean alternatingFlag;
 
 	public Droplet()
@@ -108,8 +108,7 @@ class WaterErosion
 
 		// Step 3: Determine the amount of sediment to exchange
 		// TODO when speed is low they deposit sediment, when speed is higher they accumulate it
-		float rand = random(-1, 3);
-		if (rand > 1) rand = 1;
+		float rand = random(-size, size);
 		int sedimentExchange = round(rand);
 
 		int inValue = terrain.getHeightValue(x, y);
@@ -123,16 +122,17 @@ class WaterErosion
 			sedimentExchange = SimulationSettings.MAX_HEIGHT - inValue;
 		}
 		outValue = inValue;
-		float each = sedimentExchange / size;
+		int sign = int( Math.signum(sedimentExchange) );
 
 		// Step 4: Exchange the values from each droplet and move them along in their flow direction
 		for (int d=0; d<droplets.size(); d++)
 		{
 			Droplet curr = droplets.get(d);
+			if (abs(sedimentExchange) <= 0) break;
 			if (curr.alternatingFlag == nextPassFlag)
 			{
 				float amount = curr.sediment;
-				curr.sediment -= each;
+				curr.sediment -= sign;
 				if (curr.sediment < 0)
 				{
 					curr.sediment = 0;

@@ -7,7 +7,7 @@ public SimulationSettings settingsInstance = new SimulationSettings();
 class SimulationSettings
 {
 	public static final int MAX_HEIGHT = 255;
-	public static final float SEDIMENT_LIMIT = 100f;
+	public static final int SEDIMENT_LIMIT = 10;
 
 	public boolean running;
 	public boolean showWater;
