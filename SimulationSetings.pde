@@ -8,9 +8,17 @@ class SimulationSettings
 {
 	public static final int MAX_HEIGHT = 255;
 	public static final int SEDIMENT_LIMIT = 10;
+	public static final float GRAVITY = 9.8f;
 
+	public float initialSpeed = 1;
+	public float initialWater = 1;
 	public float inertia;
-	
+	public float sedimentCapacityFactor = 2;
+	public float minSedimentCapacity = .01f;
+	public float erodeSpeed = .01f;
+	public float depositSpeed = .01f;
+	public float evaporateSpeed = .01f;
+	public int maxDropletLifetime = 100;
 
 	public boolean running;
 	public boolean showWater;

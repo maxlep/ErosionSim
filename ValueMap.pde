@@ -70,9 +70,36 @@ class ValueMap
 
 	private KernelFilter sobelX = sobelEdgeVertical();
 	private KernelFilter sobelY = sobelEdgeHorizontal();
+	// public PVector getGradient(int x, int y)
+	// {
+	// 	return new PVector( sobelX.applyFilter(snapshot, x,y), sobelY.applyFilter(snapshot, x,y) );
+	// }
+
 	public PVector getGradient(int x, int y)
 	{
-		return new PVector( sobelX.applyFilter(snapshot, x,y), sobelY.applyFilter(snapshot, x,y) );
+		PVector gradient = new PVector();
+		if (x == 0 || x == map.width-1 || y == 0 || y == map.height-1) return gradient;
+		int index = y * map.width + x;
+		int indexNW = index - snapshot.width - 1;
+
+		int heightNW = snapshot.pixels[indexNW];
+		int heightNE = snapshot.pixels[indexNW + 2];
+		int heightSW = snapshot.pixels[indexNW + 2*map.width];
+		int heightSE = snapshot.pixels[indexNW + 2*map.width + 2];
+
+		gradient.x = (heightNE - heightNW) * 0.5f + (heightSE - heightSW) * 0.5f;
+		gradient.y = (heightSW - heightNW) * 0.5f + (heightSE - heightNE) * 0.5f;
+		return gradient;
+	}
+
+	public float getGradientX(int x, int y)
+	{
+		return sobelX.applyFilter(snapshot, x,y);
+	}
+
+	public float getGradientY(int x, int y)
+	{
+		return sobelY.applyFilter(snapshot, x,y);
 	}
 
 	public PImage getValuesOnGradient(Gradient g)
@@ -88,6 +115,13 @@ class ValueMap
 	{
 		int index = map.width * y + x;
 		map.pixels[index] = value;
+	}
+
+	public void addValue(int x, int y, int value)
+	{
+		int index = map.width * y + x;
+		int current = map.pixels[index];
+		map.pixels[index] = constrain(current + value, 0, maxValue);
 	}
 
 	public void applyBrush(int x, int y, ValueBrush brush, boolean erase)

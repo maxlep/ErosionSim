@@ -7,6 +7,7 @@ class SimulationWindow extends PApplet
 	SimulationWindow(SimulationSettings settings)
 	{
 		this.settings = settings;
+		data = new SimulationData(settings);
 	}
 
 	void settings()
@@ -20,13 +21,11 @@ class SimulationWindow extends PApplet
 		surface.setTitle( settings.getSourceHeightmapFilename() );
 		// setDefaultClosePolicy(this, true);
 
-		data = new SimulationData(settings);
-
 		// Initialize the simulation with some droplets
-		for (int i=0; i<50000; i++)
-		{
-			data.water.addRandomDroplet();
-		}
+		// for (int i=0; i<50000; i++)
+		// {
+		// 	data.water.addRandomDroplet();
+		// }
 	}
 
 	void doSimulationStep()
@@ -137,7 +136,7 @@ class SimulationWindow extends PApplet
 		String filename = String.format("%s_%d.png", settings.getSourceHeightmapFilename(), data.getSimulationStep());
 		String path = "Outputs/" + filename;
 
-		PImage colored = data.terrain.getWithGradient(settings.displayGradient);
+		PImage colored = data.terrain.getWithDisplayGradient(settings.displayGradient);
 		colored.save(path);
 		println("Saved image", path);
 	}

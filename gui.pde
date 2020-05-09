@@ -81,7 +81,10 @@ public void txtHeightmapPath_change(GTextField source, GEvent event) { //_CODE_:
 
   if (event == GEvent.ENTERED || event == GEvent.LOST_FOCUS)
   {
-    settingsInstance.setSourceHeightmap( source.getText() );
+    try
+    {
+      settingsInstance.setSourceHeightmap( source.getText() );
+    } catch (Exception e) { e.printStackTrace(); }
   }
 
 } //_CODE_:txtHeightmapPath:394852:

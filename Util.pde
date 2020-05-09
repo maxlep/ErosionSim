@@ -5,6 +5,34 @@ int randomSign()
 	return rand < 0.5 ? 1 : -1;
 }
 
+class Nullable<T>
+{
+	private T data;
+	private boolean isNull;
+
+	public Nullable(T data)
+	{
+		this.data = data;
+		isNull = false;
+	}
+
+	public T getValue()
+	{
+		return isNull ? null : data;
+	}
+
+	public void setNull()
+	{
+		isNull = true;
+	}
+
+	public T getData()
+	{
+		isNull = false;
+		return data;
+	}
+}
+
 class Gradient
 {
 	private color[] colors;
@@ -28,8 +56,6 @@ class Gradient
 		color value = lerpColor(c1, c2, decimal);
 		return value;
 	}
-
-	
 }
 
 static class ColorConverter

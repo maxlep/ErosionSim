@@ -2,14 +2,23 @@
 class Terrain
 {
 	public ValueMap heightmap;
-	public PImage[] gradients;
+	public Nullable<PVector>[][] gradient;
 
 	public int getHeight() { return heightmap.height; };
 	public int getWidth()  { return heightmap.width;  };
 
 	public Terrain(PImage heightmapImg)
 	{
-		this.heightmap = new ValueMap(heightmapImg, SimulationSettings.MAX_HEIGHT);
+		heightmap = new ValueMap(heightmapImg, SimulationSettings.MAX_HEIGHT);
+
+		gradient = (Nullable<PVector>[][])new Nullable[getHeight()][getWidth()];
+		for (int y=0; y<getHeight(); y++)
+		{
+			for (int x=0; x<getWidth(); x++)
+			{
+				gradient[y][x] = new Nullable<PVector>(new PVector(0,0));
+			}
+		}
 	}
 
 	public void draw(PGraphics canvas, Gradient displayGradient)
@@ -21,6 +30,7 @@ class Terrain
 	{
 		heightmap.preStep();
 		// gradients = heightmap.getGradients();
+		resetGradientsCache();
 	}
 
 	public void postStep()
@@ -32,6 +42,11 @@ class Terrain
 	public void setHeightValue(int x, int y, int value) {
 		heightmap.setValue(x, y, value);
 		// TODO return remainder if value exceeds max or min
+	}
+
+	public void addValue(int x, int y, int value)
+	{
+		heightmap.addValue(x,y, value);
 	}
 
 	// Relies on heightmap.loadPixels previously being called
@@ -77,16 +92,32 @@ class Terrain
 
 	public PVector getGradient(int x, int y)
 	{
-		// int i = y * getWidth() + x;
-		// int dx = gradients[0].pixels[i];
-		// int dy = gradients[1].pixels[i];
-		// return new PVector(dx, dy);
-		return heightmap.getGradient(x, y);
+		PVector val = gradient[y][x].getValue();
+		if (val != null) return val;
+		
+		// PVector g = heightmap.getGradient(x, y);
+		PVector data = gradient[y][x].getData();
+		data.x = -heightmap.getGradientX(x, y);
+		data.y = -heightmap.getGradientY(x, y);
+		// data.x = g.x;
+		// data.y = g.y;
+		return data;
 	}
 
-	public PImage getWithGradient(Gradient g)
+	public PImage getWithDisplayGradient(Gradient g)
 	{
 		PImage colored = heightmap.getValuesOnGradient(g);
 		return colored;
+	}
+
+	private void resetGradientsCache()
+	{
+		for (int y=0; y<getHeight(); y++)
+		{
+			for (int x=0; x<getWidth(); x++)
+			{
+				gradient[y][x].setNull();
+			}
+		}
 	}
 }

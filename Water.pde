@@ -1,15 +1,23 @@
 
 class Droplet
 {
-	int speed;
+	// PVector pos;
+	PVector dir;
+	float speed;
+	float water;
 	int sediment;
 	boolean alternatingFlag;
+	int age;
 
-	public Droplet()
+	public Droplet(float initialSpeed, float initialWaterVolume)
 	{
-		speed = 0;
+		// pos = new PVector(0,0);
+		dir = new PVector(0,0);
+		speed = initialSpeed;
+		water = initialWaterVolume;
 		sediment = 0;
 		alternatingFlag = false;
+		age = 0;
 	}
 }
 
@@ -42,8 +50,8 @@ class WaterErosion
 		}
 	}
 
-	public int getWidth() { return settings.getWidth(); }
-	public int getHeight() { return settings.getHeight(); }
+	public int getWidth() { return data.terrain.getWidth(); }
+	public int getHeight() { return data.terrain.getHeight(); }
 
 	public void doSimulationStep()
 	{
@@ -76,85 +84,77 @@ class WaterErosion
 		ArrayList<Droplet> droplets = watermap[y][x];
 		if (droplets.isEmpty()) return destroyedCount;
 
-		// Step 1: Determine flow direction
-		int flowToIndex = terrain.getDownhillNeighborIndex(x,y);
-		// PVector gradient = terrain.getGradient(x,y);
-		if (flowToIndex == -1)	// No neighbor is lower than this is. Evaporate water and deposit all sediment.
-		{
-			int outHeight = terrain.getHeightValue(x, y);
+		// Get the droplets' height and direction of flow
+		int height = terrain.getHeightValue(x,y);
+		PVector gradient = terrain.getGradient(x,y);
 
-			for (Droplet d : droplets)
+		for (int i=0; i<droplets.size(); i++)
+		{
+			Droplet d = droplets.get(i);
+			if (d.alternatingFlag != nextPassFlag) continue;
+
+			// Update the droplet's direction, and count the number to be processed this step.
+			d.dir.x = (d.dir.x * settings.inertia - gradient.x * (1 - settings.inertia) );
+			d.dir.y = (d.dir.y * settings.inertia - gradient.y * (1 - settings.inertia) );
+			d.dir.normalize();
+
+			// Calculate the index the droplet flows to
+			int newX = int(x + d.dir.x);
+			int newY = int(y + d.dir.y);
+
+			// Remove the droplet if it's not moving or leaves the map
+			if ((newX == x && newY == y) || newX < 0 || newX >= getWidth() || newY < 0 || newY >= getHeight())
 			{
-				outHeight += d.sediment;
+				// TODO deposit all sediment
+				if (newX == x && newY == y) terrain.addValue(x,y, floor(d.sediment));
+				droplets.remove(i);
 				destroyedCount++;
+				i--;
+				continue;
 			}
-			droplets.clear();
 
-			outHeight = constrain(outHeight, 0, SimulationSettings.MAX_HEIGHT);
-			terrain.setHeightValue(x, y, outHeight);
-			return destroyedCount;
-		}
-		ArrayList<Droplet> neighborDroplets = watermap[flowToIndex / getWidth()][flowToIndex % getWidth()];
+			int newHeight = terrain.getHeightValue(newX,newY);
+			int deltaHeight = newHeight - height;
 
-		// Step 2: Count the number of droplets that have not yet been updated this step
-		int size = 0;
-		for (Droplet d : droplets)
-		{
-			size += (d.alternatingFlag == nextPassFlag ? 1 : 0);
-		}
-		if (size < 1)
-		{
-			return destroyedCount;
-		}
+			float sedimentCapacity = Math.max( -deltaHeight * d.speed * d.water * settings.sedimentCapacityFactor, settings.minSedimentCapacity );
 
-		// Step 3: Determine the amount of sediment to exchange
-		// TODO when speed is low they deposit sediment, when speed is higher they accumulate it
-
-		float rand = random(-size, size);
-		int sedimentExchange = round(rand);
-
-		int inValue = terrain.getHeightValue(x, y);
-		int outValue = inValue + sedimentExchange;
-		sedimentExchange = constrain(sedimentExchange, inValue,SimulationSettings.MAX_HEIGHT - inValue);
-		if (outValue < 0)
-		{
-			sedimentExchange = inValue;
-		}
-		if (outValue > SimulationSettings.MAX_HEIGHT)
-		{
-			sedimentExchange = SimulationSettings.MAX_HEIGHT - inValue;
-		}
-		outValue = inValue;
-		int sign = int( Math.signum(sedimentExchange) );
-
-		// Step 4: Exchange the values from each droplet and move them along in their flow direction
-		for (int d=0; d<droplets.size(); d++)
-		{
-			Droplet curr = droplets.get(d);
-			if (abs(sedimentExchange) <= 0) break;
-			if (curr.alternatingFlag == nextPassFlag)
+			// // If flowing uphill or carrying more than capacity deposit some sediment
+			if (deltaHeight > 0 || d.sediment > sedimentCapacity)
 			{
-				float amount = curr.sediment;
-				curr.sediment -= sign;
-				if (curr.sediment < 0)
-				{
-					curr.sediment = 0;
-				}
-				if (curr.sediment > settings.SEDIMENT_LIMIT)
-				{
-					curr.sediment = settings.SEDIMENT_LIMIT;
-					amount = amount - settings.SEDIMENT_LIMIT;
-				}
-				outValue += amount;
-				curr.alternatingFlag = !curr.alternatingFlag;
-				neighborDroplets.add(curr);
-				droplets.remove(curr);
-				d--;
+				float sedimentToDeposit;
+				if (deltaHeight > 0)
+					sedimentToDeposit = min(deltaHeight, d.sediment);
+				else
+					sedimentToDeposit = (d.sediment - sedimentCapacity) * settings.depositSpeed;
+
+				int deltaSediment = int(sedimentToDeposit);
+				d.sediment -= deltaSediment;
+				terrain.addValue(x,y, deltaSediment);
 			}
+			else	// Otherwise erode and pick up some sediment
+			{
+				float sedimentToErode = min((sedimentCapacity - d.sediment) * settings.erodeSpeed, -deltaHeight);
+
+				// TODO spread erosion out over a small area
+				int deltaSediment = ( height < sedimentToErode ? height : ceil(sedimentToErode) );
+				d.sediment += deltaSediment;
+				terrain.addValue(x,y, -deltaSediment);
+			}
+
+			d.speed = sqrt( d.speed * d.speed + deltaHeight * settings.GRAVITY );
+			d.water *= (1 - settings.evaporateSpeed);
+
+			// println(x,y, newX,newY, d.speed,d.dir,d.water,d.sediment);
+
+			// Move droplet to it's next position in the map
+			d.alternatingFlag = !d.alternatingFlag;
+			droplets.remove(i);
+			i--;
+			if (++d.age >= settings.maxDropletLifetime)
+				destroyedCount++;
+			else
+				watermap[newY][newX].add(d);
 		}
-		
-		// Step 5: Update the height value of this cell
-		terrain.setHeightValue(x, y, outValue);
 
 		return destroyedCount;
 	}
@@ -178,7 +178,7 @@ class WaterErosion
 
 	public void addDroplet(int x, int y)
 	{
-		Droplet d = new Droplet();
+		Droplet d = new Droplet(settings.initialSpeed, settings.initialWater);
 		watermap[y][x].add(d);
 		data.dropletCount++;
 	}
