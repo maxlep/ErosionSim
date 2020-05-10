@@ -1,28 +1,30 @@
 
+import java.util.Arrays;
+
 class ValueMap
 {
 	public int height, width;
 
-	private int maxValue;
-	private PImage map;
-	private PImage snapshot;
+	private float maxValue;
+	private float[] map;
+	private float[] snapshot;
 	// The snapshot will be used for reading values, while edits will be applied to the map.
 
-	public ValueMap(PImage map, int maxValue)
+	public ValueMap(PImage sourceMap, float maxValue)
 	{
 		this.maxValue = maxValue;
-		this.height = map.height;
-		this.width = map.width;
-		this.map = map.copy();
+		this.height = sourceMap.height;
+		this.width = sourceMap.width;
 
-		this.map.loadPixels();
-		ColorConverter.grayscaleToValue(this.map.pixels);
-		this.map.updatePixels();
-		// Reorder the values in the input heightmap to allow use of the full 4 bytes for storage of the map value.
+		// Copy the values from the map image and convert them to floats
+		sourceMap.loadPixels();
+		this.map = new float[height*width];
+		ColorConverter.colorToValue(sourceMap.pixels, this.map);
 
-		snapshot = this.map;
 		// This makes snapshot and map reference the same object; if makesnapshot() is never called, values will be written and read directly on the map.
+		snapshot = this.map;
 	}
+
 	public ValueMap(int width, int height, int maxValue)
 	{
 		this(createImage(width, height, RGB), maxValue);
@@ -30,98 +32,74 @@ class ValueMap
 
 	public void draw(PGraphics canvas, Gradient displayGradient)
 	{
-		PImage colored = getValuesOnGradient(displayGradient);
+		PImage colored = toGradientImage(displayGradient);
 		canvas.image(colored, 0,0);
 	}
 
 	public void preStep()
 	{
-		map.loadPixels();
 		takeSnapshot();
 	}
 
 	public void postStep()
 	{
-		map.updatePixels();
+
 	}
 
-	public int getValue(int index)
+	public void setValue(int x, int y, float value)
 	{
-		return snapshot.pixels[index];
+		int index = width * y + x;
+		map[index] = value;
+	}
+	public void addValue(int index, float value)
+	{
+		float current = map[index];
+		map[index] = constrain(current + value, 0, maxValue);
+	}
+	public void addValue(int x, int y, float value)
+	{
+		int index = width * y + x;
+		addValue(index, value);
 	}
 
-	public int getValue(int x, int y)
+	public float getValue(int index)
 	{
-		int index = snapshot.width * y + x;
+		return snapshot[index];
+	}
+	public float getValue(int x, int y)
+	{
+		int index = width * y + x;
 		return getValue(index);
 	}
-
-	public PImage getValues()
+	public float[] getValues()
 	{
-		// TODO make not reliant on the PImage type
-		map.loadPixels();
-		return map.copy();
+		return Arrays.copyOf(map, map.length);
 	}
 
-	public PImage[] getGradients()
-	{
-		return new PImage[] { sobelX.applyFilter(snapshot), sobelY.applyFilter(snapshot) };
-	}
-
-	private KernelFilter sobelX = sobelEdgeVertical();
-	private KernelFilter sobelY = sobelEdgeHorizontal();
-	// public PVector getGradient(int x, int y)
-	// {
-	// 	return new PVector( sobelX.applyFilter(snapshot, x,y), sobelY.applyFilter(snapshot, x,y) );
-	// }
-
-	public PVector getGradient(int x, int y)
+	public PVector getSurfaceGradient(int x, int y)
 	{
 		PVector gradient = new PVector();
-		if (x == 0 || x == map.width-1 || y == 0 || y == map.height-1) return gradient;
-		int index = y * map.width + x;
-		int indexNW = index - snapshot.width - 1;
+		if (x == 0 || x == width-1 || y == 0 || y == height-1) return gradient;
+		int index = y * width + x;
+		int indexNW = index - width - 1;
 
-		int heightNW = snapshot.pixels[indexNW];
-		int heightNE = snapshot.pixels[indexNW + 2];
-		int heightSW = snapshot.pixels[indexNW + 2*map.width];
-		int heightSE = snapshot.pixels[indexNW + 2*map.width + 2];
+		float heightNW = snapshot[indexNW];
+		float heightNE = snapshot[indexNW + 2];
+		float heightSW = snapshot[indexNW + 2*width];
+		float heightSE = snapshot[indexNW + 2*width + 2];
 
 		gradient.x = (heightNE - heightNW) * 0.5f + (heightSE - heightSW) * 0.5f;
 		gradient.y = (heightSW - heightNW) * 0.5f + (heightSE - heightNE) * 0.5f;
 		return gradient;
 	}
 
-	public float getGradientX(int x, int y)
+	public PImage toGradientImage(Gradient g)
 	{
-		return sobelX.applyFilter(snapshot, x,y);
-	}
-
-	public float getGradientY(int x, int y)
-	{
-		return sobelY.applyFilter(snapshot, x,y);
-	}
-
-	public PImage getValuesOnGradient(Gradient g)
-	{
-		PImage colored = getValues();
+		PImage colored = createImage(width,height, RGB);
 		colored.loadPixels();
-		ColorConverter.valueToGradientSample(colored.pixels, maxValue, g);
+		ColorConverter.valueToGradientImage(colored.pixels, map, maxValue, g);
 		colored.updatePixels();
 		return colored;
-	}
-
-	public void setValue(int x, int y, int value)
-	{
-		int index = map.width * y + x;
-		map.pixels[index] = value;
-	}
-
-	public void addValue(int x, int y, int value)
-	{
-		int index = map.width * y + x;
-		int current = map.pixels[index];
-		map.pixels[index] = constrain(current + value, 0, maxValue);
 	}
 
 	public void applyBrush(int x, int y, ValueBrush brush, boolean erase)
@@ -142,8 +120,8 @@ class ValueMap
 				int sign = erase ? -1 : 1;
 
 				int i = yy * width + xx;
-				map.pixels[i] += brushEffect * sign;
-				map.pixels[i] = constrain(map.pixels[i], 0,maxValue);
+				map[i] += brushEffect * sign;
+				map[i] = constrain(map[i], 0,maxValue);
 			}
 		}
 		// updatePixels();
@@ -152,10 +130,9 @@ class ValueMap
 	// Makes a copy of the heightmap at a moment in time.
 	private void takeSnapshot()
 	{
-		if (snapshot != null) { /* Dispose? */ }
+		if (snapshot == null) snapshot = new float[map.length];
 
-		snapshot = map.copy();
-		snapshot.loadPixels();
+		System.arraycopy(map,0, snapshot,0, map.length);
 	}
 }
 

@@ -75,23 +75,41 @@ static class ColorConverter
 		}
 	}
 
-	static boolean pctGT1 = false;
-	public static color valueToGradientSample(int value, int valueMax, Gradient g)
+	public static float colorToValue(color col)
 	{
-		float pct = (float)Integer.toUnsignedLong(value) / Integer.toUnsignedLong(valueMax);
+		int r = col >> 16 & 0xFF;
+		int g = col >> 8 & 0xFF;
+		int b = col  & 0xFF;
+		// TODO rgb color to grayscale value
+		float average = (r + g + b) / 3;
+		return average;
+	}
+
+	public static void colorToValue(int[] pixels, float[] outArray)
+	{
+		for (int i=0; i<pixels.length; i++)
+		{
+			outArray[i] = colorToValue(pixels[i]);
+		}
+	}
+
+	static boolean pctGT1 = false;
+	public static color valueToGradientSample(float value, float valueMax, Gradient g)
+	{
+		float pct = value / valueMax;
 		// if (pct > 1f) println(value, pct);
 		if (pct > 1f) pctGT1 = true;
 		color col = g.sample(pct);
 		return col;
 	}
 
-	public static void valueToGradientSample(int[] values, int valueMax, Gradient g)
+	public static void valueToGradientImage(int[] out, float[] values, float valueMax, Gradient g)
 	{
 		pctGT1 = false;
 		for (int i=0; i<values.length; i++)
 		{
 			color col = valueToGradientSample(values[i], valueMax, g);
-			values[i] = col;
+			out[i] = col;
 		}
 		if (pctGT1) println("Some values are above MAX_HEIGHT");
 	}

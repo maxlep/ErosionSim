@@ -38,13 +38,13 @@ class Terrain
 		heightmap.postStep();
 	}
 
-	public int getHeightValue(int x, int y) { return heightmap.getValue(x, y); }
-	public void setHeightValue(int x, int y, int value) {
+	public float getHeightValue(int x, int y) { return heightmap.getValue(x, y); }
+	public void setHeightValue(int x, int y, float value) {
 		heightmap.setValue(x, y, value);
 		// TODO return remainder if value exceeds max or min
 	}
 
-	public void addValue(int x, int y, int value)
+	public void addValue(int x, int y, float value)
 	{
 		heightmap.addValue(x,y, value);
 	}
@@ -53,10 +53,10 @@ class Terrain
 	public int getDownhillNeighborIndex(int x, int y)
 	{
 		int myIndex = y * heightmap.width + x;
-		int myValue = heightmap.getValue(x, y);
+		float myValue = heightmap.getValue(x, y);
 
 		int lowestNeighborIndex = myIndex;
-		int lowestNeighborValue = myValue;
+		float lowestNeighborValue = myValue;
 
 		int signJ = randomSign();
 		int signI = randomSign();
@@ -74,7 +74,7 @@ class Terrain
 
 				int neighborIndex = yy * heightmap.width + xx;
 				// if (neighborIndex >= heightmap.pixels.length) println(x, y);
-				int neighborValue = heightmap.getValue(neighborIndex);
+				float neighborValue = heightmap.getValue(neighborIndex);
 				if (neighborValue <= lowestNeighborValue)
 				{
 					lowestNeighborIndex = neighborIndex;
@@ -90,17 +90,17 @@ class Terrain
 		else return lowestNeighborIndex;
 	}
 
-	public PVector getGradient(int x, int y)
+	public PVector getSurfaceGradient(int x, int y)
 	{
 		PVector val = gradient[y][x].getValue();
 		if (val != null) return val;
 		
-		// PVector g = heightmap.getGradient(x, y);
+		PVector g = heightmap.getSurfaceGradient(x, y);
 		PVector data = gradient[y][x].getData();
-		data.x = -heightmap.getGradientX(x, y);
-		data.y = -heightmap.getGradientY(x, y);
-		// data.x = g.x;
-		// data.y = g.y;
+		// data.x = -heightmap.getGradientX(x, y);
+		// data.y = -heightmap.getGradientY(x, y);
+		data.x = g.x;
+		data.y = g.y;
 		// int flowIndex = getDownhillNeighborIndex(x,y);
 		// if (flowIndex == -1)
 		// {
@@ -117,9 +117,9 @@ class Terrain
 		return data;
 	}
 
-	public PImage getWithDisplayGradient(Gradient g)
+	public PImage toGradientImage(Gradient g)
 	{
-		PImage colored = heightmap.getValuesOnGradient(g);
+		PImage colored = heightmap.toGradientImage(g);
 		return colored;
 	}
 

@@ -1,17 +1,21 @@
 
+import java.util.LinkedList;
+import java.util.Iterator;
+
 class Droplet
 {
-	// PVector pos;
+	PVector pos;
 	PVector dir;
 	float speed;
 	float water;
-	int sediment;
+	float sediment;
 	boolean alternatingFlag;
 	int age;
 
-	public Droplet(float initialSpeed, float initialWaterVolume)
+	public Droplet(float x, float y, float initialSpeed, float initialWaterVolume)
 	{
 		// pos = new PVector(0,0);
+		pos = new PVector(x, y);
 		dir = new PVector(0,0);
 		speed = initialSpeed;
 		water = initialWaterVolume;
@@ -25,7 +29,7 @@ class WaterErosion
 {
 	public ValueMap waterSources;
 
-	private ArrayList<Droplet>[][] watermap;
+	private LinkedList<Droplet> droplets;
 	private boolean nextPassFlag;
 
 	private SimulationSettings settings;
@@ -39,15 +43,8 @@ class WaterErosion
 		this.terrain = data.terrain;
 		nextPassFlag = false;
 
+		droplets = new LinkedList<Droplet>();
 		waterSources = new ValueMap(getWidth(), getHeight(), 1);
-		watermap = (ArrayList<Droplet>[][]) new ArrayList[getWidth()][getHeight()];
-		for (int y=0; y<getHeight(); y++)
-		{
-			for (int x=0; x<getWidth(); x++)
-			{
-				watermap[y][x] = new ArrayList<Droplet>();
-			}
-		}
 	}
 
 	public int getWidth() { return data.terrain.getWidth(); }
@@ -59,12 +56,14 @@ class WaterErosion
 
 		terrain.preStep();
 
-		for (int y=0; y<getHeight(); y++)
+		Iterator<Droplet> iter = droplets.listIterator();
+		while (iter.hasNext())
 		{
-			for (int x=0; x<getWidth(); x++)
-			{
-				destroyedCount += updateDroplets(x, y);
-			}
+			Droplet d = iter.next();
+
+			int destroyed = updateDroplet(d);
+			destroyedCount += destroyed;
+			if (destroyed > 0) iter.remove();
 		}
 
 		terrain.postStep();
@@ -78,85 +77,78 @@ class WaterErosion
 			// addRandomDroplet();
 	}
 
-	private int updateDroplets(int x, int y)
+	private int updateDroplet(Droplet d)
 	{
-		int destroyedCount = 0;
-		ArrayList<Droplet> droplets = watermap[y][x];
-		if (droplets.isEmpty()) return destroyedCount;
+		if (d.alternatingFlag != nextPassFlag) return 0;
 
-		// Get the droplets' height and direction of flow
-		int height = terrain.getHeightValue(x,y);
-		PVector gradient = terrain.getGradient(x,y);
+		// Get the droplet's grid position
+		int gridX = int(d.pos.x);
+		int gridY = int(d.pos.y);
 
-		for (int i=0; i<droplets.size(); i++)
+		// Get the droplet's height and direction of flow
+		float height = terrain.getHeightValue(gridX,gridY);
+		PVector gradient = terrain.getSurfaceGradient(gridX,gridY);
+
+		// Update the droplet's direction, and count the number to be processed this step.
+		d.dir.x = (d.dir.x * settings.inertia - gradient.x * (1 - settings.inertia) );
+		d.dir.y = (d.dir.y * settings.inertia - gradient.y * (1 - settings.inertia) );
+		d.dir.normalize();
+
+		// Calculate the index the droplet flows to
+		d.pos.x = int(d.pos.x + d.dir.x);
+		d.pos.y = int(d.pos.y + d.dir.y);
+
+		// Remove the droplet if it's not moving or leaves the map
+		if ( (d.dir.x == 0 && d.dir.y == 0)
+			|| d.pos.x < 0 || d.pos.x >= getWidth()
+			|| d.pos.y < 0 || d.pos.y >= getHeight())
 		{
-			Droplet d = droplets.get(i);
-			if (d.alternatingFlag != nextPassFlag) continue;
-
-			// Update the droplet's direction, and count the number to be processed this step.
-			d.dir.x = (d.dir.x * settings.inertia - gradient.x * (1 - settings.inertia) );
-			d.dir.y = (d.dir.y * settings.inertia - gradient.y * (1 - settings.inertia) );
-			d.dir.normalize();
-
-			// Calculate the index the droplet flows to
-			int newX = int(x + d.dir.x);
-			int newY = int(y + d.dir.y);
-
-			// Remove the droplet if it's not moving or leaves the map
-			if ((newX == x && newY == y) || newX < 0 || newX >= getWidth() || newY < 0 || newY >= getHeight())
-			{
-				// TODO deposit all sediment
-				if (newX == x && newY == y) terrain.addValue(x,y, floor(d.sediment/2));
-				droplets.remove(i);
-				destroyedCount++;
-				i--;
-				continue;
-			}
-
-			int newHeight = terrain.getHeightValue(newX,newY);
-			int deltaHeight = newHeight - height;
-
-			float sedimentCapacity = Math.max( -deltaHeight * d.speed * d.water * settings.sedimentCapacityFactor, settings.minSedimentCapacity );
-
-			// // If flowing uphill or carrying more than capacity deposit some sediment
-			if (deltaHeight > 0 || d.sediment > sedimentCapacity)
-			{
-				float sedimentToDeposit;
-				if (deltaHeight > 0)
-					sedimentToDeposit = min(deltaHeight, d.sediment);
-				else
-					sedimentToDeposit = (d.sediment - sedimentCapacity) * settings.depositSpeed;
-
-				int deltaSediment = int(sedimentToDeposit);
-				d.sediment -= deltaSediment;
-				terrain.addValue(x,y, deltaSediment);
-			}
-			else	// Otherwise erode and pick up some sediment
-			{
-				float sedimentToErode = min((sedimentCapacity - d.sediment) * settings.erodeSpeed, -deltaHeight);
-
-				// TODO spread erosion out over a small area
-				int deltaSediment = ( height < sedimentToErode ? height : ceil(sedimentToErode) );
-				d.sediment += deltaSediment;
-				terrain.addValue(x,y, -deltaSediment);
-			}
-
-			d.speed = sqrt( d.speed * d.speed + deltaHeight * settings.GRAVITY );
-			d.water *= (1 - settings.evaporateSpeed);
-
-			// println(x,y, newX,newY, d.speed,d.dir,d.water,d.sediment);
-
-			// Move droplet to it's next position in the map
-			d.alternatingFlag = !d.alternatingFlag;
-			droplets.remove(i);
-			i--;
-			if (++d.age >= settings.maxDropletLifetime)
-				destroyedCount++;
-			else
-				watermap[newY][newX].add(d);
+			// TODO deposit all sediment
+			if (d.dir.x == 0 && d.dir.y == 0) terrain.addValue(gridX,gridY, floor(d.sediment/2));
+			return 1;
 		}
 
-		return destroyedCount;
+		int newGridX = int(d.pos.x);
+		int newGridY = int(d.pos.y);
+
+		float newHeight = terrain.getHeightValue(newGridX,newGridY);
+		float deltaHeight = newHeight - height;
+
+		float sedimentCapacity = Math.max( -deltaHeight * d.speed * d.water * settings.sedimentCapacityFactor, settings.minSedimentCapacity );
+
+		// // If flowing uphill or carrying more than capacity deposit some sediment
+		if (deltaHeight > 0 || d.sediment > sedimentCapacity)
+		{
+			float sedimentToDeposit;
+			if (deltaHeight > 0)
+				sedimentToDeposit = min(deltaHeight, d.sediment);
+			else
+				sedimentToDeposit = (d.sediment - sedimentCapacity) * settings.depositSpeed;
+
+			float deltaSediment = sedimentToDeposit;
+			d.sediment -= deltaSediment;
+			terrain.addValue(gridX,gridY, deltaSediment);
+		}
+		else	// Otherwise erode and pick up some sediment
+		{
+			float sedimentToErode = min((sedimentCapacity - d.sediment) * settings.erodeSpeed, -deltaHeight);
+
+			// TODO spread erosion out over a small area
+			float deltaSediment = ( height < sedimentToErode ? height : ceil(sedimentToErode) );
+			d.sediment += deltaSediment;
+			terrain.addValue(gridX,gridY, -deltaSediment);
+		}
+
+		d.speed = sqrt( d.speed * d.speed + deltaHeight * settings.GRAVITY );
+		d.water *= (1 - settings.evaporateSpeed);
+
+		// println(x,y, newX,newY, d.speed,d.dir,d.water,d.sediment);
+
+		d.alternatingFlag = !d.alternatingFlag;
+		if (++d.age >= settings.maxDropletLifetime)
+			return 1;
+
+		return 0;
 	}
 
 	public void draw(PGraphics canvas)
@@ -164,22 +156,21 @@ class WaterErosion
 		// Debug display
 		canvas.fill(0,0,255);
 		canvas.noStroke();
-		for (int y=0; y<getHeight(); y++)
+
+		Iterator<Droplet> iter = droplets.listIterator();
+		while (iter.hasNext())
 		{
-			for (int x=0; x<getWidth(); x++)
-			{
-				if (!watermap[y][x].isEmpty())
-				{
-					canvas.rect(x,y, 1,1);
-				}
-			}
+			Droplet d = iter.next();
+			int gridX = int(d.pos.x);
+			int gridY = int(d.pos.y);
+			canvas.rect(gridX,gridY, 1,1);
 		}
 	}
 
 	public void addDroplet(int x, int y)
 	{
-		Droplet d = new Droplet(settings.initialSpeed, settings.initialWater);
-		watermap[y][x].add(d);
+		Droplet d = new Droplet(x,y, settings.initialSpeed, settings.initialWater);
+		droplets.add(d);
 		data.dropletCount++;
 	}
 

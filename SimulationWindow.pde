@@ -67,7 +67,7 @@ class SimulationWindow extends PApplet
 			scaledY > 0 && scaledY < settings.height)
 		{
 			valMousePos.setText( String.format("%d, %d", scaledX,scaledY) );
-			valHeight.setText( Integer.toString( data.terrain.getHeightValue(scaledX,scaledY) ) );
+			valHeight.setText( Float.toString( data.terrain.getHeightValue(scaledX,scaledY) ) );
 		}
 	}
 
@@ -84,13 +84,13 @@ class SimulationWindow extends PApplet
 			break;
 		case HEIGHT: // Modify terrain
 			break;
-		case ROCK: // Read heightmap values
-			int height = data.terrain.getHeightValue(scaledX, scaledY);
+		case ROCK: // Modify terrain resistance
+
+			break;
+		case DEBUG: // Read heightmap values
+			float height = data.terrain.getHeightValue(scaledX, scaledY);
 			println("Clicked",scaledX,"x",scaledY,"y",height,"value");
 			// println("Clicked",scaledX,"x",scaledY,"y",height.toUnsignedString(),"value");
-			break;
-		case DEBUG:
-
 			break;
 		}
 	}
@@ -114,13 +114,13 @@ class SimulationWindow extends PApplet
 		case HEIGHT: // Modify terrain
 			data.terrain.heightmap.applyBrush(scaledX, scaledY, settings.terrainBrush, rightClick);
 			break;
-		case ROCK: // Read heightmap values
-			int height = data.terrain.getHeightValue(scaledX, scaledY);
+		case ROCK: // Modify terrain resistance
+
+			break;
+		case DEBUG: // Read heightmap values
+			float height = data.terrain.getHeightValue(scaledX, scaledY);
 			println("Clicked",scaledX,"x",scaledY,"y",height,"value");
 			// println("Clicked",scaledX,"x",scaledY,"y",height.toUnsignedString(),"value");
-			break;
-		case DEBUG:
-
 			break;
 		}
 	}
@@ -136,7 +136,7 @@ class SimulationWindow extends PApplet
 		String filename = String.format("%s_%d.png", settings.getSourceHeightmapFilename(), data.getSimulationStep());
 		String path = "Outputs/" + filename;
 
-		PImage colored = data.terrain.getWithDisplayGradient(settings.displayGradient);
+		PImage colored = data.terrain.toGradientImage(settings.displayGradient);
 		colored.save(path);
 		println("Saved image", path);
 	}
