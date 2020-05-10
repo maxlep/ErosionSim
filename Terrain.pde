@@ -90,13 +90,15 @@ class Terrain
 		else return lowestNeighborIndex;
 	}
 
-	public PVector getSurfaceGradient(int x, int y)
+	public PVector getSurfaceGradient(float x, float y)
 	{
-		PVector val = gradient[y][x].getValue();
+		int gridX = int(x);
+		int gridY = int(y);
+		PVector val = gradient[gridY][gridX].getValue();
 		if (val != null) return val;
 		
 		PVector g = heightmap.getSurfaceGradient(x, y);
-		PVector data = gradient[y][x].getData();
+		PVector data = gradient[gridY][gridX].getData();
 		// data.x = -heightmap.getGradientX(x, y);
 		// data.y = -heightmap.getGradientY(x, y);
 		data.x = g.x;

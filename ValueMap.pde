@@ -76,20 +76,26 @@ class ValueMap
 		return Arrays.copyOf(map, map.length);
 	}
 
-	public PVector getSurfaceGradient(int x, int y)
+	public PVector getSurfaceGradient(float x, float y)
 	{
 		PVector gradient = new PVector();
-		if (x == 0 || x == width-1 || y == 0 || y == height-1) return gradient;
-		int index = y * width + x;
-		int indexNW = index - width - 1;
 
-		float heightNW = snapshot[indexNW];
-		float heightNE = snapshot[indexNW + 2];
-		float heightSW = snapshot[indexNW + 2*width];
-		float heightSE = snapshot[indexNW + 2*width + 2];
+		int gridX = int(x);
+		int gridY = int(y);
+		if (gridX == 0 || gridX == width-1 || gridY == 0 || gridY == height-1) return gradient;
 
-		gradient.x = (heightNE - heightNW) * 0.5f + (heightSE - heightSW) * 0.5f;
-		gradient.y = (heightSW - heightNW) * 0.5f + (heightSE - heightNE) * 0.5f;
+		int index = gridY * width + gridX;
+		int indexSE = index;
+
+		float heightNW = snapshot[indexSE - width - 1];
+		float heightNE = snapshot[indexSE - width];
+		float heightSW = snapshot[indexSE - 1];
+		float heightSE = snapshot[indexSE];
+
+		float cellX = x - gridX;
+		float cellY = y - gridY;
+		gradient.x = -( (heightNE - heightNW) * (1 - cellY) + (heightSE - heightSW) * cellY );
+		gradient.y = -( (heightSW - heightNW) * (1 - cellX) + (heightSE - heightNE) * cellX );
 		return gradient;
 	}
 

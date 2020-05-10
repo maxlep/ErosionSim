@@ -72,7 +72,7 @@ public void setGUIdefaults()
 	listDisplayGradients_click(listDisplayGradients, GEvent.CLICKED);
 
 	// TODO add droplet limit GUI
-	settingsInstance.dropletSoftLimit = 50000;
+	settingsInstance.dropletSoftLimit = 10000;
 
 	settingsInstance.waterBrush = new ValueBrush(80, 1f, 1);
 	settingsInstance.terrainBrush = new ValueBrush(80, 0.2f, 2);

@@ -18,7 +18,7 @@ class SimulationSettings
 	public float erodeSpeed = .01f;
 	public float depositSpeed = .01f;
 	public float evaporateSpeed = .01f;
-	public int maxDropletLifetime = 100;
+	public int maxDropletLifetime = 50;
 
 	public boolean running;
 	public boolean showWater;

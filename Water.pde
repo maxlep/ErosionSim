@@ -90,21 +90,20 @@ class WaterErosion
 		PVector gradient = terrain.getSurfaceGradient(gridX,gridY);
 
 		// Update the droplet's direction, and count the number to be processed this step.
-		d.dir.x = (d.dir.x * settings.inertia - gradient.x * (1 - settings.inertia) );
-		d.dir.y = (d.dir.y * settings.inertia - gradient.y * (1 - settings.inertia) );
+		d.dir.x = (d.dir.x * settings.inertia + gradient.x * (1 - settings.inertia) );
+		d.dir.y = (d.dir.y * settings.inertia + gradient.y * (1 - settings.inertia) );
 		d.dir.normalize();
 
 		// Calculate the index the droplet flows to
-		d.pos.x = int(d.pos.x + d.dir.x);
-		d.pos.y = int(d.pos.y + d.dir.y);
+		d.pos.x = d.pos.x + d.dir.x;
+		d.pos.y = d.pos.y + d.dir.y;
 
 		// Remove the droplet if it's not moving or leaves the map
 		if ( (d.dir.x == 0 && d.dir.y == 0)
 			|| d.pos.x < 0 || d.pos.x >= getWidth()
 			|| d.pos.y < 0 || d.pos.y >= getHeight())
 		{
-			// TODO deposit all sediment
-			if (d.dir.x == 0 && d.dir.y == 0) terrain.addValue(gridX,gridY, floor(d.sediment/2));
+			if (d.dir.x == 0 && d.dir.y == 0) terrain.addValue(gridX,gridY, d.sediment);
 			return 1;
 		}
 
@@ -139,10 +138,10 @@ class WaterErosion
 			terrain.addValue(gridX,gridY, -deltaSediment);
 		}
 
-		d.speed = sqrt( d.speed * d.speed + deltaHeight * settings.GRAVITY );
+		d.speed = sqrt( d.speed * d.speed + abs(deltaHeight) * settings.GRAVITY );
 		d.water *= (1 - settings.evaporateSpeed);
 
-		// println(x,y, newX,newY, d.speed,d.dir,d.water,d.sediment);
+		// println(gridX,gridY, newGridX,newGridY, d.speed,d.dir,d.water,d.sediment,deltaHeight);
 
 		d.alternatingFlag = !d.alternatingFlag;
 		if (++d.age >= settings.maxDropletLifetime)

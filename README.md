@@ -21,6 +21,7 @@ On linux this is:
 **s** - Save the current terrain to `./Outputs`
 
 ## TODO
+- Fix directional bias on flat ground
 - Implement terrain resistance map to mimic different materials
 - Add gray color scheme for disabled buttons
 - Remember settings window position
