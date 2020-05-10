@@ -68,6 +68,8 @@ class SimulationWindow extends PApplet
 		{
 			valMousePos.setText( String.format("%d, %d", scaledX,scaledY) );
 			valHeight.setText( String.format("%.2f", data.terrain.getHeightValue(scaledX,scaledY)) );
+			PVector gradient = data.terrain.getSurfaceGradient(scaledX,scaledY);
+			valGradient.setText( String.format("%.2f, %.2f", gradient.x, gradient.y) );
 		}
 	}
 

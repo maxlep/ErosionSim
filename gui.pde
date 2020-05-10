@@ -136,7 +136,7 @@ public void createGUI(){
   G4P.setInputFont("Arial", G4P.PLAIN, 14);
   G4P.setSliderFont("Arial", G4P.PLAIN, 11);
   surface.setTitle("Settings");
-  pnlControls = new GPanel(this, 0, 70, 300, 150, "Controls");
+  pnlControls = new GPanel(this, 0, 70, 300, 120, "Controls");
   pnlControls.setCollapsible(false);
   pnlControls.setDraggable(false);
   pnlControls.setText("Controls");
@@ -184,7 +184,7 @@ public void createGUI(){
   btnHeightmapBrowse.addEventHandler(this, "btnHeightmapBrowse_click");
   pnlSourceHeightmap.addControl(txtHeightmapPath);
   pnlSourceHeightmap.addControl(btnHeightmapBrowse);
-  pnlTools = new GPanel(this, 0, 220, 300, 190, "Tools");
+  pnlTools = new GPanel(this, 0, 190, 300, 180, "Tools");
   pnlTools.setCollapsible(false);
   pnlTools.setDraggable(false);
   pnlTools.setText("Tools");
@@ -226,7 +226,7 @@ public void createGUI(){
   pnlTools.addControl(lblMouseMode);
   pnlTools.addControl(sliderBrushRadius);
   pnlTools.addControl(sliderBrushHardness);
-  pnlInfo = new GPanel(this, 0, 410, 300, 90, "Debug Info");
+  pnlInfo = new GPanel(this, 0, 370, 300, 130, "Debug Info");
   pnlInfo.setCollapsible(false);
   pnlInfo.setDraggable(false);
   pnlInfo.setText("Debug Info");
@@ -271,6 +271,14 @@ public void createGUI(){
   valHeight.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   valHeight.setText("#");
   valHeight.setOpaque(false);
+  lblGradient = new GLabel(this, 0, 80, 70, 20);
+  lblGradient.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lblGradient.setText("Gradient:");
+  lblGradient.setOpaque(false);
+  valGradient = new GLabel(this, 70, 80, 100, 20);
+  valGradient.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  valGradient.setText("#,#");
+  valGradient.setOpaque(false);
   pnlInfo.addControl(lblDropletCount);
   pnlInfo.addControl(valDropletCount);
   pnlInfo.addControl(lblStepCount);
@@ -281,6 +289,8 @@ public void createGUI(){
   pnlInfo.addControl(valMousePos);
   pnlInfo.addControl(lblHeight);
   pnlInfo.addControl(valHeight);
+  pnlInfo.addControl(lblGradient);
+  pnlInfo.addControl(valGradient);
 }
 
 // Variable declarations 
@@ -313,3 +323,5 @@ GLabel lblMousePos;
 GLabel valMousePos; 
 GLabel lblHeight; 
 GLabel valHeight; 
+GLabel lblGradient; 
+GLabel valGradient; 
