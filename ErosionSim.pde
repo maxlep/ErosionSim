@@ -45,6 +45,17 @@ void draw()
 			valStepRate.setText( Integer.toString( activeSimulation.data.getLastStepRate() ) );
 		else
 			valStepRate.setText("#");
+
+		int scaledX = activeSimulation.data.mouseX / activeSimulation.settings.displayScale;
+		int scaledY = activeSimulation.data.mouseY / activeSimulation.settings.displayScale;
+		if (scaledX > 0 && scaledX < activeSimulation.settings.width &&
+			scaledY > 0 && scaledY < activeSimulation.settings.height)
+		{
+			valMousePos.setText( String.format("%d, %d", scaledX,scaledY) );
+			valHeight.setText( String.format("%.2f", activeSimulation.data.terrain.getHeightValue(scaledX,scaledY)) );
+			PVector gradient = activeSimulation.data.terrain.getSurfaceGradient(scaledX,scaledY);
+			valGradient.setText( String.format("%.2f, %.2f", gradient.x, gradient.y) );
+		}
 	}
 }
 

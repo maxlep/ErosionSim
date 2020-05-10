@@ -60,17 +60,9 @@ class SimulationWindow extends PApplet
 		int radius = settings.activeBrush.getRadius() * settings.displayScale;
 		ellipse(mouseX,mouseY, radius,radius);
 
-		// Update some GUI debug values
-		int scaledX = mouseX / activeSimulation.settings.displayScale;
-		int scaledY = mouseY / activeSimulation.settings.displayScale;
-		if (scaledX > 0 && scaledX < settings.width &&
-			scaledY > 0 && scaledY < settings.height)
-		{
-			valMousePos.setText( String.format("%d, %d", scaledX,scaledY) );
-			valHeight.setText( String.format("%.2f", data.terrain.getHeightValue(scaledX,scaledY)) );
-			PVector gradient = data.terrain.getSurfaceGradient(scaledX,scaledY);
-			valGradient.setText( String.format("%.2f, %.2f", gradient.x, gradient.y) );
-		}
+		// Save mouse position for display in the settings window
+		data.mouseX = mouseX;
+		data.mouseY = mouseY;
 	}
 
 	void mouseClicked()
