@@ -67,7 +67,7 @@ class SimulationWindow extends PApplet
 			scaledY > 0 && scaledY < settings.height)
 		{
 			valMousePos.setText( String.format("%d, %d", scaledX,scaledY) );
-			valHeight.setText( Float.toString( data.terrain.getHeightValue(scaledX,scaledY) ) );
+			valHeight.setText( String.format("%.2f", data.terrain.getHeightValue(scaledX,scaledY)) );
 		}
 	}
 

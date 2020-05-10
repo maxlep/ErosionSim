@@ -21,8 +21,6 @@ On linux this is:
 **s** - Save the current terrain to `./Outputs`
 
 ## TODO
-- Refactor heightmap to use float values
-    - This will hopefully prevent drops getting stuck in discrete holes
 - Implement terrain resistance map to mimic different materials
 - Add gray color scheme for disabled buttons
 - Remember settings window position

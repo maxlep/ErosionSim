@@ -138,6 +138,7 @@ public void createGUI(){
   surface.setTitle("Settings");
   pnlControls = new GPanel(this, 0, 70, 300, 150, "Controls");
   pnlControls.setCollapsible(false);
+  pnlControls.setDraggable(false);
   pnlControls.setText("Controls");
   pnlControls.setOpaque(true);
   btnReload = new GButton(this, 10, 30, 60, 30);
@@ -171,6 +172,7 @@ public void createGUI(){
   pnlControls.addControl(listDisplayGradients);
   pnlSourceHeightmap = new GPanel(this, 0, 0, 300, 70, "Source Heightmap");
   pnlSourceHeightmap.setCollapsible(false);
+  pnlSourceHeightmap.setDraggable(false);
   pnlSourceHeightmap.setText("Source Heightmap");
   pnlSourceHeightmap.setOpaque(true);
   txtHeightmapPath = new GTextField(this, 10, 30, 210, 30, G4P.SCROLLBARS_NONE);
@@ -184,6 +186,7 @@ public void createGUI(){
   pnlSourceHeightmap.addControl(btnHeightmapBrowse);
   pnlTools = new GPanel(this, 0, 220, 300, 190, "Tools");
   pnlTools.setCollapsible(false);
+  pnlTools.setDraggable(false);
   pnlTools.setText("Tools");
   pnlTools.setOpaque(true);
   lblMouseMode = new GLabel(this, 10, 30, 86, 20);
@@ -224,6 +227,8 @@ public void createGUI(){
   pnlTools.addControl(sliderBrushRadius);
   pnlTools.addControl(sliderBrushHardness);
   pnlInfo = new GPanel(this, 0, 410, 300, 90, "Debug Info");
+  pnlInfo.setCollapsible(false);
+  pnlInfo.setDraggable(false);
   pnlInfo.setText("Debug Info");
   pnlInfo.setOpaque(true);
   lblDropletCount = new GLabel(this, 0, 40, 70, 20);
