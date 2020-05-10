@@ -142,7 +142,7 @@ class ValueBrush
 	private int size;
 	private float hardness;
 	private int value;
-	private int[][] brushMask;
+	private float[][] brushMask;
 
 	public ValueBrush(int radius, float hardness, int value)
 	{
@@ -150,7 +150,7 @@ class ValueBrush
 		this.size = 2 * radius + 1;
 		this.hardness = hardness;
 		this.value = value;
-		brushMask = new int[size][size];
+		brushMask = new float[size][size];
 		recalculateMask();
 	}
 
@@ -164,7 +164,7 @@ class ValueBrush
 		this.radius = radius;
 		this.size = 2 * radius + 1;
 
-		brushMask = new int[size][size];
+		brushMask = new float[size][size];
 		recalculateMask();
 	}
 
@@ -180,7 +180,7 @@ class ValueBrush
 		recalculateMask();
 	}
 
-	public int getMaskValue(int x, int y)
+	public float getMaskValue(int x, int y)
 	{
 		return brushMask[y][x];
 	}
@@ -200,7 +200,7 @@ class ValueBrush
 					float pct = (float)sqrDistance / sqrRadius;
 					float brushEffect = 1 - (float)Math.pow(pct, hardness * 10);
 
-					brushMask[y][x] = (int)(value * brushEffect);
+					brushMask[y][x] = value * brushEffect;
 				}
 			}
 		}
