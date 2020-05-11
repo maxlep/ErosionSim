@@ -20,6 +20,7 @@ On linux this is:
 ## TODO
 - Add gradient editor
 - Fix directional bias on flat ground
+- Remove GUI debug prints
 - Implement terrain resistance map to mimic different materials
 - Add gray color scheme for disabled buttons
 - Remember settings window position
