@@ -157,9 +157,33 @@ public void loadGradientPresets()
 	colors = new color[] { color(131,58,180), color(253,29,29), color(252,176,69) };
 	gradientPresets.put( "Sunset", new Gradient(colors) );
 
-	// colors = new color[] { color(), color(), color(), color(), color(), color() };
-	// gradientPresets.put( "Stripes", new Gradient(colors) );
+	color line = color(152,27,27);
+	color bottom = color(170,199,233);
+	color middle = color(255,247,200);
+	color top = color(213,246,160);
+	colors = new color[] {
+		bottom, bottom, bottom, line,
+		bottom, bottom, bottom, line,
+		bottom, bottom, bottom, line,
+		bottom, bottom, bottom, line,
+		middle, middle, middle, line,
+		middle, middle, middle, line,
+		middle, middle, middle, line,
+		middle, middle, middle, line,
+		top, top, top, top,
+		top, top, top, top,
+		top, top, top, top,
+		top, top, top, top};
+	gradientPresets.put( "Topography", new Gradient(colors) );
 
-	colors = new color[] { color(0), color(255), color(0), color(255), color(0), color(255), color(0), color(255) };
+	color black = color(0);
+	color white = color(255);
+	colors = new color[] {
+		black,white, black,white, black,white, black,white, black,white, black,white, black,white, black,white };
+	gradientPresets.put( "Zebra", new Gradient(colors) );
+
+	colors = new color[] {
+		black,white, black,white, black,white, black,white, black,white, black,white, black,white, black,white,
+		black,white, black,white, black,white, black,white, black,white, black,white, black,white, black,white };
 	gradientPresets.put( "Hypnotize", new Gradient(colors) );
 }
