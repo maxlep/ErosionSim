@@ -198,7 +198,7 @@ class ValueBrush
 		
 		for (int y=0; y<size; y++)
 		{
-			for (int x=0; x<2*radius; x++)
+			for (int x=0; x<size; x++)
 			{
 				double sqrDistance = Math.pow(x - center.x, 2) + Math.pow(y - center.y, 2);
 				if (sqrDistance <= sqrRadius)

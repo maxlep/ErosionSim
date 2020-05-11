@@ -229,8 +229,9 @@ public void createGUI(){
   chkWater.setOpaque(false);
   chkWater.addEventHandler(this, "chkWater_clicked");
   chkWater.setSelected(true);
-  listDisplayGradients = new GDropList(this, 80, 370, 110, 120, 3, 10);
+  listDisplayGradients = new GDropList(this, 80, 370, 110, 330, 10, 20);
   listDisplayGradients.setItems(loadStrings("list_261396"), 0);
+  listDisplayGradients.setLocalColorScheme(GCScheme.BLUE_SCHEME);
   listDisplayGradients.addEventHandler(this, "listDisplayGradients_click");
   sliderErodeSpeed = new GSlider(this, 10, 270, 140, 40, 10.0);
   sliderErodeSpeed.setShowValue(true);

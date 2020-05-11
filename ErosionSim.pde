@@ -149,5 +149,17 @@ public void loadGradientPresets()
 
 	// colors = new color[] { color(16,14,140), color(32,108,201), color(255,251,212), color(72,161,0) };
 	colors = new color[] { color(5,0,94), color(18,18,144), color(0,63,255), color(245,244,193), color(25,93,23), color(0,173,23) };
-	gradientPresets.put( "Land", new Gradient(colors) );
+	gradientPresets.put( "Coasts", new Gradient(colors) );
+
+	colors = new color[] { color(26,96,24), color(5,186,0), color(104,218,100), color(182,161,127), color(194,182,157), color(255) };
+	gradientPresets.put( "Mountains", new Gradient(colors) );
+
+	colors = new color[] { color(131,58,180), color(253,29,29), color(252,176,69) };
+	gradientPresets.put( "Sunset", new Gradient(colors) );
+
+	// colors = new color[] { color(), color(), color(), color(), color(), color() };
+	// gradientPresets.put( "Stripes", new Gradient(colors) );
+
+	colors = new color[] { color(0), color(255), color(0), color(255), color(0), color(255), color(0), color(255) };
+	gradientPresets.put( "Hypnotize", new Gradient(colors) );
 }
