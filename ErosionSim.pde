@@ -8,7 +8,7 @@ private static int windowX=500, windowY=500;
 
 void settings()
 {
-	size(300,500);
+	size(300,800);
 }
 
 void setup()
@@ -76,20 +76,37 @@ public void setGUIdefaults()
 	txtHeightmapPath.setText("Heightmaps/heightmap04.png");
 	txtHeightmapPath_change(txtHeightmapPath, GEvent.ENTERED);
 
+	sliderDropletLimit.setValue(10000);
+	sliderDropletLimit_change(sliderDropletLimit, GEvent.CHANGED);
+	sliderDropletLifetime.setValue(40);
+	sliderDropletLifetime_change(sliderDropletLimit, GEvent.CHANGED);
+
+	sliderInitialSpeed.setValue(1);
+	sliderInitialSpeed_change(sliderInitialSpeed, GEvent.CHANGED);
+	sliderInertia.setValue(0.05f);
+	sliderInertia_change(sliderInertia, GEvent.CHANGED);
+
+	sliderInitialWater.setValue(1);
+	sliderInitialWater_change(sliderInitialWater, GEvent.CHANGED);
+	sliderEvaporateSpeed.setValue(0.05f);
+	sliderEvaporateSpeed_change(sliderEvaporateSpeed, GEvent.CHANGED);
+
+	sliderErodeSpeed.setValue(0.01f);
+	sliderErodeSpeed_change(sliderErodeSpeed, GEvent.CHANGED);
+	sliderDepositSpeed.setValue(0.01f);
+	sliderDepositSpeed_change(sliderDepositSpeed, GEvent.CHANGED);
+
 	chkWater.setSelected(true);
 	chkWater_clicked(chkWater, GEvent.SELECTED);
 
-	listDisplayGradients.setItems( gradientPresets.keySet().toArray(new String[0]), 1 );
+	listDisplayGradients.setItems( gradientPresets.keySet().toArray(new String[0]), 2 );
 	listDisplayGradients_click(listDisplayGradients, GEvent.CLICKED);
-
-	// TODO add droplet limit GUI
-	settingsInstance.dropletSoftLimit = 10000;
 
 	settingsInstance.waterBrush = new ValueBrush(80, 1f, 1);
 	settingsInstance.terrainBrush = new ValueBrush(80, 0.2f, 2);
 	settingsInstance.resistanceBrush = new ValueBrush(80, 1f, 1);
-	optMouseTerrain.setSelected(true);
-	optMouseTerrain_clicked(optMouseTerrain, GEvent.SELECTED);
+	optMouseWater.setSelected(true);
+	optMouseWater_clicked(optMouseWater, GEvent.SELECTED);
 
 	// TODO connect display scale to GUI
 	settingsInstance.displayScale = 1;
@@ -129,4 +146,8 @@ public void loadGradientPresets()
 
 	colors = new color[] { color(0,0,255), color(64,252,255), color(255,240,73), color(255,42,42) };
 	gradientPresets.put( "Heatmap", new Gradient(colors) );
+
+	// colors = new color[] { color(16,14,140), color(32,108,201), color(255,251,212), color(72,161,0) };
+	colors = new color[] { color(5,0,94), color(18,18,144), color(0,63,255), color(245,244,193), color(25,93,23), color(0,173,23) };
+	gradientPresets.put( "Land", new Gradient(colors) );
 }

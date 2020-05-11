@@ -76,6 +76,69 @@ public void listDisplayGradients_click(GDropList source, GEvent event) { //_CODE
 
 } //_CODE_:listDisplayGradients:261396:
 
+public void sliderErodeSpeed_change(GSlider source, GEvent event) { //_CODE_:sliderErodeSpeed:635420:
+  println("sliderErodeSpeed - GSlider >> GEvent." + event + " @ " + millis());
+
+  settingsInstance.erodeSpeed = source.getValueF();
+
+} //_CODE_:sliderErodeSpeed:635420:
+
+public void sliderDepositSpeed_change(GSlider source, GEvent event) { //_CODE_:sliderDepositSpeed:833393:
+  println("sliderDepositSpeed - GSlider >> GEvent." + event + " @ " + millis());
+
+  settingsInstance.depositSpeed = source.getValueF();
+
+} //_CODE_:sliderDepositSpeed:833393:
+
+public void sliderInitialSpeed_change(GSlider source, GEvent event) { //_CODE_:sliderInitialSpeed:667892:
+  println("sliderInitialSpeed - GSlider >> GEvent." + event + " @ " + millis());
+
+  settingsInstance.initialSpeed = source.getValueF();
+
+} //_CODE_:sliderInitialSpeed:667892:
+
+public void sliderInertia_change(GSlider source, GEvent event) { //_CODE_:sliderInertia:777540:
+  println("sliderInertia - GSlider >> GEvent." + event + " @ " + millis());
+
+  settingsInstance.inertia = source.getValueF();
+
+} //_CODE_:sliderInertia:777540:
+
+public void sliderInitialWater_change(GSlider source, GEvent event) { //_CODE_:sliderInitialWater:899212:
+  println("sliderInitialWater - GSlider >> GEvent." + event + " @ " + millis());
+
+  settingsInstance.initialWater = source.getValueF();
+
+} //_CODE_:sliderInitialWater:899212:
+
+public void sliderEvaporateSpeed_change(GSlider source, GEvent event) { //_CODE_:sliderEvaporateSpeed:898709:
+  println("sliderEvaporateSpeed - GSlider >> GEvent." + event + " @ " + millis());
+
+  settingsInstance.evaporateSpeed = source.getValueF();
+
+} //_CODE_:sliderEvaporateSpeed:898709:
+
+public void sliderDropletLimit_change(GSlider source, GEvent event) { //_CODE_:sliderDropletLimit:631859:
+  println("sliderDropletLimit - GSlider >> GEvent." + event + " @ " + millis());
+
+  settingsInstance.dropletSoftLimit = source.getValueI();
+
+} //_CODE_:sliderDropletLimit:631859:
+
+public void sliderDropletLifetime_change(GSlider source, GEvent event) { //_CODE_:sliderDropletLifetime:273768:
+  println("sliderDropletLifetime - GSlider >> GEvent." + event + " @ " + millis());
+
+  settingsInstance.maxDropletLifetime = source.getValueI();
+
+} //_CODE_:sliderDropletLifetime:273768:
+
+public void btnReset_click(GButton source, GEvent event) { //_CODE_:btnReset:423398:
+  println("btnReset - GButton >> GEvent." + event + " @ " + millis());
+
+  setGUIdefaults();
+
+} //_CODE_:btnReset:423398:
+
 public void txtHeightmapPath_change(GTextField source, GEvent event) { //_CODE_:txtHeightmapPath:394852:
   println("txtHeightmapPath - GTextField >> GEvent." + event + " @ " + millis());
 
@@ -91,6 +154,11 @@ public void txtHeightmapPath_change(GTextField source, GEvent event) { //_CODE_:
 
 public void btnHeightmapBrowse_click(GButton source, GEvent event) { //_CODE_:btnHeightmapBrowse:338927:
   println("btnHeightmapBrowse - GButton >> GEvent." + event + " @ " + millis());
+
+  String selected = G4P.selectInput("Source heightmap", "./Heightmaps");
+  txtHeightmapPath.setText(selected);
+  txtHeightmapPath_change(txtHeightmapPath, GEvent.ENTERED);
+
 } //_CODE_:btnHeightmapBrowse:338927:
 
 public void optMouseTerrain_clicked(GOption source, GEvent event) { //_CODE_:optMouseTerrain:370312:
@@ -136,7 +204,7 @@ public void createGUI(){
   G4P.setInputFont("Arial", G4P.PLAIN, 14);
   G4P.setSliderFont("Arial", G4P.PLAIN, 11);
   surface.setTitle("Settings");
-  pnlControls = new GPanel(this, 0, 70, 300, 120, "Controls");
+  pnlControls = new GPanel(this, 0, 70, 300, 410, "Controls");
   pnlControls.setCollapsible(false);
   pnlControls.setDraggable(false);
   pnlControls.setText("Controls");
@@ -149,27 +217,120 @@ public void createGUI(){
   btnPlay.setText("Play");
   btnPlay.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   btnPlay.addEventHandler(this, "btnPlay_click");
-  btnSave = new GButton(this, 200, 80, 90, 30);
+  btnSave = new GButton(this, 200, 370, 90, 30);
   btnSave.setText("Save frame");
   btnSave.addEventHandler(this, "btnSave_click");
   btnStep = new GButton(this, 150, 30, 60, 30);
   btnStep.setText("Step");
   btnStep.addEventHandler(this, "btnStep_click");
-  chkWater = new GCheckbox(this, 220, 30, 70, 30);
+  chkWater = new GCheckbox(this, 10, 370, 70, 30);
   chkWater.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
   chkWater.setText("Show water");
   chkWater.setOpaque(false);
   chkWater.addEventHandler(this, "chkWater_clicked");
   chkWater.setSelected(true);
-  listDisplayGradients = new GDropList(this, 10, 80, 180, 120, 3, 10);
+  listDisplayGradients = new GDropList(this, 80, 370, 110, 120, 3, 10);
   listDisplayGradients.setItems(loadStrings("list_261396"), 0);
   listDisplayGradients.addEventHandler(this, "listDisplayGradients_click");
+  sliderErodeSpeed = new GSlider(this, 10, 270, 140, 40, 10.0);
+  sliderErodeSpeed.setShowValue(true);
+  sliderErodeSpeed.setLimits(0.01, 0.0, 1.0);
+  sliderErodeSpeed.setNumberFormat(G4P.DECIMAL, 2);
+  sliderErodeSpeed.setOpaque(false);
+  sliderErodeSpeed.addEventHandler(this, "sliderErodeSpeed_change");
+  sliderDepositSpeed = new GSlider(this, 150, 270, 140, 40, 10.0);
+  sliderDepositSpeed.setShowValue(true);
+  sliderDepositSpeed.setLimits(0.01, 0.0, 1.0);
+  sliderDepositSpeed.setNumberFormat(G4P.DECIMAL, 2);
+  sliderDepositSpeed.setOpaque(false);
+  sliderDepositSpeed.addEventHandler(this, "sliderDepositSpeed_change");
+  lblErodeSpeed = new GLabel(this, 0, 250, 140, 20);
+  lblErodeSpeed.setText("Erode speed");
+  lblErodeSpeed.setOpaque(false);
+  lblDepositSpeed = new GLabel(this, 150, 250, 140, 20);
+  lblDepositSpeed.setText("Deposit speed");
+  lblDepositSpeed.setOpaque(false);
+  lblInitialSpeed = new GLabel(this, 0, 130, 140, 20);
+  lblInitialSpeed.setText("Initial speed");
+  lblInitialSpeed.setOpaque(false);
+  sliderInitialSpeed = new GSlider(this, 10, 150, 140, 40, 10.0);
+  sliderInitialSpeed.setShowValue(true);
+  sliderInitialSpeed.setLimits(1.0, 0.01, 10.0);
+  sliderInitialSpeed.setNumberFormat(G4P.DECIMAL, 2);
+  sliderInitialSpeed.setOpaque(false);
+  sliderInitialSpeed.addEventHandler(this, "sliderInitialSpeed_change");
+  lblInertia = new GLabel(this, 150, 130, 140, 20);
+  lblInertia.setText("Inertia");
+  lblInertia.setOpaque(false);
+  sliderInertia = new GSlider(this, 150, 150, 140, 40, 10.0);
+  sliderInertia.setShowValue(true);
+  sliderInertia.setLimits(0.05, 0.0, 1.0);
+  sliderInertia.setNumberFormat(G4P.DECIMAL, 2);
+  sliderInertia.setOpaque(false);
+  sliderInertia.addEventHandler(this, "sliderInertia_change");
+  lblInitialWater = new GLabel(this, 0, 190, 150, 20);
+  lblInitialWater.setText("Initial water volume");
+  lblInitialWater.setOpaque(false);
+  sliderInitialWater = new GSlider(this, 10, 210, 140, 40, 10.0);
+  sliderInitialWater.setShowValue(true);
+  sliderInitialWater.setLimits(0.5, 0.01, 10.0);
+  sliderInitialWater.setNumberFormat(G4P.DECIMAL, 2);
+  sliderInitialWater.setOpaque(false);
+  sliderInitialWater.addEventHandler(this, "sliderInitialWater_change");
+  lblEvaporateSpeed = new GLabel(this, 150, 190, 140, 20);
+  lblEvaporateSpeed.setText("Evaporate speed");
+  lblEvaporateSpeed.setOpaque(false);
+  sliderEvaporateSpeed = new GSlider(this, 150, 210, 140, 40, 10.0);
+  sliderEvaporateSpeed.setShowValue(true);
+  sliderEvaporateSpeed.setLimits(0.05, 0.0, 1.0);
+  sliderEvaporateSpeed.setNumberFormat(G4P.DECIMAL, 2);
+  sliderEvaporateSpeed.setOpaque(false);
+  sliderEvaporateSpeed.addEventHandler(this, "sliderEvaporateSpeed_change");
+  lblDropletLimit = new GLabel(this, 0, 70, 140, 20);
+  lblDropletLimit.setText("Droplet limit");
+  lblDropletLimit.setOpaque(false);
+  sliderDropletLimit = new GSlider(this, 10, 90, 140, 40, 10.0);
+  sliderDropletLimit.setShowValue(true);
+  sliderDropletLimit.setLimits(1, 1, 50000);
+  sliderDropletLimit.setNumberFormat(G4P.INTEGER, 0);
+  sliderDropletLimit.setOpaque(false);
+  sliderDropletLimit.addEventHandler(this, "sliderDropletLimit_change");
+  lblDropletLifetime = new GLabel(this, 150, 70, 150, 20);
+  lblDropletLifetime.setText("Max droplet lifetime");
+  lblDropletLifetime.setOpaque(false);
+  sliderDropletLifetime = new GSlider(this, 150, 90, 140, 40, 10.0);
+  sliderDropletLifetime.setShowValue(true);
+  sliderDropletLifetime.setLimits(50, 1, 100);
+  sliderDropletLifetime.setNumberFormat(G4P.INTEGER, 0);
+  sliderDropletLifetime.setOpaque(false);
+  sliderDropletLifetime.addEventHandler(this, "sliderDropletLifetime_change");
+  btnReset = new GButton(this, 220, 30, 70, 30);
+  btnReset.setText("Reset");
+  btnReset.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
+  btnReset.addEventHandler(this, "btnReset_click");
   pnlControls.addControl(btnReload);
   pnlControls.addControl(btnPlay);
   pnlControls.addControl(btnSave);
   pnlControls.addControl(btnStep);
   pnlControls.addControl(chkWater);
   pnlControls.addControl(listDisplayGradients);
+  pnlControls.addControl(sliderErodeSpeed);
+  pnlControls.addControl(sliderDepositSpeed);
+  pnlControls.addControl(lblErodeSpeed);
+  pnlControls.addControl(lblDepositSpeed);
+  pnlControls.addControl(lblInitialSpeed);
+  pnlControls.addControl(sliderInitialSpeed);
+  pnlControls.addControl(lblInertia);
+  pnlControls.addControl(sliderInertia);
+  pnlControls.addControl(lblInitialWater);
+  pnlControls.addControl(sliderInitialWater);
+  pnlControls.addControl(lblEvaporateSpeed);
+  pnlControls.addControl(sliderEvaporateSpeed);
+  pnlControls.addControl(lblDropletLimit);
+  pnlControls.addControl(sliderDropletLimit);
+  pnlControls.addControl(lblDropletLifetime);
+  pnlControls.addControl(sliderDropletLifetime);
+  pnlControls.addControl(btnReset);
   pnlSourceHeightmap = new GPanel(this, 0, 0, 300, 70, "Source Heightmap");
   pnlSourceHeightmap.setCollapsible(false);
   pnlSourceHeightmap.setDraggable(false);
@@ -184,7 +345,7 @@ public void createGUI(){
   btnHeightmapBrowse.addEventHandler(this, "btnHeightmapBrowse_click");
   pnlSourceHeightmap.addControl(txtHeightmapPath);
   pnlSourceHeightmap.addControl(btnHeightmapBrowse);
-  pnlTools = new GPanel(this, 0, 190, 300, 180, "Tools");
+  pnlTools = new GPanel(this, 0, 480, 300, 190, "Tools");
   pnlTools.setCollapsible(false);
   pnlTools.setDraggable(false);
   pnlTools.setText("Tools");
@@ -194,12 +355,12 @@ public void createGUI(){
   lblMouseMode.setText("Mouse tool");
   lblMouseMode.setOpaque(false);
   togGroupMouseMode = new GToggleGroup();
-  optMouseTerrain = new GOption(this, 10, 50, 70, 20);
+  optMouseTerrain = new GOption(this, 100, 30, 70, 20);
   optMouseTerrain.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
   optMouseTerrain.setText("Terrain");
   optMouseTerrain.setOpaque(false);
   optMouseTerrain.addEventHandler(this, "optMouseTerrain_clicked");
-  optMouseWater = new GOption(this, 90, 50, 113, 20);
+  optMouseWater = new GOption(this, 170, 30, 113, 20);
   optMouseWater.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
   optMouseWater.setText("Water source");
   optMouseWater.setOpaque(false);
@@ -209,24 +370,31 @@ public void createGUI(){
   pnlTools.addControl(optMouseTerrain);
   togGroupMouseMode.addControl(optMouseWater);
   pnlTools.addControl(optMouseWater);
-  sliderBrushRadius = new GSlider(this, 10, 80, 280, 50, 10.0);
+  sliderBrushRadius = new GSlider(this, 10, 80, 140, 40, 10.0);
   sliderBrushRadius.setShowValue(true);
   sliderBrushRadius.setLimits(50, 1, 500);
   sliderBrushRadius.setNbrTicks(300);
-  sliderBrushRadius.setStickToTicks(true);
   sliderBrushRadius.setNumberFormat(G4P.INTEGER, 0);
   sliderBrushRadius.setOpaque(false);
   sliderBrushRadius.addEventHandler(this, "sliderBrushRadius_change");
-  sliderBrushHardness = new GSlider(this, 10, 120, 280, 50, 10.0);
+  sliderBrushHardness = new GSlider(this, 150, 80, 140, 40, 10.0);
   sliderBrushHardness.setShowValue(true);
   sliderBrushHardness.setLimits(1.0, 0.0, 1.0);
   sliderBrushHardness.setNumberFormat(G4P.DECIMAL, 2);
   sliderBrushHardness.setOpaque(false);
   sliderBrushHardness.addEventHandler(this, "sliderBrushHardness_change");
+  lblBrushRadius = new GLabel(this, 10, 60, 140, 20);
+  lblBrushRadius.setText("Brush radius");
+  lblBrushRadius.setOpaque(false);
+  lblBrushHardness = new GLabel(this, 150, 60, 140, 20);
+  lblBrushHardness.setText("Brush hardness");
+  lblBrushHardness.setOpaque(false);
   pnlTools.addControl(lblMouseMode);
   pnlTools.addControl(sliderBrushRadius);
   pnlTools.addControl(sliderBrushHardness);
-  pnlInfo = new GPanel(this, 0, 370, 300, 130, "Debug Info");
+  pnlTools.addControl(lblBrushRadius);
+  pnlTools.addControl(lblBrushHardness);
+  pnlInfo = new GPanel(this, 0, 670, 300, 130, "Debug Info");
   pnlInfo.setCollapsible(false);
   pnlInfo.setDraggable(false);
   pnlInfo.setText("Debug Info");
@@ -302,6 +470,23 @@ GButton btnSave;
 GButton btnStep; 
 GCheckbox chkWater; 
 GDropList listDisplayGradients; 
+GSlider sliderErodeSpeed; 
+GSlider sliderDepositSpeed; 
+GLabel lblErodeSpeed; 
+GLabel lblDepositSpeed; 
+GLabel lblInitialSpeed; 
+GSlider sliderInitialSpeed; 
+GLabel lblInertia; 
+GSlider sliderInertia; 
+GLabel lblInitialWater; 
+GSlider sliderInitialWater; 
+GLabel lblEvaporateSpeed; 
+GSlider sliderEvaporateSpeed; 
+GLabel lblDropletLimit; 
+GSlider sliderDropletLimit; 
+GLabel lblDropletLifetime; 
+GSlider sliderDropletLifetime; 
+GButton btnReset; 
 GPanel pnlSourceHeightmap; 
 GTextField txtHeightmapPath; 
 GButton btnHeightmapBrowse; 
@@ -312,6 +497,8 @@ GOption optMouseTerrain;
 GOption optMouseWater; 
 GSlider sliderBrushRadius; 
 GSlider sliderBrushHardness; 
+GLabel lblBrushRadius; 
+GLabel lblBrushHardness; 
 GPanel pnlInfo; 
 GLabel lblDropletCount; 
 GLabel valDropletCount; 

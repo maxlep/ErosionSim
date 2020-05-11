@@ -67,29 +67,15 @@ class SimulationWindow extends PApplet
 
 	void mouseClicked()
 	{
-		int scaledX = mouseX / settings.displayScale;
-		int scaledY = mouseY / settings.displayScale;
-		if (scaledX > settings.getWidth() || scaledY > settings.getHeight()) return;
-
-		switch (settings.getMouseMode())
-		{
-		case WATERSOURCE: // Modify water sources
-
-			break;
-		case HEIGHT: // Modify terrain
-			break;
-		case ROCK: // Modify terrain resistance
-
-			break;
-		case DEBUG: // Read heightmap values
-			float height = data.terrain.getHeightValue(scaledX, scaledY);
-			println("Clicked",scaledX,"x",scaledY,"y",height,"value");
-			// println("Clicked",scaledX,"x",scaledY,"y",height.toUnsignedString(),"value");
-			break;
-		}
+		doBrush();
 	}
 
 	void mouseDragged()
+	{
+		doBrush();
+	}
+	
+	void doBrush()
 	{
 		int scaledX = mouseX / settings.displayScale;
 		int scaledY = mouseY / settings.displayScale;

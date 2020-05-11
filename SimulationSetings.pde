@@ -10,15 +10,16 @@ class SimulationSettings
 	public static final int SEDIMENT_LIMIT = 10;
 	public static final float GRAVITY = 2f;
 
-	public float initialSpeed = 1;
-	public float initialWater = 1;
-	public float inertia = .05f;
+	public int dropletSoftLimit;
+	public float initialSpeed;
+	public float initialWater;
+	public float inertia;
 	public float sedimentCapacityFactor = 4f;
 	public float minSedimentCapacity = .01f;
-	public float erodeSpeed = .01f;
-	public float depositSpeed = .01f;
-	public float evaporateSpeed = .05f;
-	public int maxDropletLifetime = 50;
+	public float erodeSpeed;
+	public float depositSpeed;
+	public float evaporateSpeed;
+	public int maxDropletLifetime;
 
 	public boolean running;
 	public boolean showWater;
@@ -29,8 +30,6 @@ class SimulationSettings
 	public ValueBrush waterBrush;
 	public ValueBrush terrainBrush;
 	public ValueBrush resistanceBrush;
-
-	public int dropletSoftLimit;
 
 	public Gradient displayGradient;
 	public int displayScale;
