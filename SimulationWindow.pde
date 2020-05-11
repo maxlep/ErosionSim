@@ -113,7 +113,7 @@ class SimulationWindow extends PApplet
 
 	public void saveSimulationFrame()
 	{
-		String filename = String.format("%s_%d.png", settings.getSourceHeightmapFilename(), data.getSimulationStep());
+		String filename = String.format("%d%d%d-%d:%d:%d.png",year(),month(),day(),hour(),minute(),second());
 		String path = "Outputs/" + filename;
 
 		PImage colored = data.terrain.toGradientImage(settings.displayGradient);
