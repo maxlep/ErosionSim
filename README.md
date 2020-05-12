@@ -24,7 +24,6 @@ On linux this is:
     - Update readme with full feature explanation
 - Add erosion settings presets
 - Show preview of display gradient
-- Show water sources while editing
 - Initialize simulation with some water sources
     - Add button to cover entire area with rain
     - Pack these into the channels of the heightmap files

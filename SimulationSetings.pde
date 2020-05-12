@@ -23,6 +23,7 @@ class SimulationSettings
 
 	public boolean running;
 	public boolean showWater;
+	public boolean showWaterSources;
 	public boolean logToConsole;
 
 	private MouseMode mouseMode;

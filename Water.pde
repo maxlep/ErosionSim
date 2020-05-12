@@ -156,13 +156,23 @@ class WaterErosion
 		canvas.fill(0,0,255);
 		canvas.noStroke();
 
-		Iterator<Droplet> iter = droplets.listIterator();
-		while (iter.hasNext())
+		if (settings.showWater)
 		{
-			Droplet d = iter.next();
-			int gridX = int(d.pos.x);
-			int gridY = int(d.pos.y);
-			canvas.rect(gridX,gridY, 1,1);
+			Iterator<Droplet> iter = droplets.listIterator();
+			while (iter.hasNext())
+			{
+				Droplet d = iter.next();
+				int gridX = int(d.pos.x);
+				int gridY = int(d.pos.y);
+				canvas.rect(gridX,gridY, 1,1);
+			}
+		}
+
+		if (settings.showWaterSources)
+		{
+			canvas.tint(255,176,24,128);
+			canvas.image( waterSources.toGradientImage( gradientPresets.get("Grayscale") ), 0,0 );
+			canvas.tint(255,255);
 		}
 	}
 

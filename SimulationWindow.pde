@@ -4,6 +4,8 @@ class SimulationWindow extends PApplet
 	public SimulationSettings settings;
 	public SimulationData data;
 
+	private boolean showWaterSources;
+
 	SimulationWindow(SimulationSettings settings)
 	{
 		this.settings = settings;
@@ -20,12 +22,6 @@ class SimulationWindow extends PApplet
 	{
 		surface.setTitle( settings.getSourceHeightmapFilename() );
 		// setDefaultClosePolicy(this, true);
-
-		// Initialize the simulation with some droplets
-		// for (int i=0; i<50000; i++)
-		// {
-		// 	data.water.addRandomDroplet();
-		// }
 	}
 
 	void doSimulationStep()
@@ -44,7 +40,7 @@ class SimulationWindow extends PApplet
 		pg.beginDraw();
 
 		data.terrain.draw(pg, settings.displayGradient);
-		if (settings.showWater) data.water.draw(pg);
+		data.water.draw(pg);
 
 		pg.endDraw();
 
@@ -63,19 +59,26 @@ class SimulationWindow extends PApplet
 		// Save mouse position for display in the settings window
 		data.mouseX = mouseX;
 		data.mouseY = mouseY;
+
+		println(settings.showWaterSources);
 	}
 
-	void mouseClicked()
+	void mousePressed()
 	{
-		doBrush();
+		doBrush(true);
 	}
 
 	void mouseDragged()
 	{
-		doBrush();
+		doBrush(false);
+	}
+
+	void mouseReleased()
+	{
+		settings.showWaterSources = false;
 	}
 	
-	void doBrush()
+	void doBrush(boolean isClick)
 	{
 		int scaledX = mouseX / settings.displayScale;
 		int scaledY = mouseY / settings.displayScale;
@@ -85,10 +88,7 @@ class SimulationWindow extends PApplet
 		switch (settings.getMouseMode())
 		{
 		case WATERSOURCE: // Modify water sources
-			// for (int i=0; i<1000; i++)
-			// {
-			// 	data.water.addRandomDroplet(scaledX, scaledY, 30);
-			// }
+			if (isClick) settings.showWaterSources = true;
 			data.water.waterSources.applyBrush(scaledX, scaledY, settings.waterBrush, rightClick);
 			break;
 		case HEIGHT: // Modify terrain
