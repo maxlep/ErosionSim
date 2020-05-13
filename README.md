@@ -25,7 +25,6 @@ On linux this is:
     - Update readme with full feature explanation
 - Add erosion settings presets
 - Show preview of display gradient
-- Add button to cover entire area with rain
 - Begin with the simulation in an understandable state
 - Test mouse brush on trackpad
 - Remove GUI debug prints

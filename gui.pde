@@ -14,26 +14,13 @@
  * =========================================================
  */
 
-public void btnReload_click(GButton source, GEvent event) { //_CODE_:btnReload:483371:
-  println("btnReload - GButton >> GEvent." + event + " @ " + millis());
-
-  // TODO better check for window is open
-  if (activeSimulation != null)
-  {
-    activeSimulation.dispose();
-    activeSimulation.frame.setVisible(false);
-  }
-  startSimulation();
-
-} //_CODE_:btnReload:483371:
-
 public void btnPlay_click(GButton source, GEvent event) { //_CODE_:btnPlay:661167:
   println("btnPlay - GButton >> GEvent." + event + " @ " + millis());
   
   boolean isPlaying = !settingsInstance.running;
   if (isPlaying)
   {
-    source.setText("Stop");
+    source.setText("Pause");
     source.setLocalColorScheme(G4P.RED_SCHEME);
     btnReload.setEnabled(false);
     // btnReload.setLocalColorScheme();
@@ -47,34 +34,12 @@ public void btnPlay_click(GButton source, GEvent event) { //_CODE_:btnPlay:66116
   
 } //_CODE_:btnPlay:661167:
 
-public void btnSave_click(GButton source, GEvent event) { //_CODE_:btnSave:965615:
-  println("btnSave - GButton >> GEvent." + event + " @ " + millis());
-
-  activeSimulation.saveSimulationFrame();
-
-} //_CODE_:btnSave:965615:
-
 public void btnStep_click(GButton source, GEvent event) { //_CODE_:btnStep:679000:
   println("btnStep - GButton >> GEvent." + event + " @ " + millis());
 
   activeSimulation.doSimulationStep();
 
 } //_CODE_:btnStep:679000:
-
-public void chkWater_clicked(GCheckbox source, GEvent event) { //_CODE_:chkWater:767303:
-  println("chkWater - GCheckbox >> GEvent." + event + " @ " + millis());
-
-  settingsInstance.showWater = source.isSelected();
-
-} //_CODE_:chkWater:767303:
-
-public void listDisplayGradients_click(GDropList source, GEvent event) { //_CODE_:listDisplayGradients:261396:
-  println("listDisplayGradients - GDropList >> GEvent." + event + " @ " + millis());
-
-  String gradientName = source.getSelectedText();
-  settingsInstance.displayGradient = gradientPresets.get(gradientName);
-
-} //_CODE_:listDisplayGradients:261396:
 
 public void sliderErodeSpeed_change(GSlider source, GEvent event) { //_CODE_:sliderErodeSpeed:635420:
   println("sliderErodeSpeed - GSlider >> GEvent." + event + " @ " + millis());
@@ -139,27 +104,59 @@ public void btnReset_click(GButton source, GEvent event) { //_CODE_:btnReset:423
 
 } //_CODE_:btnReset:423398:
 
-public void txtHeightmapPath_change(GTextField source, GEvent event) { //_CODE_:txtHeightmapPath:394852:
-  println("txtHeightmapPath - GTextField >> GEvent." + event + " @ " + millis());
-
-  if (event == GEvent.ENTERED || event == GEvent.LOST_FOCUS)
-  {
-    try
-    {
-      settingsInstance.setSourceHeightmap( source.getText() );
-    } catch (Exception e) { e.printStackTrace(); }
-  }
-
-} //_CODE_:txtHeightmapPath:394852:
-
 public void btnHeightmapBrowse_click(GButton source, GEvent event) { //_CODE_:btnHeightmapBrowse:338927:
   println("btnHeightmapBrowse - GButton >> GEvent." + event + " @ " + millis());
 
   String selected = G4P.selectInput("Source heightmap", "./Heightmaps");
-  txtHeightmapPath.setText(selected);
-  txtHeightmapPath_change(txtHeightmapPath, GEvent.ENTERED);
+  try
+  {
+    settingsInstance.setSourceHeightmap( selected );
+  } catch (Exception e) { e.printStackTrace(); }
 
 } //_CODE_:btnHeightmapBrowse:338927:
+
+public void btnReload_click(GButton source, GEvent event) { //_CODE_:btnReload:587278:
+  println("btnReload2 - GButton >> GEvent." + event + " @ " + millis());
+  
+  // TODO better check for window is open
+  if (activeSimulation != null)
+  {
+    activeSimulation.dispose();
+    activeSimulation.frame.setVisible(false);
+  }
+  startSimulation();
+  
+} //_CODE_:btnReload:587278:
+
+public void chkWater_clicked(GCheckbox source, GEvent event) { //_CODE_:chkWater:982245:
+  println("chkWater2 - GCheckbox >> GEvent." + event + " @ " + millis());
+  
+  settingsInstance.showWater = source.isSelected();
+  
+} //_CODE_:chkWater:982245:
+
+public void listDisplayGradients_click(GDropList source, GEvent event) { //_CODE_:listDisplayGradients:960364:
+  println("listDisplayGradients2 - GDropList >> GEvent." + event + " @ " + millis());
+  
+  String gradientName = source.getSelectedText();
+  settingsInstance.displayGradient = gradientPresets.get(gradientName);
+  
+} //_CODE_:listDisplayGradients:960364:
+
+public void btnSave_click(GButton source, GEvent event) { //_CODE_:btnSave:435836:
+  println("btnSave2 - GButton >> GEvent." + event + " @ " + millis());
+  
+  activeSimulation.saveSimulationFrame();
+  
+} //_CODE_:btnSave:435836:
+
+public void knobDisplayScale_turn(GKnob source, GEvent event) { //_CODE_:knobDisplayScale:796179:
+  println("knobDisplayScale - GKnob >> GEvent." + event + " @ " + millis());
+  
+  settingsInstance.displayScale = source.getValueI();
+  settingsInstance.displayScaleChanged = true;
+  
+} //_CODE_:knobDisplayScale:796179:
 
 public void optMouseTerrain_clicked(GOption source, GEvent event) { //_CODE_:optMouseTerrain:370312:
   println("optMouseTerrain - GOption >> GEvent." + event + " @ " + millis());
@@ -204,35 +201,18 @@ public void createGUI(){
   G4P.setInputFont("Arial", G4P.PLAIN, 14);
   G4P.setSliderFont("Arial", G4P.PLAIN, 11);
   surface.setTitle("Settings");
-  pnlControls = new GPanel(this, 0, 70, 300, 410, "Controls");
+  pnlControls = new GPanel(this, 0, 150, 300, 330, "Controls");
   pnlControls.setCollapsible(false);
   pnlControls.setDraggable(false);
   pnlControls.setText("Controls");
   pnlControls.setOpaque(true);
-  btnReload = new GButton(this, 10, 30, 60, 30);
-  btnReload.setText("Reload");
-  btnReload.setLocalColorScheme(GCScheme.ORANGE_SCHEME);
-  btnReload.addEventHandler(this, "btnReload_click");
   btnPlay = new GButton(this, 80, 30, 60, 30);
   btnPlay.setText("Play");
   btnPlay.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   btnPlay.addEventHandler(this, "btnPlay_click");
-  btnSave = new GButton(this, 200, 370, 90, 30);
-  btnSave.setText("Save frame");
-  btnSave.addEventHandler(this, "btnSave_click");
   btnStep = new GButton(this, 150, 30, 60, 30);
   btnStep.setText("Step");
   btnStep.addEventHandler(this, "btnStep_click");
-  chkWater = new GCheckbox(this, 10, 370, 70, 30);
-  chkWater.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
-  chkWater.setText("Show water");
-  chkWater.setOpaque(false);
-  chkWater.addEventHandler(this, "chkWater_clicked");
-  chkWater.setSelected(true);
-  listDisplayGradients = new GDropList(this, 80, 370, 110, 330, 10, 20);
-  listDisplayGradients.setItems(loadStrings("list_261396"), 0);
-  listDisplayGradients.setLocalColorScheme(GCScheme.BLUE_SCHEME);
-  listDisplayGradients.addEventHandler(this, "listDisplayGradients_click");
   sliderErodeSpeed = new GSlider(this, 10, 270, 140, 40, 10.0);
   sliderErodeSpeed.setShowValue(true);
   sliderErodeSpeed.setLimits(0.01, 0.0, 1.0);
@@ -309,12 +289,8 @@ public void createGUI(){
   btnReset.setText("Reset");
   btnReset.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
   btnReset.addEventHandler(this, "btnReset_click");
-  pnlControls.addControl(btnReload);
   pnlControls.addControl(btnPlay);
-  pnlControls.addControl(btnSave);
   pnlControls.addControl(btnStep);
-  pnlControls.addControl(chkWater);
-  pnlControls.addControl(listDisplayGradients);
   pnlControls.addControl(sliderErodeSpeed);
   pnlControls.addControl(sliderDepositSpeed);
   pnlControls.addControl(lblErodeSpeed);
@@ -332,20 +308,58 @@ public void createGUI(){
   pnlControls.addControl(lblDropletLifetime);
   pnlControls.addControl(sliderDropletLifetime);
   pnlControls.addControl(btnReset);
-  pnlSourceHeightmap = new GPanel(this, 0, 0, 300, 70, "Source Heightmap");
+  pnlSourceHeightmap = new GPanel(this, 0, 0, 300, 150, "Display settings");
   pnlSourceHeightmap.setCollapsible(false);
   pnlSourceHeightmap.setDraggable(false);
-  pnlSourceHeightmap.setText("Source Heightmap");
+  pnlSourceHeightmap.setText("Display settings");
   pnlSourceHeightmap.setOpaque(true);
-  txtHeightmapPath = new GTextField(this, 10, 30, 210, 30, G4P.SCROLLBARS_NONE);
-  txtHeightmapPath.setPromptText("Image path");
-  txtHeightmapPath.setOpaque(true);
-  txtHeightmapPath.addEventHandler(this, "txtHeightmapPath_change");
-  btnHeightmapBrowse = new GButton(this, 230, 30, 60, 30);
-  btnHeightmapBrowse.setText("Browse");
+  btnHeightmapBrowse = new GButton(this, 10, 30, 90, 30);
+  btnHeightmapBrowse.setText("Load map");
   btnHeightmapBrowse.addEventHandler(this, "btnHeightmapBrowse_click");
-  pnlSourceHeightmap.addControl(txtHeightmapPath);
+  btnReload = new GButton(this, 110, 30, 80, 30);
+  btnReload.setText("Reload");
+  btnReload.addEventHandler(this, "btnReload_click");
+  chkWater = new GCheckbox(this, 10, 120, 120, 20);
+  chkWater.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
+  chkWater.setText("Show droplets");
+  chkWater.setOpaque(false);
+  chkWater.addEventHandler(this, "chkWater_clicked");
+  chkWater.setSelected(true);
+  listDisplayGradients = new GDropList(this, 20, 90, 110, 220, 10, 20);
+  listDisplayGradients.setItems(loadStrings("list_960364"), 0);
+  listDisplayGradients.setLocalColorScheme(GCScheme.BLUE_SCHEME);
+  listDisplayGradients.addEventHandler(this, "listDisplayGradients_click");
+  btnSave = new GButton(this, 200, 30, 90, 30);
+  btnSave.setText("Save frame");
+  btnSave.addEventHandler(this, "btnSave_click");
+  knobDisplayScale = new GKnob(this, 210, 80, 40, 40, 0.8);
+  knobDisplayScale.setTurnRange(180, 0);
+  knobDisplayScale.setTurnMode(GKnob.CTRL_HORIZONTAL);
+  knobDisplayScale.setSensitivity(1);
+  knobDisplayScale.setShowArcOnly(false);
+  knobDisplayScale.setOverArcOnly(true);
+  knobDisplayScale.setIncludeOverBezel(false);
+  knobDisplayScale.setShowTrack(true);
+  knobDisplayScale.setLimits(1.0, 1.0, 4.0);
+  knobDisplayScale.setNbrTicks(4);
+  knobDisplayScale.setStickToTicks(true);
+  knobDisplayScale.setShowTicks(true);
+  knobDisplayScale.setOpaque(false);
+  knobDisplayScale.addEventHandler(this, "knobDisplayScale_turn");
+  lblDisplayScale = new GLabel(this, 150, 90, 60, 20);
+  lblDisplayScale.setText("Scaling");
+  lblDisplayScale.setOpaque(false);
+  lblDisplayGradient = new GLabel(this, 10, 70, 130, 20);
+  lblDisplayGradient.setText("Display gradient");
+  lblDisplayGradient.setOpaque(false);
   pnlSourceHeightmap.addControl(btnHeightmapBrowse);
+  pnlSourceHeightmap.addControl(btnReload);
+  pnlSourceHeightmap.addControl(chkWater);
+  pnlSourceHeightmap.addControl(listDisplayGradients);
+  pnlSourceHeightmap.addControl(btnSave);
+  pnlSourceHeightmap.addControl(knobDisplayScale);
+  pnlSourceHeightmap.addControl(lblDisplayScale);
+  pnlSourceHeightmap.addControl(lblDisplayGradient);
   pnlTools = new GPanel(this, 0, 480, 300, 190, "Tools");
   pnlTools.setCollapsible(false);
   pnlTools.setDraggable(false);
@@ -465,12 +479,8 @@ public void createGUI(){
 // Variable declarations 
 // autogenerated do not edit
 GPanel pnlControls; 
-GButton btnReload; 
 GButton btnPlay; 
-GButton btnSave; 
 GButton btnStep; 
-GCheckbox chkWater; 
-GDropList listDisplayGradients; 
 GSlider sliderErodeSpeed; 
 GSlider sliderDepositSpeed; 
 GLabel lblErodeSpeed; 
@@ -489,8 +499,14 @@ GLabel lblDropletLifetime;
 GSlider sliderDropletLifetime; 
 GButton btnReset; 
 GPanel pnlSourceHeightmap; 
-GTextField txtHeightmapPath; 
 GButton btnHeightmapBrowse; 
+GButton btnReload; 
+GCheckbox chkWater; 
+GDropList listDisplayGradients; 
+GButton btnSave; 
+GKnob knobDisplayScale; 
+GLabel lblDisplayScale; 
+GLabel lblDisplayGradient; 
 GPanel pnlTools; 
 GLabel lblMouseMode; 
 GToggleGroup togGroupMouseMode; 

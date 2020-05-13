@@ -74,8 +74,12 @@ public void startSimulation()
 // Sets GUI defaults and populates the SimulationSettings with initial values
 public void setGUIdefaults()
 {
-	txtHeightmapPath.setText("Heightmaps/packedHeightmap01.png");
-	txtHeightmapPath_change(txtHeightmapPath, GEvent.ENTERED);
+	// txtHeightmapPath.setText("Heightmaps/packedHeightmap01.png");
+	// txtHeightmapPath_change(txtHeightmapPath, GEvent.ENTERED);
+	try
+	{
+		settingsInstance.setSourceHeightmap( "Heightmaps/packedHeightmap01.png" );
+	} catch (Exception e) { e.printStackTrace(); }
 
 	sliderDropletLimit.setValue(10000);
 	sliderDropletLimit_change(sliderDropletLimit, GEvent.CHANGED);
@@ -110,7 +114,9 @@ public void setGUIdefaults()
 	optMouseWater_clicked(optMouseWater, GEvent.SELECTED);
 
 	// TODO connect display scale to GUI
-	settingsInstance.displayScale = 1;
+  knobDisplayScale.setValue(2);
+  knobDisplayScale_turn(knobDisplayScale, GEvent.VALUE_STEADY);
+	//settingsInstance.displayScale = 1;
 }
 
 public void loadBrushSettings()

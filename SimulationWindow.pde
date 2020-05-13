@@ -20,7 +20,7 @@ class SimulationWindow extends PApplet
 
 	void setup()
 	{
-		surface.setTitle( settings.getSourceHeightmapFilename() );
+		surface.setTitle("Erosion Simulator");
 		// setDefaultClosePolicy(this, true);
 	}
 
@@ -34,6 +34,7 @@ class SimulationWindow extends PApplet
 
 	void draw()
 	{
+    if (settings.displayScaleChanged) frame.setSize(settings.getDisplayWidth(),settings.getDisplayHeight());
 		if (settings.running) doSimulationStep();
 
 		PGraphics pg = data.canvas;
