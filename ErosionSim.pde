@@ -3,6 +3,7 @@ import g4p_controls.*;
 
 public SimulationWindow activeSimulation;
 public HashMap<String,Gradient> gradientPresets;
+private boolean initialStart = true;
 
 private static int windowX=500, windowY=500;
 
@@ -73,7 +74,7 @@ public void startSimulation()
 // Sets GUI defaults and populates the SimulationSettings with initial values
 public void setGUIdefaults()
 {
-	txtHeightmapPath.setText("Heightmaps/heightmap04.png");
+	txtHeightmapPath.setText("Heightmaps/packedHeightmap01.png");
 	txtHeightmapPath_change(txtHeightmapPath, GEvent.ENTERED);
 
 	sliderDropletLimit.setValue(10000);
@@ -121,8 +122,9 @@ public void loadBrushSettings()
 
 public void resetGUI()
 {
-	settingsInstance.running = true;		// Set opposite of the desired default
-	btnPlay_click(btnPlay, GEvent.CLICKED);	// ...so this event toggles it.
+	settingsInstance.running = !initialStart;	// Set opposite of the desired default
+	btnPlay_click(btnPlay, GEvent.CLICKED);		// ...so this event toggles it.
+	if (initialStart) initialStart = false;
 }
 
 public void openSimulationWindow(SimulationSettings settings)
