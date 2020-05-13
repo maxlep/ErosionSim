@@ -19,7 +19,7 @@ class ValueMap
 		// Copy the values from the map image and convert them to floats
 		sourceMap.loadPixels();
 		this.map = new float[height*width];
-		ColorConverter.colorToValue(sourceMap.pixels, this.map);
+		ColorConverter.colorToValue(sourceMap.pixels, this.map, this.maxValue);
 
 		// This makes snapshot and map reference the same object; if makesnapshot() is never called, values will be written and read directly on the map.
 		snapshot = this.map;
@@ -27,7 +27,7 @@ class ValueMap
 
 	public ValueMap(int width, int height, int maxValue)
 	{
-		this(createImage(width, height, RGB), maxValue);
+		this(createImage(width,height, RGB), maxValue);
 	}
 
 	public void draw(PGraphics canvas, Gradient displayGradient)

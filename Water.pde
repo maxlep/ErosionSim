@@ -44,7 +44,7 @@ class WaterErosion
 		nextPassFlag = false;
 
 		droplets = new LinkedList<Droplet>();
-		waterSources = new ValueMap(getWidth(), getHeight(), 1);
+		waterSources = new ValueMap(settings.sourceWatermap, 1);
 	}
 
 	public int getWidth() { return data.terrain.getWidth(); }

@@ -38,6 +38,7 @@ class SimulationSettings
 	private String sourceHeightmapPath;
 	private String sourceHeightmapFilename;
 	private PImage sourceHeightmap;
+	private PImage sourceWatermap;
 	private int width, height;
 
 	public String getSourceHeightmapFilename() { return sourceHeightmapFilename; }
@@ -56,6 +57,9 @@ class SimulationSettings
 		this.sourceHeightmapPath = testPath.toString();
 		sourceHeightmapFilename = testFile.toString();
 		sourceHeightmap = loadImage(this.sourceHeightmapPath);
+		sourceWatermap = sourceHeightmap.copy();
+		ColorConverter.GchannelToValue(sourceHeightmap);
+		ColorConverter.BchannelToValue(sourceWatermap);
 		this.width = sourceHeightmap.width;
 		this.height = sourceHeightmap.height;
 

@@ -18,15 +18,14 @@ On linux this is:
 - GUI
 
 ## TODO
+- Add some better default maps to demo the features
 - Change GUI labels to be easier to interpret
     - Does G4P support tooltips?
     - Update window title
     - Update readme with full feature explanation
 - Add erosion settings presets
 - Show preview of display gradient
-- Initialize simulation with some water sources
-    - Add button to cover entire area with rain
-    - Pack these into the channels of the heightmap files
+- Add button to cover entire area with rain
 - Begin with the simulation in an understandable state
 - Test mouse brush on trackpad
 - Remove GUI debug prints

@@ -10,7 +10,11 @@ class Terrain
 	public Terrain(PImage heightmapImg)
 	{
 		heightmap = new ValueMap(heightmapImg, SimulationSettings.MAX_HEIGHT);
+		initializeGradient();
+	}
 
+	private void initializeGradient()
+	{
 		gradient = (Nullable<PVector>[][])new Nullable[getHeight()][getWidth()];
 		for (int y=0; y<getHeight(); y++)
 		{

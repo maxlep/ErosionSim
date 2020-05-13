@@ -79,39 +79,60 @@ static class ColorConverter
 	{
 		int r = col >> 16 & 0xFF;
 		int g = col >> 8 & 0xFF;
-		int b = col  & 0xFF;
+		int b = col & 0xFF;
 		// TODO rgb color to grayscale value
-		float average = (r + g + b) / 3;
-		return average;
+		// float average = (r + g + b) / 3;
+		// return average;
+		float max = max(r,g,b);
+		return max;
 	}
 
-	public static void colorToValue(int[] pixels, float[] outArray)
+	public static void colorToValue(int[] pixels, float[] outArray, float valueMax)
 	{
 		for (int i=0; i<pixels.length; i++)
 		{
-			outArray[i] = colorToValue(pixels[i]);
+			float value = colorToValue(pixels[i]);
+			outArray[i] = constrain(value, 0,valueMax);
 		}
 	}
 
-	static boolean pctGT1 = false;
+	public static int channelToValue(color col, int channel)
+	{
+		int shift = (2 - channel) * 8;
+		int value = col >> shift & 0xFF;
+		return value;
+	}
+
+	public static void channelToValue(int channel, PImage in)
+	{
+		in.loadPixels();
+		for (int i=0; i<in.pixels.length; i++)
+		{
+			int col = in.pixels[i];
+			int value = channelToValue(col, channel);
+			in.pixels[i] = value >> 24 | value >> 16 | value >> 8 | value;
+		}
+		in.updatePixels();
+	}
+
+	public static void RchannelToValue(PImage in) { channelToValue(0, in); }
+	public static void GchannelToValue(PImage in) { channelToValue(1, in); }
+	public static void BchannelToValue(PImage in) { channelToValue(2, in); }
+
 	public static color valueToGradientSample(float value, float valueMax, Gradient g)
 	{
 		float pct = value / valueMax;
-		// if (pct > 1f) println(value, pct);
-		if (pct > 1f) pctGT1 = true;
 		color col = g.sample(pct);
 		return col;
 	}
 
 	public static void valueToGradientImage(int[] out, float[] values, float valueMax, Gradient g)
 	{
-		pctGT1 = false;
 		for (int i=0; i<values.length; i++)
 		{
 			color col = valueToGradientSample(values[i], valueMax, g);
 			out[i] = col;
 		}
-		if (pctGT1) println("Some values are above MAX_HEIGHT");
 	}
 }
 

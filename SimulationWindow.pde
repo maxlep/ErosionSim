@@ -59,8 +59,6 @@ class SimulationWindow extends PApplet
 		// Save mouse position for display in the settings window
 		data.mouseX = mouseX;
 		data.mouseY = mouseY;
-
-		println(settings.showWaterSources);
 	}
 
 	void mousePressed()
