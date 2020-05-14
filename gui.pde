@@ -15,7 +15,7 @@
  */
 
 public void btnPlay_click(GButton source, GEvent event) { //_CODE_:btnPlay:661167:
-  println("btnPlay - GButton >> GEvent." + event + " @ " + millis());
+  // println("btnPlay - GButton >> GEvent." + event + " @ " + millis());
   
   boolean isPlaying = !settingsInstance.running;
   if (isPlaying)
@@ -35,77 +35,77 @@ public void btnPlay_click(GButton source, GEvent event) { //_CODE_:btnPlay:66116
 } //_CODE_:btnPlay:661167:
 
 public void btnStep_click(GButton source, GEvent event) { //_CODE_:btnStep:679000:
-  println("btnStep - GButton >> GEvent." + event + " @ " + millis());
+  // println("btnStep - GButton >> GEvent." + event + " @ " + millis());
 
   activeSimulation.doSimulationStep();
 
 } //_CODE_:btnStep:679000:
 
 public void sliderErodeSpeed_change(GSlider source, GEvent event) { //_CODE_:sliderErodeSpeed:635420:
-  println("sliderErodeSpeed - GSlider >> GEvent." + event + " @ " + millis());
+  // println("sliderErodeSpeed - GSlider >> GEvent." + event + " @ " + millis());
 
   settingsInstance.erodeSpeed = source.getValueF();
 
 } //_CODE_:sliderErodeSpeed:635420:
 
 public void sliderDepositSpeed_change(GSlider source, GEvent event) { //_CODE_:sliderDepositSpeed:833393:
-  println("sliderDepositSpeed - GSlider >> GEvent." + event + " @ " + millis());
+  // println("sliderDepositSpeed - GSlider >> GEvent." + event + " @ " + millis());
 
   settingsInstance.depositSpeed = source.getValueF();
 
 } //_CODE_:sliderDepositSpeed:833393:
 
 public void sliderInitialSpeed_change(GSlider source, GEvent event) { //_CODE_:sliderInitialSpeed:667892:
-  println("sliderInitialSpeed - GSlider >> GEvent." + event + " @ " + millis());
+  // println("sliderInitialSpeed - GSlider >> GEvent." + event + " @ " + millis());
 
   settingsInstance.initialSpeed = source.getValueF();
 
 } //_CODE_:sliderInitialSpeed:667892:
 
 public void sliderInertia_change(GSlider source, GEvent event) { //_CODE_:sliderInertia:777540:
-  println("sliderInertia - GSlider >> GEvent." + event + " @ " + millis());
+  // println("sliderInertia - GSlider >> GEvent." + event + " @ " + millis());
 
   settingsInstance.inertia = source.getValueF();
 
 } //_CODE_:sliderInertia:777540:
 
 public void sliderInitialWater_change(GSlider source, GEvent event) { //_CODE_:sliderInitialWater:899212:
-  println("sliderInitialWater - GSlider >> GEvent." + event + " @ " + millis());
+  // println("sliderInitialWater - GSlider >> GEvent." + event + " @ " + millis());
 
   settingsInstance.initialWater = source.getValueF();
 
 } //_CODE_:sliderInitialWater:899212:
 
 public void sliderEvaporateSpeed_change(GSlider source, GEvent event) { //_CODE_:sliderEvaporateSpeed:898709:
-  println("sliderEvaporateSpeed - GSlider >> GEvent." + event + " @ " + millis());
+  // println("sliderEvaporateSpeed - GSlider >> GEvent." + event + " @ " + millis());
 
   settingsInstance.evaporateSpeed = source.getValueF();
 
 } //_CODE_:sliderEvaporateSpeed:898709:
 
 public void sliderDropletLimit_change(GSlider source, GEvent event) { //_CODE_:sliderDropletLimit:631859:
-  println("sliderDropletLimit - GSlider >> GEvent." + event + " @ " + millis());
+  // println("sliderDropletLimit - GSlider >> GEvent." + event + " @ " + millis());
 
   settingsInstance.dropletSoftLimit = source.getValueI();
 
 } //_CODE_:sliderDropletLimit:631859:
 
 public void sliderDropletLifetime_change(GSlider source, GEvent event) { //_CODE_:sliderDropletLifetime:273768:
-  println("sliderDropletLifetime - GSlider >> GEvent." + event + " @ " + millis());
+  // println("sliderDropletLifetime - GSlider >> GEvent." + event + " @ " + millis());
 
   settingsInstance.maxDropletLifetime = source.getValueI();
 
 } //_CODE_:sliderDropletLifetime:273768:
 
 public void btnReset_click(GButton source, GEvent event) { //_CODE_:btnReset:423398:
-  println("btnReset - GButton >> GEvent." + event + " @ " + millis());
+  // println("btnReset - GButton >> GEvent." + event + " @ " + millis());
 
   setGUIdefaults();
 
 } //_CODE_:btnReset:423398:
 
 public void btnHeightmapBrowse_click(GButton source, GEvent event) { //_CODE_:btnHeightmapBrowse:338927:
-  println("btnHeightmapBrowse - GButton >> GEvent." + event + " @ " + millis());
+  // println("btnHeightmapBrowse - GButton >> GEvent." + event + " @ " + millis());
 
   String selected = G4P.selectInput("Source heightmap", "./Heightmaps");
   try
@@ -116,7 +116,7 @@ public void btnHeightmapBrowse_click(GButton source, GEvent event) { //_CODE_:bt
 } //_CODE_:btnHeightmapBrowse:338927:
 
 public void btnReload_click(GButton source, GEvent event) { //_CODE_:btnReload:587278:
-  println("btnReload2 - GButton >> GEvent." + event + " @ " + millis());
+  // println("btnReload2 - GButton >> GEvent." + event + " @ " + millis());
   
   // TODO better check for window is open
   if (activeSimulation != null)
@@ -129,14 +129,14 @@ public void btnReload_click(GButton source, GEvent event) { //_CODE_:btnReload:5
 } //_CODE_:btnReload:587278:
 
 public void chkWater_clicked(GCheckbox source, GEvent event) { //_CODE_:chkWater:982245:
-  println("chkWater2 - GCheckbox >> GEvent." + event + " @ " + millis());
+  // println("chkWater2 - GCheckbox >> GEvent." + event + " @ " + millis());
   
   settingsInstance.showWater = source.isSelected();
   
 } //_CODE_:chkWater:982245:
 
 public void listDisplayGradients_click(GDropList source, GEvent event) { //_CODE_:listDisplayGradients:960364:
-  println("listDisplayGradients2 - GDropList >> GEvent." + event + " @ " + millis());
+  // println("listDisplayGradients2 - GDropList >> GEvent." + event + " @ " + millis());
   
   String gradientName = source.getSelectedText();
   settingsInstance.displayGradient = gradientPresets.get(gradientName);
@@ -144,14 +144,14 @@ public void listDisplayGradients_click(GDropList source, GEvent event) { //_CODE
 } //_CODE_:listDisplayGradients:960364:
 
 public void btnSave_click(GButton source, GEvent event) { //_CODE_:btnSave:435836:
-  println("btnSave2 - GButton >> GEvent." + event + " @ " + millis());
+  // println("btnSave2 - GButton >> GEvent." + event + " @ " + millis());
   
   activeSimulation.saveSimulationFrame();
   
 } //_CODE_:btnSave:435836:
 
 public void knobDisplayScale_turn(GKnob source, GEvent event) { //_CODE_:knobDisplayScale:796179:
-  println("knobDisplayScale - GKnob >> GEvent." + event + " @ " + millis());
+  // println("knobDisplayScale - GKnob >> GEvent." + event + " @ " + millis());
   
   settingsInstance.displayScale = source.getValueI();
   settingsInstance.displayScaleChanged = true;
@@ -159,7 +159,7 @@ public void knobDisplayScale_turn(GKnob source, GEvent event) { //_CODE_:knobDis
 } //_CODE_:knobDisplayScale:796179:
 
 public void optMouseTerrain_clicked(GOption source, GEvent event) { //_CODE_:optMouseTerrain:370312:
-  println("optMouseTerrain - GOption >> GEvent." + event + " @ " + millis());
+  // println("optMouseTerrain - GOption >> GEvent." + event + " @ " + millis());
 
   settingsInstance.setMouseMode(MouseMode.HEIGHT);
   loadBrushSettings();
@@ -167,7 +167,7 @@ public void optMouseTerrain_clicked(GOption source, GEvent event) { //_CODE_:opt
 } //_CODE_:optMouseTerrain:370312:
 
 public void optMouseWater_clicked(GOption source, GEvent event) { //_CODE_:optMouseWater:988387:
-  println("optMouseWater - GOption >> GEvent." + event + " @ " + millis());
+  // println("optMouseWater - GOption >> GEvent." + event + " @ " + millis());
 
   settingsInstance.setMouseMode(MouseMode.WATERSOURCE);
   loadBrushSettings();
@@ -175,14 +175,14 @@ public void optMouseWater_clicked(GOption source, GEvent event) { //_CODE_:optMo
 } //_CODE_:optMouseWater:988387:
 
 public void sliderBrushRadius_change(GSlider source, GEvent event) { //_CODE_:sliderBrushRadius:748696:
-  println("sliderBrushRadius - GSlider >> GEvent." + event + " @ " + millis());
+  // println("sliderBrushRadius - GSlider >> GEvent." + event + " @ " + millis());
 
   settingsInstance.activeBrush.setRadius( source.getValueI() );
 
 } //_CODE_:sliderBrushRadius:748696:
 
 public void sliderBrushHardness_change(GSlider source, GEvent event) { //_CODE_:sliderBrushHardness:774342:
-  println("sliderBrushHardness - GSlider >> GEvent." + event + " @ " + millis());
+  // println("sliderBrushHardness - GSlider >> GEvent." + event + " @ " + millis());
 
   settingsInstance.activeBrush.setHardness( source.getValueF() );
 
