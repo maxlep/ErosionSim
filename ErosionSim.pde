@@ -9,7 +9,7 @@ private static int windowX=500, windowY=500;
 
 void settings()
 {
-	size(300,800);
+	size(300,730);
 }
 
 void setup()
@@ -18,6 +18,7 @@ void setup()
 
 	// Create the settings window GUI
 	createGUI();
+	setGUIDisplayDefaults();
 	setGUIdefaults();
 	surface.setLocation(windowX,windowY);
 	// setDefaultClosePolicy(this, true);
@@ -71,16 +72,23 @@ public void startSimulation()
 	}
 }
 
-// Sets GUI defaults and populates the SimulationSettings with initial values
-public void setGUIdefaults()
+public void setGUIDisplayDefaults()
 {
-	// txtHeightmapPath.setText("Heightmaps/packedHeightmap01.png");
-	// txtHeightmapPath_change(txtHeightmapPath, GEvent.ENTERED);
 	try
 	{
 		settingsInstance.setSourceHeightmap( "Heightmaps/packedHeightmap01.png" );
 	} catch (Exception e) { e.printStackTrace(); }
 
+	listDisplayGradients.setItems( gradientPresets.keySet().toArray(new String[0]), 2 );
+	listDisplayGradients_click(listDisplayGradients, GEvent.CLICKED);
+
+	knobDisplayScale.setValue(2);
+	knobDisplayScale_turn(knobDisplayScale, GEvent.VALUE_STEADY);
+}
+
+// Sets GUI defaults and populates the SimulationSettings with initial values
+public void setGUIdefaults()
+{
 	sliderDropletLimit.setValue(10000);
 	sliderDropletLimit_change(sliderDropletLimit, GEvent.CHANGED);
 	sliderDropletLifetime.setValue(40);
@@ -104,19 +112,11 @@ public void setGUIdefaults()
 	chkWater.setSelected(true);
 	chkWater_clicked(chkWater, GEvent.SELECTED);
 
-	listDisplayGradients.setItems( gradientPresets.keySet().toArray(new String[0]), 2 );
-	listDisplayGradients_click(listDisplayGradients, GEvent.CLICKED);
-
 	settingsInstance.waterBrush = new ValueBrush(80, 1f, 1);
 	settingsInstance.terrainBrush = new ValueBrush(80, 0.2f, 2);
 	settingsInstance.resistanceBrush = new ValueBrush(80, 1f, 1);
 	optMouseWater.setSelected(true);
 	optMouseWater_clicked(optMouseWater, GEvent.SELECTED);
-
-	// TODO connect display scale to GUI
-  knobDisplayScale.setValue(2);
-  knobDisplayScale_turn(knobDisplayScale, GEvent.VALUE_STEADY);
-	//settingsInstance.displayScale = 1;
 }
 
 public void loadBrushSettings()
@@ -137,9 +137,7 @@ public void openSimulationWindow(SimulationSettings settings)
 {
 	String[] args = {	"--display=1",
 						String.format("--location=%d,%d",windowX+width,windowY),
-						""};//,
-						//"--sketch-path=" + sketchPath};//,
-						// "Projector"};
+						""};
 	activeSimulation = new SimulationWindow(settings);
 	PApplet.runSketch(args, activeSimulation);
 }

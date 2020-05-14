@@ -34,7 +34,7 @@ class SimulationSettings
 
 	public Gradient displayGradient;
 	public int displayScale;
-  private boolean displayScaleChanged;
+	private boolean displayScaleChanged;
 
 	private String sourceHeightmapPath;
 	private String sourceHeightmapFilename;
