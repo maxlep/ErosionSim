@@ -112,6 +112,7 @@ public void btnHeightmapBrowse_click(GButton source, GEvent event) { //_CODE_:bt
   {
     settingsInstance.setSourceHeightmap( selected );
   } catch (Exception e) { e.printStackTrace(); }
+  btnReload_click(btnReload, GEvent.CLICKED);
 
 } //_CODE_:btnHeightmapBrowse:338927:
 
