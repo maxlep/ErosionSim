@@ -110,7 +110,7 @@ static class ColorConverter
 		{
 			int col = in.pixels[i];
 			int value = channelToValue(col, channel);
-			in.pixels[i] = value >> 24 | value >> 16 | value >> 8 | value;
+			in.pixels[i] = value << 24 | value << 16 | value << 8 | value;
 		}
 		in.updatePixels();
 	}
@@ -118,6 +118,25 @@ static class ColorConverter
 	public static void RchannelToValue(PImage in) { channelToValue(0, in); }
 	public static void GchannelToValue(PImage in) { channelToValue(1, in); }
 	public static void BchannelToValue(PImage in) { channelToValue(2, in); }
+
+	public static PImage mergeChannels(PImage imgR, PImage imgG, PImage imgB)
+	{
+		PImage out = imgR.copy();
+		out.loadPixels();
+		imgR.loadPixels();
+		imgG.loadPixels();
+		imgB.loadPixels();
+		for (int i=0; i<out.pixels.length; i++)
+		{
+			int r = channelToValue(imgR.pixels[i], 0);
+			int g = channelToValue(imgG.pixels[i], 1);
+			int b = channelToValue(imgB.pixels[i], 2);
+			color col = r << 16 | g << 8 | b;
+			out.pixels[i] = col;
+		}
+		out.updatePixels();
+		return out;
+	}
 
 	public static color valueToGradientSample(float value, float valueMax, Gradient g)
 	{

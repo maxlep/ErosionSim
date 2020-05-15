@@ -120,6 +120,19 @@ class SimulationWindow extends PApplet
 		println("Saved image", path);
 	}
 
+	public void saveHeightmap()
+	{
+		String filename = String.format("%d%d%d-%d:%d:%d.png",year(),month(),day(),hour(),minute(),second());
+		String path = "Outputs/" + filename;
+
+		Gradient grayscale = gradientPresets.get("Grayscale");
+		PImage heightmap = data.terrain.toGradientImage( grayscale );
+		PImage watersources = data.water.waterSources.toGradientImage( grayscale );
+		PImage packedHeightmap = ColorConverter.mergeChannels( createImage(heightmap.width,heightmap.height,RGB), heightmap, watersources );
+		packedHeightmap.save(path);
+		println("Saved image", path);
+	}
+
 	void keyPressed()
 	{
 		switch (key)

@@ -151,12 +151,12 @@ public void listDisplayGradients_click(GDropList source, GEvent event) { //_CODE
   
 } //_CODE_:listDisplayGradients:960364:
 
-public void btnSave_click(GButton source, GEvent event) { //_CODE_:btnSave:435836:
+public void btnSaveImage_click(GButton source, GEvent event) { //_CODE_:btnSaveImage:435836:
   // println("btnSave2 - GButton >> GEvent." + event + " @ " + millis());
   
   activeSimulation.saveSimulationFrame();
   
-} //_CODE_:btnSave:435836:
+} //_CODE_:btnSaveImage:435836:
 
 public void knobDisplayScale_turn(GKnob source, GEvent event) { //_CODE_:knobDisplayScale:796179:
   // println("knobDisplayScale - GKnob >> GEvent." + event + " @ " + millis());
@@ -165,6 +165,13 @@ public void knobDisplayScale_turn(GKnob source, GEvent event) { //_CODE_:knobDis
   settingsInstance.displayScaleChanged = true;
   
 } //_CODE_:knobDisplayScale:796179:
+
+public void btnSaveHeightmap_click(GButton source, GEvent event) { //_CODE_:btnSaveHeightmap:270944:
+  // println("btnSaveHeightmap - GButton >> GEvent." + event + " @ " + millis());
+
+  activeSimulation.saveHeightmap();
+
+} //_CODE_:btnSaveHeightmap:270944:
 
 public void optMouseTerrain_clicked(GOption source, GEvent event) { //_CODE_:optMouseTerrain:370312:
   // println("optMouseTerrain - GOption >> GEvent." + event + " @ " + millis());
@@ -330,28 +337,28 @@ public void createGUI(){
   pnlSourceHeightmap.setDraggable(false);
   pnlSourceHeightmap.setText("Display settings");
   pnlSourceHeightmap.setOpaque(true);
-  btnHeightmapBrowse = new GButton(this, 10, 30, 90, 30);
+  btnHeightmapBrowse = new GButton(this, 10, 30, 80, 30);
   btnHeightmapBrowse.setText("Load map");
   btnHeightmapBrowse.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
   btnHeightmapBrowse.addEventHandler(this, "btnHeightmapBrowse_click");
-  btnReload = new GButton(this, 110, 30, 80, 30);
+  btnReload = new GButton(this, 100, 30, 60, 30);
   btnReload.setText("Reload");
   btnReload.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
   btnReload.addEventHandler(this, "btnReload_click");
-  chkWater = new GCheckbox(this, 10, 120, 120, 20);
+  chkWater = new GCheckbox(this, 170, 120, 120, 20);
   chkWater.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
   chkWater.setText("Show droplets");
   chkWater.setOpaque(false);
   chkWater.addEventHandler(this, "chkWater_clicked");
   chkWater.setSelected(true);
-  listDisplayGradients = new GDropList(this, 20, 90, 110, 220, 10, 20);
+  listDisplayGradients = new GDropList(this, 180, 50, 110, 220, 10, 20);
   listDisplayGradients.setItems(loadStrings("list_960364"), 0);
   listDisplayGradients.setLocalColorScheme(GCScheme.BLUE_SCHEME);
   listDisplayGradients.addEventHandler(this, "listDisplayGradients_click");
-  btnSave = new GButton(this, 200, 30, 90, 30);
-  btnSave.setText("Save frame");
-  btnSave.addEventHandler(this, "btnSave_click");
-  knobDisplayScale = new GKnob(this, 210, 80, 40, 40, 0.8);
+  btnSaveImage = new GButton(this, 10, 110, 150, 30);
+  btnSaveImage.setText("Save image");
+  btnSaveImage.addEventHandler(this, "btnSaveImage_click");
+  knobDisplayScale = new GKnob(this, 240, 80, 40, 40, 0.8);
   knobDisplayScale.setTurnRange(180, 0);
   knobDisplayScale.setTurnMode(GKnob.CTRL_HORIZONTAL);
   knobDisplayScale.setSensitivity(1);
@@ -365,20 +372,24 @@ public void createGUI(){
   knobDisplayScale.setShowTicks(true);
   knobDisplayScale.setOpaque(false);
   knobDisplayScale.addEventHandler(this, "knobDisplayScale_turn");
-  lblDisplayScale = new GLabel(this, 150, 90, 60, 20);
+  lblDisplayScale = new GLabel(this, 180, 90, 60, 20);
   lblDisplayScale.setText("Scaling");
   lblDisplayScale.setOpaque(false);
-  lblDisplayGradient = new GLabel(this, 10, 70, 130, 20);
+  lblDisplayGradient = new GLabel(this, 170, 30, 130, 20);
   lblDisplayGradient.setText("Display gradient");
   lblDisplayGradient.setOpaque(false);
+  btnSaveHeightmap = new GButton(this, 10, 70, 150, 30);
+  btnSaveHeightmap.setText("Save heightmap");
+  btnSaveHeightmap.addEventHandler(this, "btnSaveHeightmap_click");
   pnlSourceHeightmap.addControl(btnHeightmapBrowse);
   pnlSourceHeightmap.addControl(btnReload);
   pnlSourceHeightmap.addControl(chkWater);
   pnlSourceHeightmap.addControl(listDisplayGradients);
-  pnlSourceHeightmap.addControl(btnSave);
+  pnlSourceHeightmap.addControl(btnSaveImage);
   pnlSourceHeightmap.addControl(knobDisplayScale);
   pnlSourceHeightmap.addControl(lblDisplayScale);
   pnlSourceHeightmap.addControl(lblDisplayGradient);
+  pnlSourceHeightmap.addControl(btnSaveHeightmap);
   pnlTools = new GPanel(this, 0, 520, 300, 170, "Tools");
   pnlTools.setCollapsible(false);
   pnlTools.setDraggable(false);
@@ -537,10 +548,11 @@ GButton btnHeightmapBrowse;
 GButton btnReload; 
 GCheckbox chkWater; 
 GDropList listDisplayGradients; 
-GButton btnSave; 
+GButton btnSaveImage; 
 GKnob knobDisplayScale; 
 GLabel lblDisplayScale; 
 GLabel lblDisplayGradient; 
+GButton btnSaveHeightmap; 
 GPanel pnlTools; 
 GLabel lblMouseMode; 
 GToggleGroup togGroupMouseMode; 
