@@ -132,7 +132,7 @@ public void setErosionSettings(int preset)
 	case 1:	// Soft
 		sliderDropletLimit.setValue(50000);
 		sliderDropletLimit_change(sliderDropletLimit, GEvent.CHANGED);
-		sliderDropletLifetime.setValue(40);
+		sliderDropletLifetime.setValue(70);
 		sliderDropletLifetime_change(sliderDropletLimit, GEvent.CHANGED);
 
 		sliderInitialSpeed.setValue(1);
@@ -140,35 +140,35 @@ public void setErosionSettings(int preset)
 		sliderInertia.setValue(0.05f);
 		sliderInertia_change(sliderInertia, GEvent.CHANGED);
 
-		sliderInitialWater.setValue(1);
+		sliderInitialWater.setValue(4);
 		sliderInitialWater_change(sliderInitialWater, GEvent.CHANGED);
-		sliderEvaporateSpeed.setValue(0.05f);
+		sliderEvaporateSpeed.setValue(0.12f);
 		sliderEvaporateSpeed_change(sliderEvaporateSpeed, GEvent.CHANGED);
 
 		sliderErodeSpeed.setValue(0.01f);
 		sliderErodeSpeed_change(sliderErodeSpeed, GEvent.CHANGED);
-		sliderDepositSpeed.setValue(0.01f);
+		sliderDepositSpeed.setValue(0.2f);
 		sliderDepositSpeed_change(sliderDepositSpeed, GEvent.CHANGED);
 		break;
 	case 2:	// Extreme
 		sliderDropletLimit.setValue(50000);
 		sliderDropletLimit_change(sliderDropletLimit, GEvent.CHANGED);
-		sliderDropletLifetime.setValue(40);
+		sliderDropletLifetime.setValue(30);
 		sliderDropletLifetime_change(sliderDropletLimit, GEvent.CHANGED);
 
 		sliderInitialSpeed.setValue(1);
 		sliderInitialSpeed_change(sliderInitialSpeed, GEvent.CHANGED);
-		sliderInertia.setValue(0.05f);
+		sliderInertia.setValue(0.5f);
 		sliderInertia_change(sliderInertia, GEvent.CHANGED);
 
-		sliderInitialWater.setValue(1);
+		sliderInitialWater.setValue(2);
 		sliderInitialWater_change(sliderInitialWater, GEvent.CHANGED);
 		sliderEvaporateSpeed.setValue(0.05f);
 		sliderEvaporateSpeed_change(sliderEvaporateSpeed, GEvent.CHANGED);
 
-		sliderErodeSpeed.setValue(0.01f);
+		sliderErodeSpeed.setValue(0.04f);
 		sliderErodeSpeed_change(sliderErodeSpeed, GEvent.CHANGED);
-		sliderDepositSpeed.setValue(0.01f);
+		sliderDepositSpeed.setValue(0.03f);
 		sliderDepositSpeed_change(sliderDepositSpeed, GEvent.CHANGED);
 		break;
 	}
