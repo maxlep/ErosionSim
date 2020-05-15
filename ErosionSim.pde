@@ -87,7 +87,7 @@ public void setGUIDisplayDefaults()
 	settingsInstance.running = false; 		// Set opposite of the desired default
 	btnPlay_click(btnPlay, GEvent.CLICKED);	// ...so this event toggles it.
 
-	listErosionPresets.setItems( new String[] {"1. Realistic", "2. Soft", "3. Extreme"}, 0 );
+	listErosionPresets.setItems( new String[] {"1. Moderate", "2. Soft", "3. Extreme"}, 0 );
 	listErosionPresets_click(listErosionPresets, GEvent.CLICKED);
 }
 
