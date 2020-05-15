@@ -7,7 +7,6 @@ public SimulationSettings settingsInstance = new SimulationSettings();
 class SimulationSettings
 {
 	public static final int MAX_HEIGHT = 255;
-	public static final int SEDIMENT_LIMIT = 10;
 	public static final float GRAVITY = 2f;
 
 	public int dropletSoftLimit;

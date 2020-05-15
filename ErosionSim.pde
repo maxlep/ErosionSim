@@ -4,7 +4,7 @@ import g4p_controls.*;
 public SimulationWindow activeSimulation;
 public HashMap<String,Gradient> gradientPresets;
 
-private static int windowX=500, windowY=500;
+private static int windowX=200, windowY=200;
 
 void settings()
 {
@@ -86,31 +86,14 @@ public void setGUIDisplayDefaults()
 
 	settingsInstance.running = false; 		// Set opposite of the desired default
 	btnPlay_click(btnPlay, GEvent.CLICKED);	// ...so this event toggles it.
+
+	listErosionPresets.setItems( new String[] {"1. Realistic", "2. Soft", "3. Extreme"}, 0 );
+	listErosionPresets_click(listErosionPresets, GEvent.CLICKED);
 }
 
 // Sets GUI defaults and populates the SimulationSettings with initial values
 public void setGUIdefaults()
 {
-	sliderDropletLimit.setValue(50000);
-	sliderDropletLimit_change(sliderDropletLimit, GEvent.CHANGED);
-	sliderDropletLifetime.setValue(40);
-	sliderDropletLifetime_change(sliderDropletLimit, GEvent.CHANGED);
-
-	sliderInitialSpeed.setValue(1);
-	sliderInitialSpeed_change(sliderInitialSpeed, GEvent.CHANGED);
-	sliderInertia.setValue(0.05f);
-	sliderInertia_change(sliderInertia, GEvent.CHANGED);
-
-	sliderInitialWater.setValue(1);
-	sliderInitialWater_change(sliderInitialWater, GEvent.CHANGED);
-	sliderEvaporateSpeed.setValue(0.05f);
-	sliderEvaporateSpeed_change(sliderEvaporateSpeed, GEvent.CHANGED);
-
-	sliderErodeSpeed.setValue(0.01f);
-	sliderErodeSpeed_change(sliderErodeSpeed, GEvent.CHANGED);
-	sliderDepositSpeed.setValue(0.01f);
-	sliderDepositSpeed_change(sliderDepositSpeed, GEvent.CHANGED);
-
 	chkWater.setSelected(true);
 	chkWater_clicked(chkWater, GEvent.SELECTED);
 
@@ -119,6 +102,76 @@ public void setGUIdefaults()
 	settingsInstance.resistanceBrush = new ValueBrush(80, 1f, 1);
 	optMouseTerrain.setSelected(true);
 	optMouseTerrain_clicked(optMouseTerrain, GEvent.SELECTED);
+}
+
+public void setErosionSettings(int preset)
+{
+	switch (preset)
+	{
+	case 0:	// Realistic
+		sliderDropletLimit.setValue(50000);
+		sliderDropletLimit_change(sliderDropletLimit, GEvent.CHANGED);
+		sliderDropletLifetime.setValue(40);
+		sliderDropletLifetime_change(sliderDropletLimit, GEvent.CHANGED);
+
+		sliderInitialSpeed.setValue(1);
+		sliderInitialSpeed_change(sliderInitialSpeed, GEvent.CHANGED);
+		sliderInertia.setValue(0.05f);
+		sliderInertia_change(sliderInertia, GEvent.CHANGED);
+
+		sliderInitialWater.setValue(1);
+		sliderInitialWater_change(sliderInitialWater, GEvent.CHANGED);
+		sliderEvaporateSpeed.setValue(0.05f);
+		sliderEvaporateSpeed_change(sliderEvaporateSpeed, GEvent.CHANGED);
+
+		sliderErodeSpeed.setValue(0.01f);
+		sliderErodeSpeed_change(sliderErodeSpeed, GEvent.CHANGED);
+		sliderDepositSpeed.setValue(0.01f);
+		sliderDepositSpeed_change(sliderDepositSpeed, GEvent.CHANGED);
+		break;
+	case 1:	// Soft
+		sliderDropletLimit.setValue(50000);
+		sliderDropletLimit_change(sliderDropletLimit, GEvent.CHANGED);
+		sliderDropletLifetime.setValue(40);
+		sliderDropletLifetime_change(sliderDropletLimit, GEvent.CHANGED);
+
+		sliderInitialSpeed.setValue(1);
+		sliderInitialSpeed_change(sliderInitialSpeed, GEvent.CHANGED);
+		sliderInertia.setValue(0.05f);
+		sliderInertia_change(sliderInertia, GEvent.CHANGED);
+
+		sliderInitialWater.setValue(1);
+		sliderInitialWater_change(sliderInitialWater, GEvent.CHANGED);
+		sliderEvaporateSpeed.setValue(0.05f);
+		sliderEvaporateSpeed_change(sliderEvaporateSpeed, GEvent.CHANGED);
+
+		sliderErodeSpeed.setValue(0.01f);
+		sliderErodeSpeed_change(sliderErodeSpeed, GEvent.CHANGED);
+		sliderDepositSpeed.setValue(0.01f);
+		sliderDepositSpeed_change(sliderDepositSpeed, GEvent.CHANGED);
+		break;
+	case 2:	// Extreme
+		sliderDropletLimit.setValue(50000);
+		sliderDropletLimit_change(sliderDropletLimit, GEvent.CHANGED);
+		sliderDropletLifetime.setValue(40);
+		sliderDropletLifetime_change(sliderDropletLimit, GEvent.CHANGED);
+
+		sliderInitialSpeed.setValue(1);
+		sliderInitialSpeed_change(sliderInitialSpeed, GEvent.CHANGED);
+		sliderInertia.setValue(0.05f);
+		sliderInertia_change(sliderInertia, GEvent.CHANGED);
+
+		sliderInitialWater.setValue(1);
+		sliderInitialWater_change(sliderInitialWater, GEvent.CHANGED);
+		sliderEvaporateSpeed.setValue(0.05f);
+		sliderEvaporateSpeed_change(sliderEvaporateSpeed, GEvent.CHANGED);
+
+		sliderErodeSpeed.setValue(0.01f);
+		sliderErodeSpeed_change(sliderErodeSpeed, GEvent.CHANGED);
+		sliderDepositSpeed.setValue(0.01f);
+		sliderDepositSpeed_change(sliderDepositSpeed, GEvent.CHANGED);
+		break;
+	}
 }
 
 public void loadBrushSettings()
