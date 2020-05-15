@@ -89,7 +89,7 @@ public void setGUIDisplayDefaults()
 // Sets GUI defaults and populates the SimulationSettings with initial values
 public void setGUIdefaults()
 {
-	sliderDropletLimit.setValue(10000);
+	sliderDropletLimit.setValue(50000);
 	sliderDropletLimit_change(sliderDropletLimit, GEvent.CHANGED);
 	sliderDropletLifetime.setValue(40);
 	sliderDropletLifetime_change(sliderDropletLimit, GEvent.CHANGED);
@@ -113,10 +113,10 @@ public void setGUIdefaults()
 	chkWater_clicked(chkWater, GEvent.SELECTED);
 
 	settingsInstance.waterBrush = new ValueBrush(80, 1f, 1);
-	settingsInstance.terrainBrush = new ValueBrush(80, 0.2f, 2);
+	settingsInstance.terrainBrush = new ValueBrush(80, 0.1f, 1);
 	settingsInstance.resistanceBrush = new ValueBrush(80, 1f, 1);
-	optMouseWater.setSelected(true);
-	optMouseWater_clicked(optMouseWater, GEvent.SELECTED);
+	optMouseTerrain.setSelected(true);
+	optMouseTerrain_clicked(optMouseTerrain, GEvent.SELECTED);
 }
 
 public void loadBrushSettings()
