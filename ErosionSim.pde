@@ -3,13 +3,12 @@ import g4p_controls.*;
 
 public SimulationWindow activeSimulation;
 public HashMap<String,Gradient> gradientPresets;
-private boolean initialStart = true;
 
 private static int windowX=500, windowY=500;
 
 void settings()
 {
-	size(300,730);
+	size(300,800);
 }
 
 void setup()
@@ -84,6 +83,9 @@ public void setGUIDisplayDefaults()
 
 	knobDisplayScale.setValue(2);
 	knobDisplayScale_turn(knobDisplayScale, GEvent.VALUE_STEADY);
+
+	settingsInstance.running = false; 		// Set opposite of the desired default
+	btnPlay_click(btnPlay, GEvent.CLICKED);	// ...so this event toggles it.
 }
 
 // Sets GUI defaults and populates the SimulationSettings with initial values
@@ -128,9 +130,7 @@ public void loadBrushSettings()
 
 public void resetGUI()
 {
-	settingsInstance.running = !initialStart;	// Set opposite of the desired default
-	btnPlay_click(btnPlay, GEvent.CLICKED);		// ...so this event toggles it.
-	if (initialStart) initialStart = false;
+	
 }
 
 public void openSimulationWindow(SimulationSettings settings)
