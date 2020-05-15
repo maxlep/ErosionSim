@@ -223,13 +223,13 @@ public void createGUI(){
   btnStep.addEventHandler(this, "btnStep_click");
   sliderErodeSpeed = new GSlider(this, 10, 320, 140, 40, 10.0);
   sliderErodeSpeed.setShowValue(true);
-  sliderErodeSpeed.setLimits(0.01, 0.0, 1.0);
+  sliderErodeSpeed.setLimits(0.01, 0.01, 1.0);
   sliderErodeSpeed.setNumberFormat(G4P.DECIMAL, 2);
   sliderErodeSpeed.setOpaque(false);
   sliderErodeSpeed.addEventHandler(this, "sliderErodeSpeed_change");
   sliderDepositSpeed = new GSlider(this, 150, 320, 140, 40, 10.0);
   sliderDepositSpeed.setShowValue(true);
-  sliderDepositSpeed.setLimits(0.01, 0.0, 1.0);
+  sliderDepositSpeed.setLimits(0.01, 0.01, 1.0);
   sliderDepositSpeed.setNumberFormat(G4P.DECIMAL, 2);
   sliderDepositSpeed.setOpaque(false);
   sliderDepositSpeed.addEventHandler(this, "sliderDepositSpeed_change");
@@ -253,7 +253,7 @@ public void createGUI(){
   lblInertia.setOpaque(false);
   sliderInertia = new GSlider(this, 150, 200, 140, 40, 10.0);
   sliderInertia.setShowValue(true);
-  sliderInertia.setLimits(0.05, 0.0, 1.0);
+  sliderInertia.setLimits(0.05, 0.01, 0.99);
   sliderInertia.setNumberFormat(G4P.DECIMAL, 2);
   sliderInertia.setOpaque(false);
   sliderInertia.addEventHandler(this, "sliderInertia_change");
@@ -271,7 +271,7 @@ public void createGUI(){
   lblEvaporateSpeed.setOpaque(false);
   sliderEvaporateSpeed = new GSlider(this, 150, 260, 140, 40, 10.0);
   sliderEvaporateSpeed.setShowValue(true);
-  sliderEvaporateSpeed.setLimits(0.05, 0.0, 1.0);
+  sliderEvaporateSpeed.setLimits(0.05, 0.01, 1.0);
   sliderEvaporateSpeed.setNumberFormat(G4P.DECIMAL, 2);
   sliderEvaporateSpeed.setOpaque(false);
   sliderEvaporateSpeed.addEventHandler(this, "sliderEvaporateSpeed_change");
@@ -414,7 +414,7 @@ public void createGUI(){
   sliderBrushRadius.addEventHandler(this, "sliderBrushRadius_change");
   sliderBrushHardness = new GSlider(this, 150, 120, 140, 40, 10.0);
   sliderBrushHardness.setShowValue(true);
-  sliderBrushHardness.setLimits(1.0, 0.0, 1.0);
+  sliderBrushHardness.setLimits(1.0, 0.01, 1.0);
   sliderBrushHardness.setNumberFormat(G4P.DECIMAL, 2);
   sliderBrushHardness.setOpaque(false);
   sliderBrushHardness.addEventHandler(this, "sliderBrushHardness_change");
