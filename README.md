@@ -24,7 +24,7 @@ On linux this is:
 
 ## Controls
 
-### Diplay Settings
+### Display Settings
 
 - **Load map:** Open a file browser window to select a heightmap to load. The green channel of the selected image will be used as the height value, and the blue channel will be used to determine where rain may be added.
 - **Reload:** Reload the last heightmap.
