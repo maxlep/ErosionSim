@@ -2,10 +2,13 @@
 
 A simulation inspired by hydraulic erosion, where water droplets representing rain redistribute sediment over the image. Created using Processing 3.
 
-## Results (WIP)
-![](Outputs/basic_gradient.png)
-![](Outputs/islands.png)
-![](Outputs/crumbling.png)
+## Results
+| | |
+:-:|:-:
+![](Outputs/Demos/moderate-erosion-demo.gif) | ![](Outputs/Demos/extreme-erosion-demo.gif)
+![](Outputs/Demos/grayscale-demo.gif) | ![](Outputs/2020512-18:1:47.png)
+![](Outputs/2020511-17:44:8.png) | ![](Outputs/crumbling.png)
+![](Outputs/atoms_eroded.png) | ![](Outputs/2020515-20:3:23.png)
 
 
 ## Running
