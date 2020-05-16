@@ -69,7 +69,7 @@ public void setGUIDisplayDefaults()
 {
 	try
 	{
-		settingsInstance.setSourceHeightmap( "Heightmaps/packedHeightmap01.png" );
+		settingsInstance.setSourceHeightmap( "packedHeightmap01.png" );
 	} catch (Exception e) { e.printStackTrace(); }
 
 	listDisplayGradients.setItems( gradientPresets.keySet().toArray(new String[0]), 2 );
