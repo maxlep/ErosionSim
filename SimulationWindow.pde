@@ -15,7 +15,6 @@ class SimulationWindow extends PApplet
 	void settings()
 	{
 		size(settings.getDisplayWidth(), settings.getDisplayHeight());
-		println(settings.getDisplayWidth(), settings.getDisplayHeight());
 	}
 
 	void setup()
@@ -34,8 +33,14 @@ class SimulationWindow extends PApplet
 
 	void draw()
 	{
-    if (settings.displayScaleChanged) frame.setSize(settings.getDisplayWidth(),settings.getDisplayHeight());
-		if (settings.running) doSimulationStep();
+		if (settings.displayScaleChanged)
+		{
+			surface.setSize(settings.getDisplayWidth(),settings.getDisplayHeight());
+		}
+		if (settings.running)
+		{
+			doSimulationStep();
+		}
 
 		PGraphics pg = data.canvas;
 		pg.beginDraw();

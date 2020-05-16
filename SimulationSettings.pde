@@ -62,8 +62,6 @@ class SimulationSettings
 		ColorConverter.BchannelToValue(sourceWatermap);
 		this.width = sourceHeightmap.width;
 		this.height = sourceHeightmap.height;
-
-		println(width, height);
 	}
 
 	public MouseMode getMouseMode() { return mouseMode; }
