@@ -67,15 +67,10 @@ On linux this is:
 - **Height:** The height of the map location that the mouse is above.
 - **Gradient:** The slope of the map location that the mouse is above.
 
-
 ## TODO
-- Redirect heightmaps and outputs to data folder
-- Add some better default maps to demo the features
-- Test mouse brush on trackpad
-
-### Stretch goals
 - Add gradient editor
 - Fix directional bias on flat ground
 - Implement terrain resistance map to mimic different materials
 - Remember settings window position
 - Add grouping and movement to rain pattern
+- Test mouse brush on trackpad
