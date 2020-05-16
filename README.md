@@ -13,7 +13,7 @@ A simulation inspired by hydraulic erosion, where water droplets representing ra
 
 ## Running
 ### From a package
-Navigate to the packages page of this repository and download the executable for your operating system.
+Navigate to the [releases](https://github.com/maxlep/ErosionSim/releases) page of this repository and download the executable for your operating system.
 
 ### From source
 Execute ErosionSim.pde with `processing-java`.
